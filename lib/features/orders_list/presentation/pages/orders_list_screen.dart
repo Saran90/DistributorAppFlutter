@@ -197,6 +197,9 @@ class _OrdersListScreenState extends State<OrdersListScreen> {
               if (state is SalesOrderSendingFailed) {
                 context.showMessage(state.message);
               }
+              if (state is NoSalesOrderAvailableForSending) {
+                context.showMessage(state.message);
+              }
             },
           )
         ],

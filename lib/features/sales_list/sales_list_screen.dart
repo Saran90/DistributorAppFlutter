@@ -1,8 +1,10 @@
 import 'package:distributor_app_flutter/features/orders_list/presentation/pages/models/order.dart';
+import 'package:distributor_app_flutter/utils/app_router.dart';
 import 'package:distributor_app_flutter/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../app_config.dart';
 import '../../utils/colors.dart';
 import '../orders_list/presentation/bloc/order_summary/order_summary_cubit.dart';
 import '../orders_list/presentation/bloc/sales_order/sales_order_cubit.dart';
@@ -127,11 +129,17 @@ class _SalesListScreenState extends State<SalesListScreen> {
                 _orders.isNotEmpty
                     ? SliverList(
                         delegate: SliverChildBuilderDelegate(
-                            (context, index) => SalesItemWidget(
-                                  order: _orders[index],
-                                  onUploadClicked: () =>
-                                      _onUploadClicked(_orders[index]),
-                                ),
+                            (context, index) => InkWell(
+                              onTap: () => AppConfig.appRouter.push(
+                                  SalesItemListRouter(
+                                      orderId:
+                                      _orders[index].orderId)),
+                              child: SalesItemWidget(
+                                    order: _orders[index],
+                                    onUploadClicked: () =>
+                                        _onUploadClicked(_orders[index]),
+                                  ),
+                            ),
                             childCount: _orders.length),
                       )
                     : const SliverFillRemaining(
@@ -180,6 +188,9 @@ class _SalesListScreenState extends State<SalesListScreen> {
                 context.showMessage(state.message);
               }
               if (state is SalesOrderSendingFailed) {
+                context.showMessage(state.message);
+              }
+              if (state is NoSalesOrderAvailableForSending) {
                 context.showMessage(state.message);
               }
             },

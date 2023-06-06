@@ -149,7 +149,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Padding(
       padding: const EdgeInsets.only(top: 20),
       child: IconDropDown<Manufacture>(
-        hint: 'Select manufacture',
+        hint: 'Select brand',
         dropDownItems: _manufactures,
         onChanged: _onManufactureSelected,
         icon: 'assets/icons/supplier.png',
@@ -184,19 +184,15 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_userNameController.text.isNotEmpty &&
         _passwordController.text.isNotEmpty) {
       if (_hasManufacturesFlow) {
-        if(_selectedManufacture != null) {
-          context.read<AuthCubit>().loginWithManufacture(
-              _userNameController.text.trim(),
-              _passwordController.text.trim(),
-              _selectedManufacture!.id!);
-        }else{
-          context.showMessage('Please select a manufacture');
-        }
+        context.read<AuthCubit>().loginWithManufacture(
+            _userNameController.text.trim(),
+            _passwordController.text.trim(),
+            _selectedManufacture?.id ?? 0);
       } else {
         context.read<AuthCubit>().login(
             _userNameController.text.trim(), _passwordController.text.trim());
       }
-    }else{
+    } else {
       context.showMessage('Please provide required information.');
     }
   }

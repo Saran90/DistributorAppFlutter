@@ -33,3 +33,13 @@ class SalesOrderSendingFailed extends SalesOrderState {
   @override
   List<Object> get props => [message];
 }
+
+class NoSalesOrderAvailableForSending extends SalesOrderState {
+
+  final String message;
+
+  const NoSalesOrderAvailableForSending({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}

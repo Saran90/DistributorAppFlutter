@@ -64,6 +64,16 @@ class OrderSummaryRepositoryImpl extends OrderSummaryRepository {
   }
 
   @override
+  Future<Either<Failure, List<HiveOrderSummaryModel>?>> getAllUnSendOrders() async {
+    try {
+      var result = await orderSummaryDataSource.getAllUnSendOrders();
+      return Right(result);
+    } catch (exception) {
+      return Left(CacheFailure());
+    }
+  }
+
+  @override
   Future<Either<Failure, HiveOrderSummaryModel?>> getOrder(int orderId) async {
     try {
       var result = await orderSummaryDataSource.getOrder(orderId);

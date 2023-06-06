@@ -21,6 +21,16 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const OrdersListWrapper(),
       );
     },
+    OrdersItemListRouter.name: (routeData) {
+      final args = routeData.argsAs<OrdersItemListRouterArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: OrdersItemListWrapper(
+          key: args.key,
+          orderId: args.orderId,
+        ),
+      );
+    },
     SplashRouter.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -65,20 +75,20 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const SalesListWrapper(),
       );
     },
+    SalesItemListRouter.name: (routeData) {
+      final args = routeData.argsAs<SalesItemListRouterArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: SalesItemListWrapper(
+          key: args.key,
+          orderId: args.orderId,
+        ),
+      );
+    },
     LoginRouter.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const LoginWrapper(),
-      );
-    },
-    OrdersItemListRouter.name: (routeData) {
-      final args = routeData.argsAs<OrdersItemListRouterArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: OrdersItemListWrapper(
-          key: args.key,
-          orderId: args.orderId,
-        ),
       );
     },
   };
@@ -96,6 +106,44 @@ class OrdersListRouter extends PageRouteInfo<void> {
   static const String name = 'OrdersListRouter';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [OrdersItemListWrapper]
+class OrdersItemListRouter extends PageRouteInfo<OrdersItemListRouterArgs> {
+  OrdersItemListRouter({
+    Key? key,
+    required int orderId,
+    List<PageRouteInfo>? children,
+  }) : super(
+          OrdersItemListRouter.name,
+          args: OrdersItemListRouterArgs(
+            key: key,
+            orderId: orderId,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'OrdersItemListRouter';
+
+  static const PageInfo<OrdersItemListRouterArgs> page =
+      PageInfo<OrdersItemListRouterArgs>(name);
+}
+
+class OrdersItemListRouterArgs {
+  const OrdersItemListRouterArgs({
+    this.key,
+    required this.orderId,
+  });
+
+  final Key? key;
+
+  final int orderId;
+
+  @override
+  String toString() {
+    return 'OrdersItemListRouterArgs{key: $key, orderId: $orderId}';
+  }
 }
 
 /// generated route for
@@ -230,6 +278,44 @@ class SalesListRouter extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [SalesItemListWrapper]
+class SalesItemListRouter extends PageRouteInfo<SalesItemListRouterArgs> {
+  SalesItemListRouter({
+    Key? key,
+    required int orderId,
+    List<PageRouteInfo>? children,
+  }) : super(
+          SalesItemListRouter.name,
+          args: SalesItemListRouterArgs(
+            key: key,
+            orderId: orderId,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'SalesItemListRouter';
+
+  static const PageInfo<SalesItemListRouterArgs> page =
+      PageInfo<SalesItemListRouterArgs>(name);
+}
+
+class SalesItemListRouterArgs {
+  const SalesItemListRouterArgs({
+    this.key,
+    required this.orderId,
+  });
+
+  final Key? key;
+
+  final int orderId;
+
+  @override
+  String toString() {
+    return 'SalesItemListRouterArgs{key: $key, orderId: $orderId}';
+  }
+}
+
+/// generated route for
 /// [LoginWrapper]
 class LoginRouter extends PageRouteInfo<void> {
   const LoginRouter({List<PageRouteInfo>? children})
@@ -241,42 +327,4 @@ class LoginRouter extends PageRouteInfo<void> {
   static const String name = 'LoginRouter';
 
   static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [OrdersItemListWrapper]
-class OrdersItemListRouter extends PageRouteInfo<OrdersItemListRouterArgs> {
-  OrdersItemListRouter({
-    Key? key,
-    required int orderId,
-    List<PageRouteInfo>? children,
-  }) : super(
-          OrdersItemListRouter.name,
-          args: OrdersItemListRouterArgs(
-            key: key,
-            orderId: orderId,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'OrdersItemListRouter';
-
-  static const PageInfo<OrdersItemListRouterArgs> page =
-      PageInfo<OrdersItemListRouterArgs>(name);
-}
-
-class OrdersItemListRouterArgs {
-  const OrdersItemListRouterArgs({
-    this.key,
-    required this.orderId,
-  });
-
-  final Key? key;
-
-  final int orderId;
-
-  @override
-  String toString() {
-    return 'OrdersItemListRouterArgs{key: $key, orderId: $orderId}';
-  }
 }

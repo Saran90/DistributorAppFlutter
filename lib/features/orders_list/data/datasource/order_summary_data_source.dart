@@ -8,6 +8,7 @@ abstract class OrderSummaryDataSource{
   Future<int?> deleteAllOrders();
   Future<List<HiveOrderSummaryModel>?> getOrdersByCustomer(int customerId);
   Future<List<HiveOrderSummaryModel>?> getAllOrders();
+  Future<List<HiveOrderSummaryModel>?> getAllUnSendOrders();
   Future<HiveOrderSummaryModel?> getOrder(int orderId);
   Future<void> updateOrderSummaryStatus(int orderId, int status);
 }
@@ -31,6 +32,11 @@ class OrderSummaryDataSourceImpl extends OrderSummaryDataSource{
   @override
   Future<List<HiveOrderSummaryModel>?> getAllOrders() async {
     return hiveDataSource.getAllOrderSummaries();
+  }
+
+  @override
+  Future<List<HiveOrderSummaryModel>?> getAllUnSendOrders() async {
+    return hiveDataSource.getAllUnSendOrderSummaries();
   }
 
   @override

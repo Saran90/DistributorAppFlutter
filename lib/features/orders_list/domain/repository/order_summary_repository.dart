@@ -10,6 +10,7 @@ abstract class OrderSummaryRepository{
   Future<Either<Failure,int?>> deleteAllOrders();
   Future<Either<Failure,List<HiveOrderSummaryModel>?>> getOrdersByCustomer(int customerId);
   Future<Either<Failure,List<HiveOrderSummaryModel>?>> getAllOrders();
+  Future<Either<Failure,List<HiveOrderSummaryModel>?>> getAllUnSendOrders();
   Future<Either<Failure,HiveOrderSummaryModel?>> getOrder(int orderId);
   Future<Either<Failure,void>> updateOrderSummaryStatus(int orderId,int status);
 }

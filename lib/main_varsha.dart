@@ -8,6 +8,7 @@ import 'package:distributor_app_flutter/features/cart/cart_injection_container.d
 import 'package:distributor_app_flutter/features/data_download/data_injection_container.dart';
 import 'package:distributor_app_flutter/features/login/auth_injection_container.dart';
 import 'package:distributor_app_flutter/features/login/presentation/bloc/auth/auth_cubit.dart';
+import 'package:distributor_app_flutter/features/login/presentation/bloc/manufacture/manufacture_cubit.dart';
 import 'package:distributor_app_flutter/features/orders_list/order_injection_container.dart';
 import 'package:distributor_app_flutter/features/product_list/product_injection_container.dart';
 import 'package:distributor_app_flutter/utils/constants.dart';
@@ -101,6 +102,9 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
         providers: [
           BlocProvider<AuthCubit>(
+            create: (context) => AppConfig.s1(),
+          ),
+          BlocProvider<ManufactureCubit>(
             create: (context) => AppConfig.s1(),
           )
         ],

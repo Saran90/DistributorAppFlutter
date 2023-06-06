@@ -81,6 +81,8 @@ abstract class HiveDataSource {
 
   Future<List<HiveOrderSummaryModel>?> getAllOrderSummaries();
 
+  Future<List<HiveOrderSummaryModel>?> getAllUnSendOrderSummaries();
+
   Future<HiveOrderSummaryModel?> getOrderSummaryById(int orderId);
 
   Future<void> updateOrderSummary(HiveOrderSummaryModel hiveOrderSummaryModel);
@@ -375,6 +377,13 @@ class HiveDataSourceImpl extends HiveDataSource {
     List<HiveOrderSummaryModel>? orderSummaries =
         orderSummaryBox?.values.toList();
     return orderSummaries;
+  }
+
+  @override
+  Future<List<HiveOrderSummaryModel>?> getAllUnSendOrderSummaries() async {
+    List<HiveOrderSummaryModel>? orderSummaries =
+        orderSummaryBox?.values.toList();
+    return orderSummaries?.where((element) => element.status != 1).toList();
   }
 
   @override

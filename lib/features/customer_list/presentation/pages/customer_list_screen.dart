@@ -12,6 +12,8 @@ import 'package:app_popup_menu/app_popup_menu.dart';
 
 import '../../../../../utils/colors.dart';
 import '../../../../app_config.dart';
+import '../../../../core/widgets/app_button.dart';
+import '../../../../utils/strings.dart';
 import '../widgets/customer_item_widget.dart';
 
 class CustomerListScreen extends StatefulWidget {
@@ -287,6 +289,9 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
               if (state is SalesOrderSendingFailed) {
                 context.showMessage(state.message);
               }
+              if (state is NoSalesOrderAvailableForSending) {
+                context.showMessage(state.message);
+              }
             },
           )
         ],
@@ -302,7 +307,7 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
           if (value == 0) {
             context.read<SalesOrderCubit>().sendSalesOrder();
           } else {
-            context.read<AuthCubit>().logout();
+            _showSyncDataConfirmationBottomSheet();
           }
         },
         items: [
@@ -320,7 +325,7 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
                 width: 20,
                 height: 20,
               ),
-              label: 'Update Data')
+              label: 'Sync Data')
         ],
       ),
     );
@@ -430,4 +435,103 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
       ),
     );
   }
+
+  void _showSyncDataConfirmationBottomSheet() async {
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => SingleChildScrollView(
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 12),
+          decoration: const BoxDecoration(
+              color: appColor,
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+          padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+              top: 24,
+              left: 24,
+              right: 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10)
+                ),
+                height: 5,
+                width: 80,
+                margin: const EdgeInsets.only(top: 2),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(top: 30),
+                child: Text(
+                  'Sync Data',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500),
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(top: 30),
+                child: Text(
+                  syncDataConfirmationDialogMessage,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 30, bottom: 30),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Center(
+                        child: SizedBox(
+                          height: 40,
+                          child: AppButton(
+                            startColor: appColorGradient1,
+                            endColor: appColorGradient2,
+                            onSubmit: () async {
+                              AppConfig.appRouter.pop();
+                            },
+                            label: 'Cancel',
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10,),
+                    Expanded(
+                      child: Center(
+                        child: SizedBox(
+                          height: 40,
+                          child: AppButton(
+                            startColor: appColorGradient1,
+                            endColor: appColorGradient2,
+                            onSubmit: () async {
+                              context.read<AuthCubit>().logout();
+                              AppConfig.appRouter.pop();
+                            },
+                            label: 'Sync Data',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+    // FocusManager.instance.primaryFocus?.unfocus();
+  }
+
 }

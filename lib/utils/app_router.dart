@@ -10,6 +10,7 @@ import '../features/login/presentation/pages/login_wrapper.dart';
 import '../features/orders_list/presentation/pages/order_item_list_wrapper.dart';
 import '../features/orders_list/presentation/pages/orders_list_wrapper.dart';
 import '../features/product_list/presentation/pages/product_list_wrapper.dart';
+import '../features/sales_list/sales_item_list_wrapper.dart';
 import '../features/sales_list/sales_list_wrapper.dart';
 import '../features/splash/splash_wrapper.dart';
 import 'routes.dart';
@@ -48,6 +49,10 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
             page: OrdersItemListRouter.page,
             path: orderItemListRoute,
+            guards: [AuthGuard()]),
+        AutoRoute(
+            page: SalesItemListRouter.page,
+            path: salesItemListRoute,
             guards: [AuthGuard()]),
       ];
 }

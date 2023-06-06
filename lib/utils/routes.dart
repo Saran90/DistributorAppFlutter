@@ -7,3 +7,4 @@ const String cartRoute = '/cart';
 const String salesListRoute = '/sales';
 const String orderListRoute = '/orders';
 const String orderItemListRoute = '/orderItems';
+const String salesItemListRoute = '/salesItems';

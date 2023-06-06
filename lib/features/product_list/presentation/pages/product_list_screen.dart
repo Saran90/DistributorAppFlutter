@@ -177,7 +177,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                                     controller: _searchController,
                                     keyboardType: TextInputType.text,
                                     decoration: const InputDecoration(
-                                      hintText: 'Search Customer',
+                                      hintText: 'Search Product',
                                       hintStyle: TextStyle(
                                           color: Colors.white54,
                                           fontSize: 14,

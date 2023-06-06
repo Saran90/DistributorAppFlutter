@@ -26,6 +26,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../../utils/strings.dart';
+import '../../../domain/usecase/get_all_unsend_order_summaries_use_case.dart';
 
 part 'sales_order_state.dart';
 
@@ -38,10 +39,12 @@ class SalesOrderCubit extends Cubit<SalesOrderState> {
     required this.updateOrderDetailsStatusUseCase,
     required this.sendSalesOrderUpdateUseCase,
     required this.getOrderSummaryByIdUseCase,
+    required this.getAllUnSendOrderSummariesUseCase,
   }) : super(SalesOrderInitial());
 
   final SendSalesOrderUseCase sendSalesOrderUseCase;
   final GetAllOrderSummariesUseCase getAllOrderSummariesUseCase;
+  final GetAllUnSendOrderSummariesUseCase getAllUnSendOrderSummariesUseCase;
   final GetOrderDetailsForOrderUseCase getOrderDetailsForOrderUseCase;
   final UpdateOrderSummaryStatusUseCase updateOrderSummaryStatusUseCase;
   final UpdateOrderDetailsStatusUseCase updateOrderDetailsStatusUseCase;
@@ -51,7 +54,8 @@ class SalesOrderCubit extends Cubit<SalesOrderState> {
   Future<void> sendSalesOrder() async {
     emit(SalesOrderLoading());
     List<SalesorderList> salesOrderList = [];
-    var orderSummaries = await getAllOrderSummariesUseCase.call(NoParams());
+    var orderSummaries =
+        await getAllUnSendOrderSummariesUseCase.call(NoParams());
     List<HiveOrderSummaryModel>? orderSummaryModels;
     orderSummaries.fold(
         (l) => orderSummaryModels = [], (r) => orderSummaryModels = r ?? []);
@@ -84,38 +88,47 @@ class SalesOrderCubit extends Cubit<SalesOrderState> {
       }
     }
 
-    SendSalesOrderRequest sendSalesOrderRequest =
-        SendSalesOrderRequest(salesorderList: salesOrderList);
+    if (salesOrderList.isNotEmpty) {
+      SendSalesOrderRequest sendSalesOrderRequest =
+          SendSalesOrderRequest(salesorderList: salesOrderList);
 
-    var result = await sendSalesOrderUseCase
-        .call(SendSalesOrderParams(request: sendSalesOrderRequest));
-    result.fold((l) {
-      if (l is ServerFailure) {
-        emit(const SalesOrderSendingFailed(message: serverFailureMessage));
-      } else if (l is NetworkFailure) {
-        emit(const SalesOrderSendingFailed(message: networkFailureMessage));
-      } else {
-        emit(const SalesOrderSendingFailed(
-            message: 'Sales order sending failed'));
-      }
-    }, (r) async {
-      if (r != null) {
-        if ((r.status ?? 0) == 1) {
-          debugPrint('OrderSummaryLength: ${orderSummaryModels!.length}');
-          for (var orderSummary in orderSummaryModels!) {
-            await updateOrderSummaryStatus(orderSummary.orderId, 1);
-          }
-          emit(SalesOrderSendSuccessfully(
-              message: r.statusMessage ?? 'Order Send successfully'));
+      var result = await sendSalesOrderUseCase
+          .call(SendSalesOrderParams(request: sendSalesOrderRequest));
+      result.fold((l) {
+        if (l is ServerFailure) {
+          emit(const SalesOrderSendingFailed(message: serverFailureMessage));
+        } else if (l is NetworkFailure) {
+          emit(const SalesOrderSendingFailed(message: networkFailureMessage));
         } else {
-          emit(SalesOrderSendingFailed(
-              message: r.statusMessage ?? 'Sales order sending failed'));
+          emit(const SalesOrderSendingFailed(
+              message: 'Sales order sending failed'));
         }
-      } else {
-        emit(const SalesOrderSendingFailed(
-            message: 'Sales order sending failed'));
-      }
-    });
+      }, (r) async {
+        if (r != null) {
+          if ((r.status ?? 0) == 1) {
+            debugPrint('OrderSummaryLength: ${orderSummaryModels!.length}');
+            for (var orderSummary in orderSummaryModels!) {
+              await updateOrderSummaryStatus(orderSummary.orderId, 1);
+            }
+            emit(SalesOrderSendSuccessfully(
+                message: r.statusMessage ?? 'Order Send successfully'));
+          } else {
+            for (var orderSummary in orderSummaryModels!) {
+              await updateOrderSummaryStatus(
+                  orderSummary.orderId, r.status?.toInt() ?? 0);
+            }
+            emit(SalesOrderSendingFailed(
+                message: r.statusMessage ?? 'Sales order sending failed'));
+          }
+        } else {
+          emit(const SalesOrderSendingFailed(
+              message: 'Sales order sending failed'));
+        }
+      });
+    } else {
+      emit(const NoSalesOrderAvailableForSending(
+          message: 'No pending sales order'));
+    }
   }
 
   Future<void> sendSalesOrderUpdate(int orderId) async {
