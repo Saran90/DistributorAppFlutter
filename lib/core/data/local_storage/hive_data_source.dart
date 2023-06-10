@@ -385,7 +385,7 @@ class HiveDataSourceImpl extends HiveDataSource {
   Future<List<HiveOrderSummaryModel>?> getAllFailedOrderSummaries() async {
     List<HiveOrderSummaryModel>? orderSummaries = orderSummaryBox?.values
         .toList()
-        .where((element) => element.status != 1)
+        .where((element) => (element.status != 1) && (element.status != -2))
         .toList();
     return orderSummaries;
   }
