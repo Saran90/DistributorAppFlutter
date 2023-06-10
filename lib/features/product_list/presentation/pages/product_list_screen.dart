@@ -13,6 +13,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../app_config.dart';
 import '../../../../utils/colors.dart';
+import '../../../../utils/strings.dart';
 import '../../../cart/presentation/pages/models/cart.dart';
 
 class ProductListScreen extends StatefulWidget {
@@ -569,27 +570,111 @@ class _ProductListScreenState extends State<ProductListScreen> {
 
   Future<bool> _onBackPressed() async {
     if (_cartProducts.isNotEmpty) {
-      await showDialog(
+      await showModalBottomSheet(
         context: context,
-        builder: (ctx) => AlertDialog(
-          title: const Text('Alert'),
-          content: const Text('Do you really want to clear the cart?'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => AppConfig.appRouter.pop(),
-              child: const Text('No'),
+        isScrollControlled: true,
+        isDismissible: false,
+        backgroundColor: Colors.transparent,
+        builder: (ctx) =>
+            SingleChildScrollView(
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 12),
+                decoration: const BoxDecoration(
+                    gradient: LinearGradient(colors: [
+                      appColorGradient1,
+                      appColorGradient2
+                    ]),
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20))),
+                padding: EdgeInsets.only(
+                    bottom: MediaQuery
+                        .of(context)
+                        .viewInsets
+                        .bottom,
+                    top: 24,
+                    left: 24,
+                    right: 24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10)),
+                      height: 5,
+                      width: 80,
+                      margin: const EdgeInsets.only(top: 2),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 30),
+                      child: Text(
+                        'Cart',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w800),
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 30),
+                      child: Text(
+                        clearCartConfirmationMessage,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 30, bottom: 30),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Center(
+                              child: SizedBox(
+                                height: 40,
+                                child: AppButton(
+                                  startColor: appColorGradient1,
+                                  endColor: appColorGradient2,
+                                  onSubmit: () async {
+                                    AppConfig.appRouter.pop();
+                                  },
+                                  label: 'No',
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          Expanded(
+                            child: Center(
+                              child: SizedBox(
+                                height: 40,
+                                child: AppButton(
+                                  startColor: appColorGradient1,
+                                  endColor: appColorGradient2,
+                                  onSubmit: () async {
+                                    await context
+                                        .read<CartCubit>()
+                                        .deleteCart(widget.hiveCustomerModel.id!);
+                                    AppConfig.appRouter.pop();
+                                  },
+                                  label: 'Yes',
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ),
-            TextButton(
-              onPressed: () async {
-                await context
-                    .read<CartCubit>()
-                    .deleteCart(widget.hiveCustomerModel.id!);
-                AppConfig.appRouter.pop();
-              },
-              child: const Text('Yes'),
-            ),
-          ],
-        ),
       );
       return true;
     } else {

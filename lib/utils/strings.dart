@@ -11,3 +11,6 @@ const String syncDataConfirmationDialogMessage =
 const String duplicateOrderUpdateMessage =
     'This order is a duplicate one. Do you want this order to be forcefully added as a new sale?';
 const String orderDeletionMessage = 'Do you really want to delete this order?';
+const String logoutConfirmationMessage = 'Do you really want to logout?';
+const String clearCartConfirmationMessage = 'Do you really want to clear this order?';
+const String deleteItemConfirmationMessage = 'Do you really want to delete this item from cart?';

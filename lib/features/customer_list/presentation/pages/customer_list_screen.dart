@@ -426,7 +426,7 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
             AppConfig.appRouter.push(const FailedOrdersListRouter());
             break;
           case 4:
-            _logoutClicked();
+            _showLogoutConfirmationBottomSheet();
             break;
         }
         _closeKeyboard();
@@ -436,29 +436,6 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
         color: Colors.white,
         height: 24,
         width: 24,
-      ),
-    );
-  }
-
-  Future<void> _logoutClicked() async {
-    await showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Alert'),
-        content: const Text('Do you really want to logout?'),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => AppConfig.appRouter.pop(),
-            child: const Text('No'),
-          ),
-          TextButton(
-            onPressed: () async {
-              context.read<AuthCubit>().logout();
-              AppConfig.appRouter.pop();
-            },
-            child: const Text('Yes'),
-          ),
-        ],
       ),
     );
   }
@@ -550,6 +527,107 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
                               AppConfig.appRouter.pop();
                             },
                             label: 'Sync Data',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showLogoutConfirmationBottomSheet() async {
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => SingleChildScrollView(
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 12),
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(colors: [
+                appColorGradient1,
+                appColorGradient2
+              ]),
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+          padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+              top: 24,
+              left: 24,
+              right: 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10)),
+                height: 5,
+                width: 80,
+                margin: const EdgeInsets.only(top: 2),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(top: 30),
+                child: Text(
+                  'Logout',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w800),
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(top: 30),
+                child: Text(
+                  logoutConfirmationMessage,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 30, bottom: 30),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Center(
+                        child: SizedBox(
+                          height: 40,
+                          child: AppButton(
+                            startColor: appColorGradient1,
+                            endColor: appColorGradient2,
+                            onSubmit: () async {
+                              AppConfig.appRouter.pop();
+                            },
+                            label: 'Cancel',
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    Expanded(
+                      child: Center(
+                        child: SizedBox(
+                          height: 40,
+                          child: AppButton(
+                            startColor: appColorGradient1,
+                            endColor: appColorGradient2,
+                            onSubmit: () async {
+                              context.read<AuthCubit>().logout();
+                              AppConfig.appRouter.pop();
+                            },
+                            label: 'Logout',
                           ),
                         ),
                       ),

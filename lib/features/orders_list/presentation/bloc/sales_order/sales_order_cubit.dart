@@ -133,7 +133,7 @@ class SalesOrderCubit extends Cubit<SalesOrderState> {
           uploadedOrders: ordersUploaded));
     } else {
       emit(const NoSalesOrderAvailableForSending(
-          message: 'No pending sales order'));
+          message: 'No order available for upload!'));
     }
   }
 
