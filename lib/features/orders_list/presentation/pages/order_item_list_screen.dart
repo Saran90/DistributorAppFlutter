@@ -83,7 +83,7 @@ class _OrdersItemListScreenState extends State<OrdersItemListScreen> {
                               flex: 2,
                               child: Center(
                                 child: Text(
-                                  'Sl.No',
+                                  'SNo',
                                   style: _tableHeaderStyle,
                                 ),
                               )),

@@ -85,7 +85,7 @@ class _FailedOrdersItemListScreenState
                               flex: 2,
                               child: Center(
                                 child: Text(
-                                  'Sl.No',
+                                  'SNo',
                                   style: _tableHeaderStyle,
                                 ),
                               )),

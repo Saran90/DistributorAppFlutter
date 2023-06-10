@@ -66,7 +66,7 @@ class _SalesItemListScreenState extends State<SalesItemListScreen> {
                               flex: 2,
                               child: Center(
                                 child: Text(
-                                  'Sl.No',
+                                  'SNo',
                                   style: _tableHeaderStyle,
                                 ),
                               )),
