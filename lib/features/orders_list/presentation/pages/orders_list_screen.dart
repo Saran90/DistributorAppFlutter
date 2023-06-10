@@ -83,7 +83,7 @@ class _OrdersListScreenState extends State<OrdersListScreen> {
                                 child: SizedBox(
                                   child: Center(
                                     child: Text(
-                                      'Sl.No',
+                                      'SNo',
                                       style: _tableHeaderStyle,
                                     ),
                                   ),

@@ -82,7 +82,7 @@ class _FailedOrdersListScreenState extends State<FailedOrdersListScreen> {
                                 child: SizedBox(
                                   child: Center(
                                     child: Text(
-                                      'Sl.No',
+                                      'SNo',
                                       style: _tableHeaderStyle,
                                     ),
                                   ),
