@@ -49,12 +49,13 @@ class _CartScreenState extends State<CartScreen> {
       body: Stack(
         children: [
           Padding(
-            padding: const EdgeInsets.only(bottom: 140),
+            padding: const EdgeInsets.only(bottom: 170),
             child: CustomScrollView(
               slivers: [
                 SliverAppBar(
                   backgroundColor: appColor,
                   pinned: true,
+                  elevation: 0,
                   flexibleSpace: Container(
                     decoration: const BoxDecoration(
                       gradient: LinearGradient(
@@ -73,14 +74,16 @@ class _CartScreenState extends State<CartScreen> {
                   ),
                 ),
                 SliverAppBar(
-                  toolbarHeight: 60,
+                  toolbarHeight: 70,
                   backgroundColor: appColor,
                   automaticallyImplyLeading: false,
-                  pinned: true,
-                  title: Container(
+                  pinned: false,
+                  flexibleSpace: Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 10),
-                    color: appColor,
+                        horizontal: 20, vertical: 20),
+                    decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                            colors: [appColorGradient1, appColorGradient2])),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -191,7 +194,15 @@ class _CartScreenState extends State<CartScreen> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              height: 140,
+              height: 170,
+              decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                      colors: [appColorGradient1, appColorGradient2]),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10),
+                  )),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
               child: Column(
                 children: [_cartSummaryWidget(), _actionButtons()],
               ),
@@ -352,7 +363,10 @@ class _CartScreenState extends State<CartScreen> {
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 12),
           decoration: const BoxDecoration(
-              color: appColor,
+              gradient: LinearGradient(colors: [
+                appColorGradient1,
+                appColorGradient2
+              ]),
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20), topRight: Radius.circular(20))),
           padding: EdgeInsets.only(
@@ -421,13 +435,11 @@ class _CartScreenState extends State<CartScreen> {
                     endColor: appColorGradient2,
                     onSubmit: () async {
                       if (quantityController.text.isNotEmpty) {
-                        double quantity =
-                            double.parse(quantityController.text);
+                        double quantity = double.parse(quantityController.text);
                         await AppConfig.appRouter.pop();
                         onQuantitySelected(quantity, cart);
-                      }else{
-                        double quantity =
-                        double.parse(quantityController.text);
+                      } else {
+                        double quantity = double.parse(quantityController.text);
                         await AppConfig.appRouter.pop();
                         onQuantitySelected(quantity, cart);
                       }
@@ -462,7 +474,6 @@ class _CartScreenState extends State<CartScreen> {
   Widget _cartSummaryWidget() {
     return Container(
       height: 90,
-      color: Colors.white,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Column(
         children: [
@@ -475,8 +486,7 @@ class _CartScreenState extends State<CartScreen> {
                       child: Text(
                         'Total number of items:',
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
+                            fontWeight: FontWeight.bold, color: Colors.white),
                       ))),
               Expanded(
                   flex: 4,
@@ -485,7 +495,9 @@ class _CartScreenState extends State<CartScreen> {
                       child: Text(
                         '${_cartProducts.length}',
                         style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 22),
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 22),
                       ))),
             ],
           ),
@@ -501,8 +513,7 @@ class _CartScreenState extends State<CartScreen> {
                       child: Text(
                         'Gross Amount:',
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
+                            fontWeight: FontWeight.bold, color: Colors.white),
                       ))),
               Expanded(
                   flex: 4,
@@ -511,7 +522,9 @@ class _CartScreenState extends State<CartScreen> {
                       child: Text(
                         '${_cartAmount()}',
                         style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 22),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22,
+                            color: Colors.white),
                       ))),
             ],
           )
@@ -522,8 +535,8 @@ class _CartScreenState extends State<CartScreen> {
 
   Widget _actionButtons() {
     return Container(
-      height: 50,
-      padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+      height: 60,
+      padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10, top: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
@@ -535,7 +548,7 @@ class _CartScreenState extends State<CartScreen> {
             onSubmit: _onClearClicked,
           )),
           const SizedBox(
-            width: 10,
+            width: 20,
           ),
           Expanded(
               child: AppButton(
@@ -585,7 +598,7 @@ class _CartScreenState extends State<CartScreen> {
   _onSaveClicked() {
     context.read<OrderSummaryCubit>().addOrderSummary(HiveOrderSummaryModel(
         orderId: _generateOrderId(),
-        status: 0,
+        status: -2,
         userId: _userId!,
         customerId: widget.hiveCustomerModel.id!,
         customerName: widget.hiveCustomerModel.name!,

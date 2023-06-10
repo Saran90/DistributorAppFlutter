@@ -6,6 +6,8 @@ import '../core/data/local_storage/models/hive_customer_model.dart';
 import '../features/cart/presentation/pages/cart_wrapper.dart';
 import '../features/customer_list/presentation/pages/customer_list_wrapper.dart';
 import '../features/data_download/presentation/pages/data_download_wrapper.dart';
+import '../features/failed_orders/presentation/pages/failed_order_item_list_wrapper.dart';
+import '../features/failed_orders/presentation/pages/failed_orders_list_wrapper.dart';
 import '../features/login/presentation/pages/login_wrapper.dart';
 import '../features/orders_list/presentation/pages/order_item_list_wrapper.dart';
 import '../features/orders_list/presentation/pages/orders_list_wrapper.dart';
@@ -53,6 +55,14 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
             page: SalesItemListRouter.page,
             path: salesItemListRoute,
+            guards: [AuthGuard()]),
+        AutoRoute(
+            page: FailedOrdersListRouter.page,
+            path: failedOrdersListRoute,
+            guards: [AuthGuard()]),
+        AutoRoute(
+            page: FailedOrdersItemListRouter.page,
+            path: failedOrdersItemListRoute,
             guards: [AuthGuard()]),
       ];
 }

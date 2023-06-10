@@ -14,8 +14,21 @@ class SalesOrderLoading extends SalesOrderState {
   List<Object> get props => [];
 }
 
-class SalesOrderSendSuccessfully extends SalesOrderState {
+class SalesOrdersLoading extends SalesOrderState {
+  @override
+  List<Object> get props => [];
+}
 
+class SalesOrdersUploadProgress extends SalesOrderState {
+  SalesOrdersUploadProgress({required this.progress});
+
+  final double progress;
+
+  @override
+  List<Object> get props => [progress];
+}
+
+class SalesOrderSendSuccessfully extends SalesOrderState {
   String message;
 
   SalesOrderSendSuccessfully({required this.message});
@@ -25,7 +38,6 @@ class SalesOrderSendSuccessfully extends SalesOrderState {
 }
 
 class SalesOrderSendingFailed extends SalesOrderState {
-
   final String message;
 
   const SalesOrderSendingFailed({required this.message});
@@ -34,8 +46,30 @@ class SalesOrderSendingFailed extends SalesOrderState {
   List<Object> get props => [message];
 }
 
-class NoSalesOrderAvailableForSending extends SalesOrderState {
+class SalesOrdersSendSuccessfully extends SalesOrderState {
+  String message;
+  List<int> uploadedOrders;
+  List<int> failedOrders;
 
+  SalesOrdersSendSuccessfully(
+      {required this.message,
+      required this.uploadedOrders,
+      required this.failedOrders});
+
+  @override
+  List<Object> get props => [message, uploadedOrders, failedOrders];
+}
+
+class SalesOrdersSendingFailed extends SalesOrderState {
+  final String message;
+
+  const SalesOrdersSendingFailed({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}
+
+class NoSalesOrderAvailableForSending extends SalesOrderState {
   final String message;
 
   const NoSalesOrderAvailableForSending({required this.message});

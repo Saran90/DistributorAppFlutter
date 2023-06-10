@@ -35,7 +35,7 @@ class _SalesListScreenState extends State<SalesListScreen> {
       body: Stack(
         children: [
           Padding(
-            padding: const EdgeInsets.only(bottom: 140),
+            padding: const EdgeInsets.only(bottom: 10),
             child: CustomScrollView(
               slivers: [
                 SliverAppBar(
@@ -136,8 +136,6 @@ class _SalesListScreenState extends State<SalesListScreen> {
                                       _orders[index].orderId)),
                               child: SalesItemWidget(
                                     order: _orders[index],
-                                    onUploadClicked: () =>
-                                        _onUploadClicked(_orders[index]),
                                   ),
                             ),
                             childCount: _orders.length),
@@ -174,33 +172,8 @@ class _SalesListScreenState extends State<SalesListScreen> {
               }
             },
           ),
-          BlocConsumer<SalesOrderCubit, SalesOrderState>(
-            builder: (context, state) {
-              if (state is SalesOrderLoading) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-              return Container();
-            },
-            listener: (context, state) {
-              if (state is SalesOrderSendSuccessfully) {
-                context.showMessage(state.message);
-              }
-              if (state is SalesOrderSendingFailed) {
-                context.showMessage(state.message);
-              }
-              if (state is NoSalesOrderAvailableForSending) {
-                context.showMessage(state.message);
-              }
-            },
-          )
         ],
       ),
     );
-  }
-
-  void _onUploadClicked(Order order) {
-    context.read<SalesOrderCubit>().sendSalesOrderUpdate(order.orderId);
   }
 }

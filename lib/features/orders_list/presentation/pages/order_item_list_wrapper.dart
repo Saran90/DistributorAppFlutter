@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../app_config.dart';
+import '../bloc/order_summary/order_summary_cubit.dart';
 
 @RoutePage(name: 'OrdersItemListRouter')
 class OrdersItemListWrapper extends StatelessWidget {
@@ -17,7 +18,11 @@ class OrdersItemListWrapper extends StatelessWidget {
     return MultiBlocProvider(providers: [
       BlocProvider<OrderDetailsCubit>(
         create: (context) => AppConfig.s1()..getOrderDetailsForOrder(orderId),
+      ),
+      BlocProvider<OrderSummaryCubit>(
+        create: (context) =>
+            AppConfig.s1(),
       )
-    ], child: const OrdersItemListScreen());
+    ], child: OrdersItemListScreen(orderId: orderId,));
   }
 }

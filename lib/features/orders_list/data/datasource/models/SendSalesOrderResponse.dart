@@ -6,7 +6,7 @@ SendSalesOrderResponse sendSalesOrderResponseFromJson(String str) => SendSalesOr
 String sendSalesOrderResponseToJson(SendSalesOrderResponse data) => json.encode(data.toJson());
 class SendSalesOrderResponse {
   SendSalesOrderResponse({
-      num? status, 
+      int? status, 
       String? statusMessage,}){
     _status = status;
     _statusMessage = statusMessage;
@@ -16,14 +16,14 @@ class SendSalesOrderResponse {
     _status = json['Status'];
     _statusMessage = json['StatusMessage'];
   }
-  num? _status;
+  int? _status;
   String? _statusMessage;
-SendSalesOrderResponse copyWith({  num? status,
+SendSalesOrderResponse copyWith({  int? status,
   String? statusMessage,
 }) => SendSalesOrderResponse(  status: status ?? _status,
   statusMessage: statusMessage ?? _statusMessage,
 );
-  num? get status => _status;
+  int? get status => _status;
   String? get statusMessage => _statusMessage;
 
   Map<String, dynamic> toJson() {

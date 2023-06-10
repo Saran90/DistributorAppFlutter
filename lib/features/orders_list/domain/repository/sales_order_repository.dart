@@ -8,4 +8,5 @@ import '../../../../core/data/error/failures.dart';
 abstract class SalesOrderRepository{
   Future<Either<Failure, SendSalesOrderResponse?>> sendSalesOrder(SendSalesOrderRequest request);
   Future<Either<Failure, SendSalesOrderResponse?>> sendSalesOrderUpdate(SendSalesOrderUpdateRequest request);
+  Future<Either<Failure, SendSalesOrderResponse?>> sendSalesOrderUpdateForcefully(SendSalesOrderUpdateRequest request);
 }

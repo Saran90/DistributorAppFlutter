@@ -13,4 +13,5 @@ class EndPoint {
   String sendSalesOrder = 'SalesOrderUpdateList';
   String sendSalesOrderUpdate = 'SalesOrderUpdate';
   String manufactureList = 'GetManufactureList';
+  String salesForceFullyUpdate = 'SalesOrderForcefullySaving';
 }

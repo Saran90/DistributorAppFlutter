@@ -12,6 +12,7 @@ import '../../../../app_config.dart';
 import '../../../../core/data/local_storage/models/hive_order_summary_model.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../utils/colors.dart';
+import '../widgets/sales_upload_widget.dart';
 
 class OrdersListScreen extends StatefulWidget {
   const OrdersListScreen({Key? key}) : super(key: key);
@@ -28,7 +29,7 @@ class _OrdersListScreenState extends State<OrdersListScreen> {
 
   @override
   void initState() {
-    context.read<OrderSummaryCubit>().getAllOrderSummaries(0);
+    _getAllPendingOrders();
     super.initState();
   }
 
@@ -38,7 +39,8 @@ class _OrdersListScreenState extends State<OrdersListScreen> {
       body: Stack(
         children: [
           Padding(
-            padding: EdgeInsets.only(bottom: _pendingOrders.isNotEmpty?140:0),
+            padding:
+                EdgeInsets.only(bottom: _pendingOrders.isNotEmpty ? 160 : 0),
             child: CustomScrollView(
               slivers: [
                 SliverAppBar(
@@ -116,6 +118,7 @@ class _OrdersListScreenState extends State<OrdersListScreen> {
                                     ),
                                   ),
                                 )),
+                            const Expanded(flex: 2, child: SizedBox()),
                           ],
                         ),
                       ),
@@ -126,12 +129,17 @@ class _OrdersListScreenState extends State<OrdersListScreen> {
                     ? SliverList(
                         delegate: SliverChildBuilderDelegate(
                             (context, index) => InkWell(
-                                  onTap: () => AppConfig.appRouter.push(
-                                      OrdersItemListRouter(
-                                          orderId:
-                                              _pendingOrders[index].orderId)),
+                                  onTap: () async {
+                                    await AppConfig.appRouter.push(
+                                        OrdersItemListRouter(
+                                            orderId:
+                                                _pendingOrders[index].orderId));
+                                    _getAllPendingOrders();
+                                  },
                                   child: OrderItemWidget(
                                     pendingOrder: _pendingOrders[index],
+                                    onUploadClicked: (id) =>
+                                        _onOrderUploadClicked(id),
                                   ),
                                 ),
                             childCount: _pendingOrders.length),
@@ -150,8 +158,15 @@ class _OrdersListScreenState extends State<OrdersListScreen> {
             visible: _pendingOrders.isNotEmpty,
             child: Align(
               alignment: Alignment.bottomCenter,
-              child: SizedBox(
-                height: 140,
+              child: Container(
+                height: 160,
+                decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                        colors: [appColorGradient1, appColorGradient2]),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10),
+                    )),
                 child: Column(
                   children: [_cartSummaryWidget(), _actionButtons()],
                 ),
@@ -190,15 +205,16 @@ class _OrdersListScreenState extends State<OrdersListScreen> {
               return Container();
             },
             listener: (context, state) {
+              if (state is NoSalesOrderAvailableForSending) {
+                context.showMessage(state.message);
+              }
               if (state is SalesOrderSendSuccessfully) {
                 context.showMessage(state.message);
-                AppConfig.appRouter.pop();
+                _getAllPendingOrders();
               }
               if (state is SalesOrderSendingFailed) {
                 context.showMessage(state.message);
-              }
-              if (state is NoSalesOrderAvailableForSending) {
-                context.showMessage(state.message);
+                _getAllPendingOrders();
               }
             },
           )
@@ -209,9 +225,8 @@ class _OrdersListScreenState extends State<OrdersListScreen> {
 
   Widget _cartSummaryWidget() {
     return Container(
-      height: 90,
-      color: Colors.white,
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      height: 110,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: Column(
         children: [
           Row(
@@ -223,8 +238,7 @@ class _OrdersListScreenState extends State<OrdersListScreen> {
                       child: Text(
                         'Total number of items:',
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
+                            fontWeight: FontWeight.bold, color: Colors.white),
                       ))),
               Expanded(
                   flex: 4,
@@ -233,7 +247,9 @@ class _OrdersListScreenState extends State<OrdersListScreen> {
                       child: Text(
                         '${_pendingOrders.length}',
                         style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 22),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22,
+                            color: Colors.white),
                       ))),
             ],
           ),
@@ -249,8 +265,7 @@ class _OrdersListScreenState extends State<OrdersListScreen> {
                       child: Text(
                         'Gross Amount:',
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
+                            fontWeight: FontWeight.bold, color: Colors.white),
                       ))),
               Expanded(
                   flex: 4,
@@ -259,7 +274,9 @@ class _OrdersListScreenState extends State<OrdersListScreen> {
                       child: Text(
                         '${_orderAmount()}',
                         style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 22),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22,
+                            color: Colors.white),
                       ))),
             ],
           )
@@ -271,7 +288,7 @@ class _OrdersListScreenState extends State<OrdersListScreen> {
   Widget _actionButtons() {
     return Container(
       height: 50,
-      padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+      padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
       child: Center(
         child: AppButton(
           startColor: appColorGradient1,
@@ -291,7 +308,32 @@ class _OrdersListScreenState extends State<OrdersListScreen> {
     return totalAmount.to2DigitFraction();
   }
 
-  _onSendClicked() {
-    context.read<SalesOrderCubit>().sendSalesOrder();
+  _onSendClicked() async {
+    await _showSalesUploadingBottomSheet();
+    _getAllPendingOrders();
+  }
+
+  void _getAllPendingOrders() {
+    context.read<OrderSummaryCubit>().getAllOrderSummaries(-2);
+  }
+
+  void _onOrderUploadClicked(int id) {
+    context.read<SalesOrderCubit>().sendSalesOrderUpdate(id);
+  }
+
+  Future<void> _showSalesUploadingBottomSheet() async {
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      isDismissible: false,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => StatefulBuilder(
+        builder: (context, setState) => BlocProvider<SalesOrderCubit>(
+          create: (context) => AppConfig.s1(),
+          child: const SalesUploadWidget(),
+        ),
+      ),
+    );
+    // FocusManager.instance.primaryFocus?.unfocus();
   }
 }

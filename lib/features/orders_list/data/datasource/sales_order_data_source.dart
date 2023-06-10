@@ -14,6 +14,9 @@ abstract class SalesOrderDataSource {
 
   Future<SendSalesOrderResponse?> sendSalesOrderUpdate(
       SendSalesOrderUpdateRequest request);
+
+  Future<SendSalesOrderResponse?> sendSalesOrderUpdateForcefully(
+      SendSalesOrderUpdateRequest request);
 }
 
 class SalesOrderDataSourceImpl extends SalesOrderDataSource {
@@ -48,6 +51,26 @@ class SalesOrderDataSourceImpl extends SalesOrderDataSource {
     try {
       var response = await dio.post(
           AppConfig.instance.endPoint!.sendSalesOrderUpdate,
+          data: request.toJson(),
+          options: Options(headers: {
+            'Authorization':
+                'Bearer ${sharedPreferenceDataSource.getString(spAccessToken)}'
+          }));
+      SendSalesOrderResponse salesOrderResponse =
+          SendSalesOrderResponse.fromJson(response.data);
+      return salesOrderResponse;
+    } catch (exception) {
+      debugPrint('Customers Call: $exception');
+    }
+    return null;
+  }
+
+  @override
+  Future<SendSalesOrderResponse?> sendSalesOrderUpdateForcefully(
+      SendSalesOrderUpdateRequest request) async {
+    try {
+      var response = await dio.post(
+          AppConfig.instance.endPoint!.salesForceFullyUpdate,
           data: request.toJson(),
           options: Options(headers: {
             'Authorization':

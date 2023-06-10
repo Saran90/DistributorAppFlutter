@@ -50,4 +50,23 @@ class SalesOrderRepositoryImpl extends SalesOrderRepository {
       return Left(ServerFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, SendSalesOrderResponse?>> sendSalesOrderUpdateForcefully(
+      SendSalesOrderUpdateRequest request) async {
+    try {
+      if (await NetworkChecker.isConnected()) {
+        var result = await salesOrderDataSource.sendSalesOrderUpdateForcefully(request);
+        if (result != null) {
+          return Right(result);
+        } else {
+          return Left(ServerFailure());
+        }
+      } else {
+        return Left(NetworkFailure());
+      }
+    } catch (exception) {
+      return Left(ServerFailure());
+    }
+  }
 }

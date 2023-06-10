@@ -16,6 +16,7 @@ import 'package:distributor_app_flutter/features/orders_list/domain/usecase/get_
 import 'package:distributor_app_flutter/features/orders_list/domain/usecase/get_order_details_for_order_use_case.dart';
 import 'package:distributor_app_flutter/features/orders_list/domain/usecase/get_order_summary_by_customer_use_case.dart';
 import 'package:distributor_app_flutter/features/orders_list/domain/usecase/get_order_summary_by_id_use_case.dart';
+import 'package:distributor_app_flutter/features/orders_list/domain/usecase/send_sales_order_update_forcefully_use_case.dart';
 import 'package:distributor_app_flutter/features/orders_list/domain/usecase/send_sales_order_update_use_case.dart';
 import 'package:distributor_app_flutter/features/orders_list/domain/usecase/send_sales_order_use_case.dart';
 import 'package:distributor_app_flutter/features/orders_list/domain/usecase/update_order_details_status_use_case.dart';
@@ -40,6 +41,7 @@ class SalesOrderCubit extends Cubit<SalesOrderState> {
     required this.sendSalesOrderUpdateUseCase,
     required this.getOrderSummaryByIdUseCase,
     required this.getAllUnSendOrderSummariesUseCase,
+    required this.sendSalesOrderUpdateForcefullyUseCase,
   }) : super(SalesOrderInitial());
 
   final SendSalesOrderUseCase sendSalesOrderUseCase;
@@ -49,33 +51,39 @@ class SalesOrderCubit extends Cubit<SalesOrderState> {
   final UpdateOrderSummaryStatusUseCase updateOrderSummaryStatusUseCase;
   final UpdateOrderDetailsStatusUseCase updateOrderDetailsStatusUseCase;
   final SendSalesOrderUpdateUseCase sendSalesOrderUpdateUseCase;
+  final SendSalesOrderUpdateForcefullyUseCase
+      sendSalesOrderUpdateForcefullyUseCase;
   final GetOrderSummaryByIdUseCase getOrderSummaryByIdUseCase;
 
   Future<void> sendSalesOrder() async {
-    emit(SalesOrderLoading());
-    List<SalesorderList> salesOrderList = [];
+    emit(SalesOrdersLoading());
     var orderSummaries =
         await getAllUnSendOrderSummariesUseCase.call(NoParams());
-    List<HiveOrderSummaryModel>? orderSummaryModels;
+    List<HiveOrderSummaryModel> hiveOrderSummaryModels = [];
     orderSummaries.fold(
-        (l) => orderSummaryModels = [], (r) => orderSummaryModels = r ?? []);
-    if (orderSummaryModels != null) {
-      for (int i = 0; i < orderSummaryModels!.length; i++) {
-        OrderSummary orderSummary = OrderSummary(
-            orderDate: orderSummaryModels![i].orderDate.toApiFormat(),
-            custId: orderSummaryModels![i].customerId,
-            orderAmt: orderSummaryModels![i].orderAmount.toString(),
-            salesmanId: orderSummaryModels![i].userId);
-        List<OrderDetails> orderDetailsList = [];
-        var orderDetails = await getOrderDetailsForOrderUseCase.call(
-            GetOrderDetailsForOrderParams(
-                orderId: orderSummaryModels![i].orderId));
+        (l) => hiveOrderSummaryModels = [],
+        (r) => hiveOrderSummaryModels =
+            r?.where((element) => element.status == -2).toList() ?? []);
+    List<int> ordersUploaded = [];
+    List<int> ordersUploadingFailed = [];
+    if (hiveOrderSummaryModels.isNotEmpty) {
+      for (int i = 0; i < hiveOrderSummaryModels.length; i++) {
+        var orderSummary = hiveOrderSummaryModels[i];
+
+        OrderSummaryModel orderSummaryModel = OrderSummaryModel(
+            orderDate: orderSummary.orderDate.toApiFormat(),
+            custId: orderSummary.customerId,
+            orderAmt: orderSummary.orderAmount.toString(),
+            salesmanId: orderSummary.userId);
+        List<OrderDetailsModel> orderDetailsList = [];
+        var orderDetails = await getOrderDetailsForOrderUseCase
+            .call(GetOrderDetailsForOrderParams(orderId: orderSummary.orderId));
         List<HiveOrderDetailsModel>? orderDetailsModels;
         orderDetails.fold((l) => orderDetailsModels = [],
             (r) => orderDetailsModels = r ?? []);
         if (orderDetailsModels != null) {
           for (var orderDetail in orderDetailsModels!) {
-            OrderDetails orderDetails = OrderDetails(
+            OrderDetailsModel orderDetails = OrderDetailsModel(
                 rate: orderDetail.rate,
                 mrp: orderDetail.mrp,
                 productId: orderDetail.productId,
@@ -83,48 +91,46 @@ class SalesOrderCubit extends Cubit<SalesOrderState> {
             orderDetailsList.add(orderDetails);
           }
         }
-        salesOrderList.add(SalesorderList(
-            orderSummary: orderSummary, orderDetails: orderDetailsList));
-      }
-    }
+        SendSalesOrderUpdateRequest salesOrderUpdateRequest =
+            SendSalesOrderUpdateRequest(
+                orderSummary: orderSummaryModel,
+                orderDetails: orderDetailsList);
+        var result = await sendSalesOrderUpdateUseCase
+            .call(SendSalesOrderUpdateParams(request: salesOrderUpdateRequest));
 
-    if (salesOrderList.isNotEmpty) {
-      SendSalesOrderRequest sendSalesOrderRequest =
-          SendSalesOrderRequest(salesorderList: salesOrderList);
+        double progress = (i / hiveOrderSummaryModels.length);
+        emit(SalesOrdersUploadProgress(progress: progress));
 
-      var result = await sendSalesOrderUseCase
-          .call(SendSalesOrderParams(request: sendSalesOrderRequest));
-      result.fold((l) {
-        if (l is ServerFailure) {
-          emit(const SalesOrderSendingFailed(message: serverFailureMessage));
-        } else if (l is NetworkFailure) {
-          emit(const SalesOrderSendingFailed(message: networkFailureMessage));
-        } else {
-          emit(const SalesOrderSendingFailed(
-              message: 'Sales order sending failed'));
-        }
-      }, (r) async {
-        if (r != null) {
-          if ((r.status ?? 0) == 1) {
-            debugPrint('OrderSummaryLength: ${orderSummaryModels!.length}');
-            for (var orderSummary in orderSummaryModels!) {
-              await updateOrderSummaryStatus(orderSummary.orderId, 1);
-            }
-            emit(SalesOrderSendSuccessfully(
-                message: r.statusMessage ?? 'Order Send successfully'));
+        await result.fold((l) {
+          if (l is ServerFailure) {
+            emit(const SalesOrdersSendingFailed(message: serverFailureMessage));
+            return;
+          } else if (l is NetworkFailure) {
+            emit(
+                const SalesOrdersSendingFailed(message: networkFailureMessage));
+            return;
           } else {
-            for (var orderSummary in orderSummaryModels!) {
-              await updateOrderSummaryStatus(
-                  orderSummary.orderId, r.status?.toInt() ?? 0);
-            }
-            emit(SalesOrderSendingFailed(
-                message: r.statusMessage ?? 'Sales order sending failed'));
+            return;
           }
-        } else {
-          emit(const SalesOrderSendingFailed(
-              message: 'Sales order sending failed'));
-        }
-      });
+        }, (r) async {
+          if (r != null) {
+            int orderStatus = r.status ?? 0;
+            await updateOrderSummaryStatus(orderSummary.orderId, orderStatus);
+            if (orderStatus == 1) {
+              ordersUploaded.add(orderSummary.orderId);
+            } else {
+              ordersUploadingFailed.add(orderSummary.orderId);
+            }
+          } else {
+            await updateOrderSummaryStatus(orderSummary.orderId, 0);
+            ordersUploadingFailed.add(orderSummary.orderId);
+          }
+        });
+      }
+      emit(SalesOrdersSendSuccessfully(
+          message: 'Uploading complete',
+          failedOrders: ordersUploadingFailed,
+          uploadedOrders: ordersUploaded));
     } else {
       emit(const NoSalesOrderAvailableForSending(
           message: 'No pending sales order'));
@@ -177,8 +183,78 @@ class SalesOrderCubit extends Cubit<SalesOrderState> {
         }
       }, (r) async {
         if (r != null) {
-          if ((r.status ?? 0) == 1) {
-            await updateOrderSummaryStatus(hiveOrderSummaryModel!.orderId, 1);
+          int orderStatus = r.status ?? 0;
+          await updateOrderSummaryStatus(
+              hiveOrderSummaryModel!.orderId, orderStatus);
+          if (orderStatus == 1) {
+            emit(SalesOrderSendSuccessfully(
+                message: r.statusMessage ?? 'Order resend successfully'));
+          } else {
+            emit(SalesOrderSendingFailed(
+                message: r.statusMessage ?? 'Sales order sending failed'));
+          }
+        } else {
+          emit(const SalesOrderSendingFailed(
+              message: 'Sales order sending failed'));
+        }
+      });
+    } else {
+      emit(
+          const SalesOrderSendingFailed(message: 'Sales order sending failed'));
+    }
+  }
+
+  Future<void> sendSalesOrderUpdateForcefully(int orderId) async {
+    emit(SalesOrderLoading());
+    var orderSummary = await getOrderSummaryByIdUseCase
+        .call(GetOrderSummaryByIdParams(orderId: orderId));
+    HiveOrderSummaryModel? hiveOrderSummaryModel;
+    orderSummary.fold(
+        (l) => hiveOrderSummaryModel = null, (r) => hiveOrderSummaryModel = r);
+    if (hiveOrderSummaryModel != null) {
+      OrderSummaryModel orderSummaryModel = OrderSummaryModel(
+          orderDate: hiveOrderSummaryModel!.orderDate.toApiFormat(),
+          custId: hiveOrderSummaryModel!.customerId,
+          orderAmt: hiveOrderSummaryModel!.orderAmount.toString(),
+          salesmanId: hiveOrderSummaryModel!.userId);
+      List<OrderDetailsModel> orderDetailsList = [];
+      var orderDetails = await getOrderDetailsForOrderUseCase.call(
+          GetOrderDetailsForOrderParams(
+              orderId: hiveOrderSummaryModel!.orderId));
+      List<HiveOrderDetailsModel>? orderDetailsModels;
+      orderDetails.fold(
+          (l) => orderDetailsModels = [], (r) => orderDetailsModels = r ?? []);
+      if (orderDetailsModels != null) {
+        for (var orderDetail in orderDetailsModels!) {
+          OrderDetailsModel orderDetails = OrderDetailsModel(
+              rate: orderDetail.rate,
+              mrp: orderDetail.mrp,
+              productId: orderDetail.productId,
+              qty: orderDetail.quantity);
+          orderDetailsList.add(orderDetails);
+        }
+      }
+      SendSalesOrderUpdateRequest salesOrderUpdateRequest =
+          SendSalesOrderUpdateRequest(
+              orderSummary: orderSummaryModel, orderDetails: orderDetailsList);
+      var result = await sendSalesOrderUpdateForcefullyUseCase.call(
+          SendSalesOrderUpdateForcefullyParams(
+              request: salesOrderUpdateRequest));
+      result.fold((l) {
+        if (l is ServerFailure) {
+          emit(const SalesOrderSendingFailed(message: serverFailureMessage));
+        } else if (l is NetworkFailure) {
+          emit(const SalesOrderSendingFailed(message: networkFailureMessage));
+        } else {
+          emit(const SalesOrderSendingFailed(
+              message: 'Sales order sending failed'));
+        }
+      }, (r) async {
+        if (r != null) {
+          int orderStatus = r.status ?? 0;
+          await updateOrderSummaryStatus(
+              hiveOrderSummaryModel!.orderId, orderStatus);
+          if (orderStatus == 1) {
             emit(SalesOrderSendSuccessfully(
                 message: r.statusMessage ?? 'Order resend successfully'));
           } else {

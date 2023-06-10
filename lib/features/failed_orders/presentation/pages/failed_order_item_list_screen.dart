@@ -1,3 +1,4 @@
+import 'package:distributor_app_flutter/app_config.dart';
 import 'package:distributor_app_flutter/core/data/local_storage/models/hive_order_details_model.dart';
 import 'package:distributor_app_flutter/features/orders_list/presentation/bloc/order_details/order_details_cubit.dart';
 import 'package:distributor_app_flutter/features/orders_list/presentation/bloc/order_summary/order_summary_cubit.dart';
@@ -6,22 +7,23 @@ import 'package:distributor_app_flutter/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../app_config.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../utils/colors.dart';
 import '../../../../utils/strings.dart';
 
-class OrdersItemListScreen extends StatefulWidget {
-  const OrdersItemListScreen({Key? key, required this.orderId})
+class FailedOrdersItemListScreen extends StatefulWidget {
+  const FailedOrdersItemListScreen({Key? key, required this.orderId})
       : super(key: key);
 
   final int orderId;
 
   @override
-  State<OrdersItemListScreen> createState() => _OrdersItemListScreenState();
+  State<FailedOrdersItemListScreen> createState() =>
+      _FailedOrdersItemListScreenState();
 }
 
-class _OrdersItemListScreenState extends State<OrdersItemListScreen> {
+class _FailedOrdersItemListScreenState
+    extends State<FailedOrdersItemListScreen> {
   final _tableHeaderStyle = const TextStyle(
       color: Colors.white, fontSize: 12, fontWeight: FontWeight.w500);
 
@@ -49,7 +51,7 @@ class _OrdersItemListScreenState extends State<OrdersItemListScreen> {
                   leadingWidth: 50,
                   centerTitle: true,
                   title: const Text(
-                    'Pending Order Items',
+                    'Order Items',
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,
@@ -159,20 +161,21 @@ class _OrdersItemListScreenState extends State<OrdersItemListScreen> {
                 ),
                 _orderItems.isNotEmpty
                     ? SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                            (context, index) => OrderDetailItemWidget(
-                                  orderItem: _orderItems[index],
-                                  index: index,
-                                ),
-                            childCount: _orderItems.length),
-                      )
-                    : const SliverFillRemaining(
-                        child: Center(
-                          child: Text(
-                            'No data available',
+                  delegate: SliverChildBuilderDelegate(
+                          (context, index) =>
+                          OrderDetailItemWidget(
+                            orderItem: _orderItems[index],
+                            index: index,
                           ),
-                        ),
-                      ),
+                      childCount: _orderItems.length),
+                )
+                    : const SliverFillRemaining(
+                  child: Center(
+                    child: Text(
+                      'No data available',
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -216,7 +219,7 @@ class _OrdersItemListScreenState extends State<OrdersItemListScreen> {
                 context.showMessage(state.message);
               }
             },
-          ),
+          )
         ],
       ),
     );
@@ -227,101 +230,106 @@ class _OrdersItemListScreenState extends State<OrdersItemListScreen> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (ctx) => SingleChildScrollView(
-        child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 12),
-          decoration: const BoxDecoration(
-              gradient: LinearGradient(colors: [
-                appColorGradient1,
-                appColorGradient2
-              ]),
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20), topRight: Radius.circular(20))),
-          padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom,
-              top: 24,
-              left: 24,
-              right: 24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10)),
-                height: 5,
-                width: 80,
-                margin: const EdgeInsets.only(top: 2),
-              ),
-              const Padding(
-                padding: EdgeInsets.only(top: 30),
-                child: Text(
-                  'Order Delete',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w800),
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.only(top: 30),
-                child: Text(
-                  orderDeletionMessage,
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 40, bottom: 30),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Center(
-                        child: SizedBox(
-                          height: 40,
-                          child: AppButton(
-                            startColor: appColorGradient1,
-                            endColor: appColorGradient2,
-                            onSubmit: () async {
-                              AppConfig.appRouter.pop();
-                            },
-                            label: 'Cancel',
+      builder: (ctx) =>
+          SingleChildScrollView(
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 12),
+              decoration: const BoxDecoration(
+                  gradient: LinearGradient(colors: [
+                    appColorGradient1,
+                    appColorGradient2
+                  ]),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20))),
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery
+                      .of(context)
+                      .viewInsets
+                      .bottom,
+                  top: 24,
+                  left: 24,
+                  right: 24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10)),
+                    height: 5,
+                    width: 80,
+                    margin: const EdgeInsets.only(top: 2),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 30),
+                    child: Text(
+                      'Order Delete',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800),
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 30),
+                    child: Text(
+                      orderDeletionMessage,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 40, bottom: 30),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Center(
+                            child: SizedBox(
+                              height: 40,
+                              child: AppButton(
+                                startColor: appColorGradient1,
+                                endColor: appColorGradient2,
+                                onSubmit: () async {
+                                  AppConfig.appRouter.pop();
+                                },
+                                label: 'Cancel',
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    Expanded(
-                      child: Center(
-                        child: SizedBox(
-                          height: 40,
-                          child: AppButton(
-                            startColor: appColorGradient1,
-                            endColor: appColorGradient2,
-                            onSubmit: () async {
-                              context
-                                  .read<OrderSummaryCubit>()
-                                  .deleteSummary(widget.orderId);
-                              AppConfig.appRouter.pop();
-                            },
-                            label: 'Delete',
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        Expanded(
+                          child: Center(
+                            child: SizedBox(
+                              height: 40,
+                              child: AppButton(
+                                startColor: appColorGradient1,
+                                endColor: appColorGradient2,
+                                onSubmit: () async {
+                                  context
+                                      .read<OrderSummaryCubit>()
+                                      .deleteSummary(widget.orderId);
+                                  AppConfig.appRouter.pop();
+                                },
+                                label: 'Delete',
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
-                ),
-              )
-            ],
+                  )
+                ],
+              ),
+            ),
           ),
-        ),
-      ),
     );
   }
 }

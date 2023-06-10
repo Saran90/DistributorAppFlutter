@@ -61,6 +61,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                 SliverAppBar(
                   backgroundColor: appColor,
                   pinned: true,
+                  elevation: 0,
                   flexibleSpace: Container(
                     decoration: const BoxDecoration(
                       gradient: LinearGradient(
@@ -118,101 +119,107 @@ class _ProductListScreenState extends State<ProductListScreen> {
                 ),
                 SliverAppBar(
                   toolbarHeight: 140,
-                  backgroundColor: appColor,
+                  // backgroundColor: appColor,
                   automaticallyImplyLeading: false,
                   pinned: false,
-                  title: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 20),
-                    margin: const EdgeInsets.only(bottom: 20),
-                    color: appColor,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          '${widget.hiveCustomerModel.name}, ${widget.hiveCustomerModel.location}',
-                          maxLines: 2,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
+                  flexibleSpace: Container(
+                    decoration: const BoxDecoration(
+                        gradient: LinearGradient(colors: [
+                          appColorGradient1,
+                          appColorGradient2
+                        ])
+                    ),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            '${widget.hiveCustomerModel.name}, ${widget.hiveCustomerModel.location}',
+                            maxLines: 2,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border:
-                                  Border.all(color: Colors.white, width: 1)),
-                          height: 40,
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              SizedBox(
-                                  width: 25,
-                                  height: 25,
-                                  child: Image.asset(
-                                    'assets/icons/search.png',
-                                    color: Colors.white,
-                                  )),
-                              const SizedBox(
-                                width: 20,
-                              ),
-                              Expanded(
-                                child: SizedBox(
-                                  height: 40,
-                                  child: TextFormField(
-                                    cursorColor: Colors.white,
-                                    style: const TextStyle(
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border:
+                                Border.all(color: Colors.white, width: 1)),
+                            height: 40,
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                SizedBox(
+                                    width: 25,
+                                    height: 25,
+                                    child: Image.asset(
+                                      'assets/icons/search.png',
                                       color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w400,
+                                    )),
+                                const SizedBox(
+                                  width: 20,
+                                ),
+                                Expanded(
+                                  child: SizedBox(
+                                    height: 40,
+                                    child: TextFormField(
+                                      cursorColor: Colors.white,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                      controller: _searchController,
+                                      keyboardType: TextInputType.text,
+                                      decoration: const InputDecoration(
+                                        hintText: 'Search Product',
+                                        hintStyle: TextStyle(
+                                            color: Colors.white54,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400),
+                                        contentPadding: EdgeInsets.symmetric(
+                                            horizontal: 5, vertical: 14),
+                                        border: InputBorder.none,
+                                      ),
+                                      onChanged: (value) => _updateList(),
                                     ),
-                                    controller: _searchController,
-                                    keyboardType: TextInputType.text,
-                                    decoration: const InputDecoration(
-                                      hintText: 'Search Product',
-                                      hintStyle: TextStyle(
-                                          color: Colors.white54,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400),
-                                      contentPadding: EdgeInsets.symmetric(
-                                          horizontal: 5, vertical: 14),
-                                      border: InputBorder.none,
-                                    ),
-                                    onChanged: (value) => _updateList(),
                                   ),
                                 ),
-                              ),
-                              Visibility(
-                                  visible: _searchController.text.isNotEmpty,
-                                  child: InkWell(
-                                    onTap: () {
-                                      _searchController.clear();
-                                      _closeKeyboard();
-                                      _updateList();
-                                    },
-                                    child: SizedBox(
-                                      width: 20,
-                                      height: 20,
-                                      child: SvgPicture.asset(
-                                        'assets/icons/close.svg',
-                                        height: 30,
-                                        width: 30,
-                                        color: Colors.white,
+                                Visibility(
+                                    visible: _searchController.text.isNotEmpty,
+                                    child: InkWell(
+                                      onTap: () {
+                                        _searchController.clear();
+                                        _closeKeyboard();
+                                        _updateList();
+                                      },
+                                      child: SizedBox(
+                                        width: 20,
+                                        height: 20,
+                                        child: SvgPicture.asset(
+                                          'assets/icons/close.svg',
+                                          height: 30,
+                                          width: 30,
+                                          color: Colors.white,
+                                        ),
                                       ),
-                                    ),
-                                  ))
-                            ],
-                          ),
-                        )
-                      ],
+                                    ))
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -398,7 +405,8 @@ class _ProductListScreenState extends State<ProductListScreen> {
   }
 
   Future<void> _onProductClicked(Product product) async {
-    _showQuantitySelectionBottomSheet(product, _onQuantitySelected);
+    await _showQuantitySelectionBottomSheet(product, _onQuantitySelected);
+    _closeKeyboard();
   }
 
   void _onQuantitySelected(double quantity, Product product) {
@@ -450,7 +458,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
     }
   }
 
-  void _showQuantitySelectionBottomSheet(Product product,
+  Future<void> _showQuantitySelectionBottomSheet(Product product,
       Function(double quantity, Product product) onQuantitySelected) async {
     final quantityFieldFocusNode = FocusNode();
     final quantityController = TextEditingController();
@@ -466,7 +474,10 @@ class _ProductListScreenState extends State<ProductListScreen> {
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 12),
           decoration: const BoxDecoration(
-              color: appColor,
+              gradient: LinearGradient(colors: [
+                appColorGradient1,
+                appColorGradient2
+              ]),
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20), topRight: Radius.circular(20))),
           padding: EdgeInsets.only(
@@ -554,7 +565,6 @@ class _ProductListScreenState extends State<ProductListScreen> {
         ),
       ),
     );
-    // FocusManager.instance.primaryFocus?.unfocus();
   }
 
   Future<bool> _onBackPressed() async {

@@ -50,4 +50,9 @@ class EndPointVarsha extends EndPoint {
   String get manufactureList {
     return 'GetManufactureList';
   }
+
+  @override
+  String get salesForceFullyUpdate {
+    return 'SalesOrderForcefullySaving';
+  }
 }

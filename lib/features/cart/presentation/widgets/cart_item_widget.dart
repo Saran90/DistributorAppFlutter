@@ -21,7 +21,7 @@ class CartItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 60,
-      color: (cartModel.quantity > 0) ? appColorGradient2 : Colors.white,
+      color: (cartModel.quantity > 0) ? Colors.white.withOpacity(0.6) : Colors.white,
       child: Row(
         children: [
           Expanded(

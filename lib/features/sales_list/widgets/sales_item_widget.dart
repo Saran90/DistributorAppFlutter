@@ -1,15 +1,12 @@
 import 'package:distributor_app_flutter/features/orders_list/presentation/pages/models/order.dart';
-import 'package:distributor_app_flutter/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 class SalesItemWidget extends StatelessWidget {
   const SalesItemWidget(
-      {Key? key, required this.order, required this.onUploadClicked})
+      {Key? key, required this.order})
       : super(key: key);
 
   final Order order;
-  final Function() onUploadClicked;
 
   @override
   Widget build(BuildContext context) {
@@ -86,28 +83,6 @@ class SalesItemWidget extends StatelessWidget {
             width: 0.5,
             color: Colors.black54,
           ),
-          Expanded(
-              flex: 2,
-              child: InkWell(
-                onTap: onUploadClicked,
-                child: Container(
-                  padding: const EdgeInsets.all(5),
-                  decoration: const BoxDecoration(
-                      color: appColorGradient2,
-                      border: Border(
-                          top: BorderSide(color: Colors.black54, width: 0.5),
-                          bottom:
-                              BorderSide(color: Colors.black54, width: 0.5))),
-                  child: Center(
-                    child: SvgPicture.asset(
-                      'assets/icons/upload.svg',
-                      color: Colors.white,
-                      height: 20,
-                      width: 20,
-                    ),
-                  ),
-                ),
-              )),
         ],
       ),
     );

@@ -14,6 +14,7 @@ import '../../../../../utils/colors.dart';
 import '../../../../app_config.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../utils/strings.dart';
+import '../../../orders_list/presentation/widgets/sales_upload_widget.dart';
 import '../widgets/customer_item_widget.dart';
 
 class CustomerListScreen extends StatefulWidget {
@@ -41,6 +42,7 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
               SliverAppBar(
                 backgroundColor: appColor,
                 pinned: true,
+                elevation: 0,
                 flexibleSpace: Container(
                   decoration: const BoxDecoration(
                     gradient: LinearGradient(
@@ -59,14 +61,18 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
                 ),
               ),
               SliverAppBar(
-                toolbarHeight: 120,
+                toolbarHeight: 130,
                 backgroundColor: appColor,
                 pinned: false,
-                title: Container(
+                flexibleSpace: Container(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                  margin: const EdgeInsets.only(bottom: 20),
-                  color: appColor,
+                  const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  decoration: const BoxDecoration(
+                      gradient: LinearGradient(colors: [
+                        appColorGradient1,
+                        appColorGradient2
+                      ])
+                  ),
                   child: Column(
                     children: [
                       Container(
@@ -283,10 +289,10 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
               return Container();
             },
             listener: (context, state) {
-              if (state is SalesOrderSendSuccessfully) {
+              if (state is SalesOrdersSendSuccessfully) {
                 context.showMessage(state.message);
               }
-              if (state is SalesOrderSendingFailed) {
+              if (state is SalesOrdersSendingFailed) {
                 context.showMessage(state.message);
               }
               if (state is NoSalesOrderAvailableForSending) {
@@ -296,37 +302,46 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
           )
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: appColor,
-        selectedLabelStyle: const TextStyle(color: Colors.white, fontSize: 15),
-        unselectedLabelStyle:
-            const TextStyle(color: Colors.white, fontSize: 15),
-        fixedColor: Colors.white,
-        unselectedItemColor: Colors.white,
-        onTap: (value) {
-          if (value == 0) {
-            context.read<SalesOrderCubit>().sendSalesOrder();
-          } else {
-            _showSyncDataConfirmationBottomSheet();
-          }
-        },
-        items: [
-          BottomNavigationBarItem(
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(colors: [
+            appColorGradient1,
+            appColorGradient2
+          ])
+        ),
+        child: BottomNavigationBar(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          selectedLabelStyle: const TextStyle(color: Colors.white, fontSize: 15),
+          unselectedLabelStyle:
+              const TextStyle(color: Colors.white, fontSize: 15),
+          fixedColor: Colors.white,
+          unselectedItemColor: Colors.white,
+          onTap: (value) {
+            if (value == 0) {
+              _showSalesUploadingBottomSheet();
+            } else {
+              _showSyncDataConfirmationBottomSheet();
+            }
+          },
+          items: [
+            BottomNavigationBarItem(
               icon: Image.asset(
                 'assets/icons/send.png',
                 width: 20,
                 height: 20,
               ),
               label: 'Send Sales Order',
-          ),
-          BottomNavigationBarItem(
-              icon: Image.asset(
-                'assets/icons/update.png',
-                width: 20,
-                height: 20,
-              ),
-              label: 'Sync Data')
-        ],
+            ),
+            BottomNavigationBarItem(
+                icon: Image.asset(
+                  'assets/icons/update.png',
+                  width: 20,
+                  height: 20,
+                ),
+                label: 'Sync Data')
+          ],
+        ),
       ),
     );
   }
@@ -380,14 +395,18 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
         var list = <PopupMenuEntry<Object>>[];
         list.add(const PopupMenuItem(
           value: 1,
-          child: Text('Sales Order'),
+          child: Text('Sales Orders'),
         ));
         list.add(const PopupMenuItem(
           value: 2,
-          child: Text('Pending Order'),
+          child: Text('Pending Orders'),
         ));
         list.add(const PopupMenuItem(
           value: 3,
+          child: Text('Failed Orders'),
+        ));
+        list.add(const PopupMenuItem(
+          value: 4,
           child: Text('Logout'),
         ));
         return list;
@@ -404,12 +423,20 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
             AppConfig.appRouter.push(const OrdersListRouter());
             break;
           case 3:
+            AppConfig.appRouter.push(const FailedOrdersListRouter());
+            break;
+          case 4:
             _logoutClicked();
             break;
         }
         _closeKeyboard();
       },
-      icon: Image.asset('assets/icons/settings.png',color: Colors.white,height: 24,width: 24,),
+      icon: Image.asset(
+        'assets/icons/settings.png',
+        color: Colors.white,
+        height: 24,
+        width: 24,
+      ),
     );
   }
 
@@ -445,7 +472,10 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 12),
           decoration: const BoxDecoration(
-              color: appColor,
+              gradient: LinearGradient(colors: [
+                appColorGradient1,
+                appColorGradient2
+              ]),
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20), topRight: Radius.circular(20))),
           padding: EdgeInsets.only(
@@ -459,9 +489,8 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10)
-                ),
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10)),
                 height: 5,
                 width: 80,
                 margin: const EdgeInsets.only(top: 2),
@@ -473,7 +502,7 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
-                      fontWeight: FontWeight.w500),
+                      fontWeight: FontWeight.w800),
                 ),
               ),
               const Padding(
@@ -506,7 +535,9 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 10,),
+                    const SizedBox(
+                      width: 20,
+                    ),
                     Expanded(
                       child: Center(
                         child: SizedBox(
@@ -529,6 +560,20 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
             ],
           ),
         ),
+      ),
+    );
+    // FocusManager.instance.primaryFocus?.unfocus();
+  }
+
+  Future<void> _showSalesUploadingBottomSheet() async {
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      isDismissible: false,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => StatefulBuilder(
+        builder: (context, setState) => BlocProvider<SalesOrderCubit>(create: (context) => AppConfig.s1(),
+          child: const SalesUploadWidget(),),
       ),
     );
     // FocusManager.instance.primaryFocus?.unfocus();

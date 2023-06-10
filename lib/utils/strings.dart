@@ -8,3 +8,6 @@ const String networkFailureMessage = 'Please check your internet connection';
 const String cacheFailureMessage = 'Failed to retrieve data';
 const String syncDataConfirmationDialogMessage =
     'For syncing data, you need to re-login again. Any available local data will be cleared in the process.\n\nIf you have any local data not yet saved, please send the sales order first and then sync data.';
+const String duplicateOrderUpdateMessage =
+    'This order is a duplicate one. Do you want this order to be forcefully added as a new sale?';
+const String orderDeletionMessage = 'Do you really want to delete this order?';

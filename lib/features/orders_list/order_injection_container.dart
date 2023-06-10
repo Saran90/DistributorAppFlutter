@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:distributor_app_flutter/features/orders_list/domain/usecase/get_all_failed_order_summaries_use_case.dart';
 import 'package:distributor_app_flutter/features/orders_list/domain/usecase/get_all_unsend_order_summaries_use_case.dart';
+import 'package:distributor_app_flutter/features/orders_list/domain/usecase/send_sales_order_update_forcefully_use_case.dart';
 
 import '../../app_config.dart';
 import 'data/datasource/order_details_data_source.dart';
@@ -60,6 +62,9 @@ class OrderInjectionContainer {
     AppConfig.s1.registerLazySingleton<UpdateOrderSummaryStatusUseCase>(() =>
         UpdateOrderSummaryStatusUseCase(
             orderSummaryRepository: AppConfig.s1()));
+    AppConfig.s1.registerLazySingleton<GetAllFailedOrderSummariesUseCase>(() =>
+        GetAllFailedOrderSummariesUseCase(
+            orderSummaryRepository: AppConfig.s1()));
 
     AppConfig.s1.registerFactory<OrderSummaryCubit>(() => OrderSummaryCubit(
           addOrderSummaryUseCase: AppConfig.s1(),
@@ -70,6 +75,7 @@ class OrderInjectionContainer {
           getOrderSummaryByCustomerIdUseCase: AppConfig.s1(),
           getOrderSummaryByIdUseCase: AppConfig.s1(),
           updateOrderSummaryStatusUseCase: AppConfig.s1(),
+          getAllFailedOrderSummariesUseCase: AppConfig.s1(),
         ));
 
     AppConfig.s1.registerLazySingleton<OrderDetailsDataSource>(
@@ -107,6 +113,9 @@ class OrderInjectionContainer {
     AppConfig.s1.registerLazySingleton<GetAllUnSendOrderSummariesUseCase>(() =>
         GetAllUnSendOrderSummariesUseCase(
             orderSummaryRepository: AppConfig.s1()));
+    AppConfig.s1.registerLazySingleton<SendSalesOrderUpdateForcefullyUseCase>(
+        () => SendSalesOrderUpdateForcefullyUseCase(
+            salesOrderRepository: AppConfig.s1()));
 
     AppConfig.s1.registerFactory<SalesOrderCubit>(() => SalesOrderCubit(
         sendSalesOrderUseCase: AppConfig.s1(),
@@ -116,6 +125,7 @@ class OrderInjectionContainer {
         updateOrderSummaryStatusUseCase: AppConfig.s1(),
         getOrderSummaryByIdUseCase: AppConfig.s1(),
         sendSalesOrderUpdateUseCase: AppConfig.s1(),
-        getAllUnSendOrderSummariesUseCase: AppConfig.s1()));
+        getAllUnSendOrderSummariesUseCase: AppConfig.s1(),
+        sendSalesOrderUpdateForcefullyUseCase: AppConfig.s1()));
   }
 }

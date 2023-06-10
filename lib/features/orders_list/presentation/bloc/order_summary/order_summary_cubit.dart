@@ -14,6 +14,7 @@ import 'package:distributor_app_flutter/features/orders_list/presentation/pages/
 import 'package:equatable/equatable.dart';
 
 import '../../../../../../utils/strings.dart';
+import '../../../domain/usecase/get_all_failed_order_summaries_use_case.dart';
 
 part 'order_summary_state.dart';
 
@@ -24,6 +25,7 @@ class OrderSummaryCubit extends Cubit<OrderSummaryState> {
     required this.deleteAllOrderSummaryByCustomerIdUseCase,
     required this.deleteOrderSummaryUseCase,
     required this.getAllOrderSummariesUseCase,
+    required this.getAllFailedOrderSummariesUseCase,
     required this.getOrderSummaryByCustomerIdUseCase,
     required this.getOrderSummaryByIdUseCase,
     required this.updateOrderSummaryStatusUseCase,
@@ -35,6 +37,7 @@ class OrderSummaryCubit extends Cubit<OrderSummaryState> {
       deleteAllOrderSummaryByCustomerIdUseCase;
   final DeleteOrderSummaryUseCase deleteOrderSummaryUseCase;
   final GetAllOrderSummariesUseCase getAllOrderSummariesUseCase;
+  final GetAllFailedOrderSummariesUseCase getAllFailedOrderSummariesUseCase;
   final GetOrderSummaryByCustomerIdUseCase getOrderSummaryByCustomerIdUseCase;
   final GetOrderSummaryByIdUseCase getOrderSummaryByIdUseCase;
   final UpdateOrderSummaryStatusUseCase updateOrderSummaryStatusUseCase;
@@ -48,8 +51,8 @@ class OrderSummaryCubit extends Cubit<OrderSummaryState> {
       if (l is CacheFailure) {
         emit(const OrderSummaryAdditionFailed(message: cacheFailureMessage));
       } else {
-        emit(const OrderSummaryAdditionFailed(
-            message: 'Order Summary addition failed'));
+        emit(
+            const OrderSummaryAdditionFailed(message: 'Order addition failed'));
       }
     }, (r) => emit(OrderSummaryAdded(hiveOrderSummaryModel: r)));
   }
@@ -61,8 +64,8 @@ class OrderSummaryCubit extends Cubit<OrderSummaryState> {
       if (l is CacheFailure) {
         emit(const OrderSummaryDeletionFailed(message: cacheFailureMessage));
       } else {
-        emit(const OrderSummaryDeletionFailed(
-            message: 'Order Summary deletion failed'));
+        emit(
+            const OrderSummaryDeletionFailed(message: 'Order deletion failed'));
       }
     }, (r) => emit(OrderSummaryDeleted()));
   }
@@ -75,8 +78,8 @@ class OrderSummaryCubit extends Cubit<OrderSummaryState> {
       if (l is CacheFailure) {
         emit(const OrderSummaryDeletionFailed(message: cacheFailureMessage));
       } else {
-        emit(const OrderSummaryDeletionFailed(
-            message: 'Order Summary deletion failed'));
+        emit(
+            const OrderSummaryDeletionFailed(message: 'Order deletion failed'));
       }
     }, (r) => emit(OrderSummaryDeleted()));
   }
@@ -90,8 +93,8 @@ class OrderSummaryCubit extends Cubit<OrderSummaryState> {
       if (l is CacheFailure) {
         emit(const OrderSummaryDeletionFailed(message: cacheFailureMessage));
       } else {
-        emit(const OrderSummaryDeletionFailed(
-            message: 'Order Summary deletion failed'));
+        emit(
+            const OrderSummaryDeletionFailed(message: 'Order deletion failed'));
       }
     }, (r) => emit(OrderSummaryDeleted()));
   }
@@ -103,8 +106,8 @@ class OrderSummaryCubit extends Cubit<OrderSummaryState> {
       if (l is CacheFailure) {
         emit(const OrderSummaryFetchingFailed(message: cacheFailureMessage));
       } else {
-        emit(const OrderSummaryFetchingFailed(
-            message: 'Order Summary fetching failed'));
+        emit(
+            const OrderSummaryFetchingFailed(message: 'Order fetching failed'));
       }
     }, (r) {
       if (r != null) {
@@ -130,6 +133,39 @@ class OrderSummaryCubit extends Cubit<OrderSummaryState> {
     });
   }
 
+  Future<void> getAllFailedOrderSummaries() async {
+    emit(OrderSummaryLoading());
+    var result = await getAllFailedOrderSummariesUseCase.call(NoParams());
+    result.fold((l) {
+      if (l is CacheFailure) {
+        emit(const OrderSummaryFetchingFailed(message: cacheFailureMessage));
+      } else {
+        emit(
+            const OrderSummaryFetchingFailed(message: 'Order fetching failed'));
+      }
+    }, (r) {
+      if (r != null) {
+        List<HiveOrderSummaryModel> failedOrderSummaries = r;
+        failedOrderSummaries.sort(
+          (a, b) => a.orderDate.compareTo(b.orderDate),
+        );
+        List<Order> failedOrders = [];
+        for (int i = 0; i < failedOrderSummaries.length; i++) {
+          failedOrders.add(Order(
+              orderId: failedOrderSummaries[i].orderId,
+              customerId: failedOrderSummaries[i].customerId,
+              status: failedOrderSummaries[i].status,
+              amount: failedOrderSummaries[i].orderAmount,
+              customerName: failedOrderSummaries[i].customerName,
+              slNo: (i + 1)));
+        }
+        emit(OrderSummaryPopulated(orderSummaries: failedOrders));
+      } else {
+        emit(OrderSummaryPopulated(orderSummaries: []));
+      }
+    });
+  }
+
   Future<void> updateOrderSummaryStatus(int orderId, int status) async {
     emit(OrderSummaryLoading());
     var result = await updateOrderSummaryStatusUseCase
@@ -140,43 +176,38 @@ class OrderSummaryCubit extends Cubit<OrderSummaryState> {
             message: cacheFailureMessage));
       } else {
         emit(const OrderSummaryStatusUpdationFailed(
-            message: 'Order Summary status updation failed'));
+            message: 'Order status updation failed'));
       }
     }, (r) => emit(OrderSummaryStatusUpdated()));
   }
 
-// Future<void> getAllOrderSummaryByCustomer(int customerId) async {
-//   emit(OrderSummaryLoading());
-//   var result = await getOrderSummaryByCustomerIdUseCase
-//       .call(GetOrderSummaryByCustomerIdParams(customerId: customerId));
-//   result.fold((l) {
-//     if (l is CacheFailure) {
-//       emit(const OrderSummaryFetchingFailed(message: cacheFailureMessage));
-//     } else {
-//       emit(const OrderSummaryFetchingFailed(
-//           message: 'Order Summary fetching failed'));
-//     }
-//   }, (r) => emit(OrderSummaryPopulated(orderSummaries: r ?? [])));
-// }
-
-// Future<void> getAllOrderSummaryById(int orderId) async {
-//   emit(OrderSummaryLoading());
-//   var result = await getOrderSummaryByIdUseCase
-//       .call(GetOrderSummaryByIdParams(orderId: orderId));
-//   result.fold((l) {
-//     if (l is CacheFailure) {
-//       emit(const OrderSummaryFetchingFailed(message: cacheFailureMessage));
-//     } else {
-//       emit(const OrderSummaryFetchingFailed(
-//           message: 'Order Summary fetching failed'));
-//     }
-//   }, (r) {
-//     if (r != null) {
-//       emit(OrderSummaryByIdPopulated(orderSummaryModel: r));
-//     } else {
-//       emit(const OrderSummaryFetchingFailed(
-//           message: 'Order Summary fetching failed'));
-//     }
-//   });
-// }
+  Future<void> deleteSummary(int orderId) async {
+    emit(OrderSummaryLoading());
+    var orderSummary = await getOrderSummaryByIdUseCase
+        .call(GetOrderSummaryByIdParams(orderId: orderId));
+    HiveOrderSummaryModel? hiveOrderSummaryModel;
+    orderSummary.fold((l) {
+      if (l is CacheFailure) {
+        emit(const OrderSummaryDeletionFailed(message: cacheFailureMessage));
+      } else {
+        emit(
+            const OrderSummaryDeletionFailed(message: 'Order deletion failed'));
+      }
+    }, (r) => hiveOrderSummaryModel = r);
+    if (hiveOrderSummaryModel != null) {
+      var result = await deleteOrderSummaryUseCase.call(
+          DeleteOrderSummaryParams(
+              hiveOrderSummaryModel: hiveOrderSummaryModel!));
+      result.fold((l) {
+        if (l is CacheFailure) {
+          emit(const OrderSummaryDeletionFailed(message: cacheFailureMessage));
+        } else {
+          emit(const OrderSummaryDeletionFailed(
+              message: 'Order deletion failed'));
+        }
+      }, (r) => emit(OrderSummaryDeleted()));
+    } else {
+      emit(const OrderSummaryDeletionFailed(message: 'Order deletion failed'));
+    }
+  }
 }

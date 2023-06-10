@@ -50,4 +50,9 @@ class EndPointCochinDistributors extends EndPoint{
   String get manufactureList {
     return 'GetManufactureList';
   }
+
+  @override
+  String get salesForceFullyUpdate {
+    return 'SalesOrderForcefullySaving';
+  }
 }

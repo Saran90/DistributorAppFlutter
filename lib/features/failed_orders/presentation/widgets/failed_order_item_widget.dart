@@ -4,12 +4,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../utils/colors.dart';
 
-class OrderItemWidget extends StatelessWidget {
-  const OrderItemWidget(
-      {Key? key, required this.pendingOrder, required this.onUploadClicked})
+class FailedOrderItemWidget extends StatelessWidget {
+  const FailedOrderItemWidget(
+      {Key? key, required this.failedOrder, required this.onUploadClicked})
       : super(key: key);
 
-  final Order pendingOrder;
+  final Order failedOrder;
   final Function(int) onUploadClicked;
 
   @override
@@ -28,7 +28,7 @@ class OrderItemWidget extends StatelessWidget {
                         top: BorderSide(color: Colors.black54, width: 0.5),
                         bottom: BorderSide(color: Colors.black54, width: 0.5))),
                 child: Center(
-                  child: Text('${pendingOrder.slNo}'),
+                  child: Text('${failedOrder.slNo}'),
                 ),
               )),
           Container(
@@ -45,7 +45,7 @@ class OrderItemWidget extends StatelessWidget {
                         top: BorderSide(color: Colors.black54, width: 0.5),
                         bottom: BorderSide(color: Colors.black54, width: 0.5))),
                 child: Center(
-                  child: Text(pendingOrder.customerName),
+                  child: Text(failedOrder.customerName),
                 ),
               )),
           Container(
@@ -62,7 +62,7 @@ class OrderItemWidget extends StatelessWidget {
                         top: BorderSide(color: Colors.black54, width: 0.5),
                         bottom: BorderSide(color: Colors.black54, width: 0.5))),
                 child: Center(
-                  child: Text('${pendingOrder.amount}'),
+                  child: Text('${failedOrder.amount}'),
                 ),
               )),
           Container(
@@ -90,12 +90,16 @@ class OrderItemWidget extends StatelessWidget {
           Expanded(
               flex: 2,
               child: InkWell(
-                onTap: () => onUploadClicked(pendingOrder.orderId),
+                onTap: () {
+                  if(failedOrder.status != -1){
+                    onUploadClicked(failedOrder.orderId);
+                  }
+                },
                 child: Container(
                   padding: const EdgeInsets.all(5),
-                  decoration: const BoxDecoration(
-                      color: appColorGradient2,
-                      border: Border(
+                  decoration: BoxDecoration(
+                      color: failedOrder.status==-1?Colors.grey:appColorGradient2,
+                      border: const Border(
                           top: BorderSide(color: Colors.black54, width: 0.5),
                           bottom:
                               BorderSide(color: Colors.black54, width: 0.5))),
@@ -115,8 +119,14 @@ class OrderItemWidget extends StatelessWidget {
   }
 
   String getOrderStatusLabel() {
-    if (pendingOrder.status == -2) {
+    if (failedOrder.status == -2) {
       return 'Pending';
+    } else if (failedOrder.status == 0) {
+      return 'Failed';
+    } else if (failedOrder.status == 2) {
+      return 'Duplicate';
+    } else if (failedOrder.status == -1) {
+      return 'Sync Issue';
     } else {
       return 'Done';
     }
