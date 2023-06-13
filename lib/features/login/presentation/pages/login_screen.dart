@@ -23,16 +23,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final _userNameController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  List<Manufacture> _manufactures = [];
-  var _hasManufacturesFlow = false;
-  Manufacture? _selectedManufacture;
-
   @override
   void initState() {
-    if (AppConfig.instance.flavor == AppConfig.varsha.flavor) {
-      _hasManufacturesFlow = true;
-      context.read<ManufactureCubit>().getManufactures();
-    }
     super.initState();
   }
 
@@ -61,29 +53,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 }
               },
             ),
-            BlocConsumer<ManufactureCubit, ManufactureState>(
-              builder: (context, state) {
-                if (state is ManufactureLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                return Container();
-              },
-              listener: (context, state) {
-                if (state is ManufactureListPopulated) {
-                  setState(() {
-                    _manufactures = state.manufactures;
-                  });
-                }
-                if (state is NoManufacturesAvailable) {
-                  setState(() {
-                    _manufactures = [];
-                  });
-                }
-                if (state is ManufactureListFecthingFailed) {
-                  context.showMessage(state.message);
-                }
-              },
-            )
           ],
         ),
       ),
@@ -110,8 +79,6 @@ class _LoginScreenState extends State<LoginScreen> {
             _appLogoWidget(),
             _userNameWidget(),
             _passwordWidget(),
-            Visibility(
-                visible: _hasManufacturesFlow, child: _manufactureListWidget()),
             _loginButton()
           ],
         ),
@@ -145,19 +112,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _manufactureListWidget() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 20),
-      child: IconDropDown<Manufacture>(
-        hint: 'Select brand',
-        dropDownItems: _manufactures,
-        onChanged: _onManufactureSelected,
-        icon: 'assets/icons/supplier.png',
-        selectedValue: _selectedManufacture,
-      ),
-    );
-  }
-
   Widget _loginButton() {
     return Padding(
       padding: const EdgeInsets.only(top: 30),
@@ -183,23 +137,10 @@ class _LoginScreenState extends State<LoginScreen> {
   void _onLoginClicked() {
     if (_userNameController.text.isNotEmpty &&
         _passwordController.text.isNotEmpty) {
-      if (_hasManufacturesFlow) {
-        context.read<AuthCubit>().loginWithManufacture(
-            _userNameController.text.trim(),
-            _passwordController.text.trim(),
-            _selectedManufacture?.id ?? 0);
-      } else {
-        context.read<AuthCubit>().login(
-            _userNameController.text.trim(), _passwordController.text.trim());
-      }
+      context.read<AuthCubit>().login(
+          _userNameController.text.trim(), _passwordController.text.trim());
     } else {
       context.showMessage('Please provide required information.');
     }
-  }
-
-  _onManufactureSelected(Manufacture? manufacture) {
-    setState(() {
-      _selectedManufacture = manufacture;
-    });
   }
 }
