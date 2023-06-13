@@ -252,6 +252,7 @@ class HiveDataSourceImpl extends HiveDataSource {
                 element.name!.toLowerCase().startsWith(search.toLowerCase()))
             .toList();
       }
+      products.sort((a, b) => a.name!.compareTo(b.name!),);
     }
     return products;
   }
