@@ -252,7 +252,9 @@ class HiveDataSourceImpl extends HiveDataSource {
                 element.name!.toLowerCase().startsWith(search.toLowerCase()))
             .toList();
       }
-      products.sort((a, b) => a.name!.compareTo(b.name!),);
+      products.sort(
+        (a, b) => a.name!.compareTo(b.name!),
+      );
     }
     return products;
   }
@@ -260,7 +262,7 @@ class HiveDataSourceImpl extends HiveDataSource {
   @override
   Future<void> addCart(HiveCartModel hiveCartModel) async {
     return await cartBox?.put(
-        (hiveCartModel.customerId.toString() + hiveCartModel.productId)
+        (hiveCartModel.customerId + DateTime.now().millisecondsSinceEpoch)
             .hashCode,
         hiveCartModel);
   }
@@ -286,7 +288,7 @@ class HiveDataSourceImpl extends HiveDataSource {
         cartBox?.values.where((e) => e.customerId == customerId).toList();
     if (customerCart != null) {
       return customerCart
-          .where((element) => element.productId == productId)
+          .where((element) => element.productId == productId.toString())
           .toList()
           .first;
     }
@@ -296,14 +298,15 @@ class HiveDataSourceImpl extends HiveDataSource {
   @override
   List<HiveCartModel>? getCustomerCart(int customerId) {
     List<HiveCartModel>? customerCart =
-        cartBox?.values.where((e) => e.customerId == customerId).toList();
+        cartBox?.values.toList();
+    customerCart = customerCart?.where((e) => e.customerId == customerId).toList();
     return customerCart;
   }
 
   @override
   Future<void> updateCart(HiveCartModel hiveCartModel) async {
     return await cartBox?.put(
-        (hiveCartModel.customerId.toString() + hiveCartModel.productId)
+        (hiveCartModel.customerId + DateTime.now().millisecondsSinceEpoch)
             .hashCode,
         hiveCartModel);
   }
@@ -311,7 +314,7 @@ class HiveDataSourceImpl extends HiveDataSource {
   @override
   Future<void>? deleteCustomerCartItem(HiveCartModel hiveCartModel) {
     return cartBox?.delete(
-        (hiveCartModel.customerId.toString() + hiveCartModel.productId)
+        (hiveCartModel.customerId + DateTime.now().millisecondsSinceEpoch)
             .hashCode);
   }
 

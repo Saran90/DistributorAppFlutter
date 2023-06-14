@@ -19,7 +19,7 @@ class OrderDetailItemWidget extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-              flex: 4,
+              flex: 3,
               child: Container(
                 padding: const EdgeInsets.all(5),
                 decoration: const BoxDecoration(
@@ -27,7 +27,9 @@ class OrderDetailItemWidget extends StatelessWidget {
                         top: BorderSide(color: Colors.black54, width: 0.5),
                         bottom: BorderSide(color: Colors.black54, width: 0.5))),
                 child: Center(
-                  child: Text('${index+1}'),
+                  child: Text('${index + 1}',style: const TextStyle(
+                      fontSize: 12
+                  ),),
                 ),
               )),
           Container(
@@ -44,7 +46,10 @@ class OrderDetailItemWidget extends StatelessWidget {
                         top: BorderSide(color: Colors.black54, width: 0.5),
                         bottom: BorderSide(color: Colors.black54, width: 0.5))),
                 child: Center(
-                  child: Text(orderItem.productName),
+                  child: Text(
+                    orderItem.productName,
+                    style: const TextStyle(fontSize: 12),
+                  ),
                 ),
               )),
           Container(
@@ -61,7 +66,10 @@ class OrderDetailItemWidget extends StatelessWidget {
                         top: BorderSide(color: Colors.black54, width: 0.5),
                         bottom: BorderSide(color: Colors.black54, width: 0.5))),
                 child: Center(
-                  child: Text('${orderItem.mrp}'),
+                  child: Text(
+                    '${orderItem.mrp}',
+                    style: const TextStyle(fontSize: 12),
+                  ),
                 ),
               )),
           Container(
@@ -78,7 +86,10 @@ class OrderDetailItemWidget extends StatelessWidget {
                         top: BorderSide(color: Colors.black54, width: 0.5),
                         bottom: BorderSide(color: Colors.black54, width: 0.5))),
                 child: Center(
-                  child: Text('${orderItem.rate}'),
+                  child: Text(
+                    '${orderItem.rate}',
+                    style: const TextStyle(fontSize: 12),
+                  ),
                 ),
               )),
           Container(
@@ -95,7 +106,10 @@ class OrderDetailItemWidget extends StatelessWidget {
                         top: BorderSide(color: Colors.black54, width: 0.5),
                         bottom: BorderSide(color: Colors.black54, width: 0.5))),
                 child: Center(
-                  child: Text('${orderItem.quantity}'),
+                  child: Text(
+                    '${orderItem.quantity}',
+                    style: const TextStyle(fontSize: 12),
+                  ),
                 ),
               )),
           Container(
@@ -112,7 +126,10 @@ class OrderDetailItemWidget extends StatelessWidget {
                         top: BorderSide(color: Colors.black54, width: 0.5),
                         bottom: BorderSide(color: Colors.black54, width: 0.5))),
                 child: Center(
-                  child: Text('${orderItem.total.to2DigitFraction()}'),
+                  child: Text(
+                    '${orderItem.total.to2DigitFraction()}',
+                    style: const TextStyle(fontSize: 12),
+                  ),
                 ),
               )),
         ],

@@ -28,7 +28,9 @@ class FailedOrderItemWidget extends StatelessWidget {
                         top: BorderSide(color: Colors.black54, width: 0.5),
                         bottom: BorderSide(color: Colors.black54, width: 0.5))),
                 child: Center(
-                  child: Text('${failedOrder.slNo}'),
+                  child: Text('${failedOrder.slNo}',style: const TextStyle(
+                      fontSize: 12
+                  ),),
                 ),
               )),
           Container(
@@ -45,7 +47,9 @@ class FailedOrderItemWidget extends StatelessWidget {
                         top: BorderSide(color: Colors.black54, width: 0.5),
                         bottom: BorderSide(color: Colors.black54, width: 0.5))),
                 child: Center(
-                  child: Text(failedOrder.customerName),
+                  child: Text(failedOrder.customerName,style: const TextStyle(
+                      fontSize: 12
+                  ),),
                 ),
               )),
           Container(
@@ -62,7 +66,9 @@ class FailedOrderItemWidget extends StatelessWidget {
                         top: BorderSide(color: Colors.black54, width: 0.5),
                         bottom: BorderSide(color: Colors.black54, width: 0.5))),
                 child: Center(
-                  child: Text('${failedOrder.amount}'),
+                  child: Text('${failedOrder.amount}',style: const TextStyle(
+                      fontSize: 12
+                  ),),
                 ),
               )),
           Container(
@@ -79,7 +85,9 @@ class FailedOrderItemWidget extends StatelessWidget {
                         top: BorderSide(color: Colors.black54, width: 0.5),
                         bottom: BorderSide(color: Colors.black54, width: 0.5))),
                 child: Center(
-                  child: Text(getOrderStatusLabel()),
+                  child: Text(getOrderStatusLabel(),style: const TextStyle(
+                      fontSize: 12
+                  ),),
                 ),
               )),
           Container(

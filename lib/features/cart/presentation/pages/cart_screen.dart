@@ -109,11 +109,13 @@ class _CartScreenState extends State<CartScreen> {
                   automaticallyImplyLeading: false,
                   backgroundColor: appColor,
                   toolbarHeight: 20,
+                  titleSpacing: 0,
                   pinned: true,
                   title: Container(
                     color: appColor,
                     padding: const EdgeInsets.only(bottom: 10),
                     child: Row(
+                      mainAxisSize: MainAxisSize.max,
                       children: [
                         Expanded(
                             flex: 8,
@@ -125,6 +127,11 @@ class _CartScreenState extends State<CartScreen> {
                                 ),
                               ),
                             )),
+                        Container(
+                          height: 60,
+                          width: 0.5,
+                          color: Colors.transparent,
+                        ),
                         Expanded(
                             flex: 4,
                             child: SizedBox(
@@ -135,6 +142,11 @@ class _CartScreenState extends State<CartScreen> {
                                 ),
                               ),
                             )),
+                        Container(
+                          height: 60,
+                          width: 0.5,
+                          color: Colors.transparent,
+                        ),
                         Expanded(
                             flex: 4,
                             child: SizedBox(
@@ -145,6 +157,11 @@ class _CartScreenState extends State<CartScreen> {
                                 ),
                               ),
                             )),
+                        Container(
+                          height: 60,
+                          width: 0.5,
+                          color: Colors.transparent,
+                        ),
                         Expanded(
                             flex: 4,
                             child: SizedBox(
@@ -155,6 +172,11 @@ class _CartScreenState extends State<CartScreen> {
                                 ),
                               ),
                             )),
+                        Container(
+                          height: 60,
+                          width: 0.5,
+                          color: Colors.transparent,
+                        ),
                         Expanded(
                             flex: 4,
                             child: SizedBox(
@@ -165,6 +187,11 @@ class _CartScreenState extends State<CartScreen> {
                                 ),
                               ),
                             )),
+                        Container(
+                          height: 60,
+                          width: 0.5,
+                          color: Colors.transparent,
+                        ),
                         const Expanded(flex: 2, child: SizedBox()),
                       ],
                     ),

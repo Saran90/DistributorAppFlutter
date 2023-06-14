@@ -13,111 +13,117 @@ class ProductItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 60,
-      color: (productModel.quantity!=null && productModel.quantity!>0)?appColorGradient2:Colors.white,
-      child: Row(
-        children: [
-          Expanded(
-              flex: 2,
-              child: Container(
-                padding: const EdgeInsets.all(5),
-                  decoration: const BoxDecoration(
-                      border: Border(
-                          top: BorderSide(color: Colors.black54, width: 0.5),
-                          bottom: BorderSide(color: Colors.black54, width: 0.5))),
-                  child: CachedNetworkImage(
-                    imageUrl: productModel.image??'',
-                    placeholder: (context, url) => SvgPicture.asset('assets/icons/item_icon.svg',fit: BoxFit.scaleDown,),
-                    errorWidget: (context, url, error) => SvgPicture.asset('assets/icons/item_icon.svg',fit: BoxFit.scaleDown),
-                  ))),
-          Container(
-            height: 60,
-            width: 0.5,
-            color: Colors.black54,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          color: (productModel.quantity != null && productModel.quantity! > 0)
+              ? appColorGradient2
+              : Colors.white,
+          child: Row(
+            children: [
+              Expanded(
+                  flex: 2,
+                  child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: CachedNetworkImage(
+                        imageUrl: productModel.image ?? '',
+                        placeholder: (context, url) => SvgPicture.asset(
+                          'assets/icons/item_icon.svg',
+                          fit: BoxFit.scaleDown,
+                        ),
+                        errorWidget: (context, url, error) => SvgPicture.asset(
+                            'assets/icons/item_icon.svg',
+                            fit: BoxFit.scaleDown),
+                      ))),
+              Container(
+                height: 60,
+                width: 0.5,
+                color: Colors.black54,
+              ),
+              Expanded(
+                  flex: 8,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    child: Center(
+                      child: Text(
+                        '${productModel.name}',
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ),
+                  )),
+              Container(
+                height: 60,
+                width: 0.5,
+                color: Colors.black54,
+              ),
+              Expanded(
+                  flex: 4,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    child: Center(
+                      child: Text(
+                        '${productModel.stock}',
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ),
+                  )),
+              Container(
+                height: 60,
+                width: 0.5,
+                color: Colors.black54,
+              ),
+              Expanded(
+                  flex: 4,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    child: Center(
+                      child: Text(
+                        '${productModel.rate}',
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ),
+                  )),
+              Container(
+                height: 60,
+                width: 0.5,
+                color: Colors.black54,
+              ),
+              Expanded(
+                  flex: 4,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    child: Center(
+                      child: Text(
+                        '${productModel.quantity}',
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ),
+                  )),
+              Container(
+                height: 60,
+                width: 0.5,
+                color: Colors.black54,
+              ),
+              Expanded(
+                  flex: 4,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    child: Center(
+                      child: Text(
+                        '${productModel.total}',
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ),
+                  )),
+            ],
           ),
-          Expanded(
-              flex: 8,
-              child: Container(
-                padding: const EdgeInsets.all(5),
-                decoration: const BoxDecoration(
-                    border: Border(
-                        top: BorderSide(color: Colors.black54, width: 0.5),
-                        bottom: BorderSide(color: Colors.black54, width: 0.5))),
-                child: Center(
-                  child: Text('${productModel.name}'),
-                ),
-              )),
-          Container(
-            height: 60,
-            width: 0.5,
-            color: Colors.black54,
-          ),
-          Expanded(
-              flex: 4,
-              child: Container(
-                padding: const EdgeInsets.all(5),
-                decoration: const BoxDecoration(
-                    border: Border(
-                        top: BorderSide(color: Colors.black54, width: 0.5),
-                        bottom: BorderSide(color: Colors.black54, width: 0.5))),
-                child: Center(
-                  child: Text('${productModel.stock}'),
-                ),
-              )),
-          Container(
-            height: 60,
-            width: 0.5,
-            color: Colors.black54,
-          ),
-          Expanded(
-              flex: 4,
-              child: Container(
-                padding: const EdgeInsets.all(5),
-                decoration: const BoxDecoration(
-                    border: Border(
-                        top: BorderSide(color: Colors.black54, width: 0.5),
-                        bottom: BorderSide(color: Colors.black54, width: 0.5))),
-                child: Center(
-                  child: Text('${productModel.rate}'),
-                ),
-              )),
-          Container(
-            height: 60,
-            width: 0.5,
-            color: Colors.black54,
-          ),
-          Expanded(
-              flex: 4,
-              child: Container(
-                padding: const EdgeInsets.all(5),
-                decoration: const BoxDecoration(
-                    border: Border(
-                        top: BorderSide(color: Colors.black54, width: 0.5),
-                        bottom: BorderSide(color: Colors.black54, width: 0.5))),
-                child: Center(
-                  child: Text('${productModel.quantity}'),
-                ),
-              )),
-          Container(
-            height: 60,
-            width: 0.5,
-            color: Colors.black54,
-          ),
-          Expanded(
-              flex: 4,
-              child: Container(
-                padding: const EdgeInsets.all(5),
-                decoration: const BoxDecoration(
-                    border: Border(
-                        top: BorderSide(color: Colors.black54, width: 0.5),
-                        bottom: BorderSide(color: Colors.black54, width: 0.5))),
-                child: Center(
-                  child: Text('${productModel.total}'),
-                ),
-              )),
-        ],
-      ),
+        ),
+        Container(
+          color: Colors.black54,
+          height: 0.5,
+        )
+      ],
     );
   }
 }

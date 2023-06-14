@@ -24,7 +24,9 @@ class SalesItemWidget extends StatelessWidget {
                         top: BorderSide(color: Colors.black54, width: 0.5),
                         bottom: BorderSide(color: Colors.black54, width: 0.5))),
                 child: Center(
-                  child: Text('${order.slNo}'),
+                  child: Text('${order.slNo}',style: const TextStyle(
+                      fontSize: 12
+                  ),),
                 ),
               )),
           Container(
@@ -41,7 +43,9 @@ class SalesItemWidget extends StatelessWidget {
                         top: BorderSide(color: Colors.black54, width: 0.5),
                         bottom: BorderSide(color: Colors.black54, width: 0.5))),
                 child: Center(
-                  child: Text(order.customerName),
+                  child: Text(order.customerName,style: const TextStyle(
+                      fontSize: 12
+                  ),),
                 ),
               )),
           Container(
@@ -58,7 +62,9 @@ class SalesItemWidget extends StatelessWidget {
                         top: BorderSide(color: Colors.black54, width: 0.5),
                         bottom: BorderSide(color: Colors.black54, width: 0.5))),
                 child: Center(
-                  child: Text('${order.amount}'),
+                  child: Text('${order.amount}',style: const TextStyle(
+                      fontSize: 12
+                  ),),
                 ),
               )),
           Container(
@@ -75,7 +81,9 @@ class SalesItemWidget extends StatelessWidget {
                         top: BorderSide(color: Colors.black54, width: 0.5),
                         bottom: BorderSide(color: Colors.black54, width: 0.5))),
                 child: Center(
-                  child: Text(getOrderStatusLabel()),
+                  child: Text(getOrderStatusLabel(),style: const TextStyle(
+                      fontSize: 12
+                  ),),
                 ),
               )),
           Container(

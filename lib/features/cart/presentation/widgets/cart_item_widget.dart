@@ -23,6 +23,7 @@ class CartItemWidget extends StatelessWidget {
       height: 60,
       color: (cartModel.quantity > 0) ? Colors.white.withOpacity(0.6) : Colors.white,
       child: Row(
+        mainAxisSize: MainAxisSize.max,
         children: [
           Expanded(
               flex: 8,
@@ -33,7 +34,9 @@ class CartItemWidget extends StatelessWidget {
                         top: BorderSide(color: Colors.black54, width: 0.5),
                         bottom: BorderSide(color: Colors.black54, width: 0.5))),
                 child: Center(
-                  child: Text(cartModel.productName),
+                  child: Text(cartModel.productName,style: const TextStyle(
+                      fontSize: 12
+                  ),),
                 ),
               )),
           Container(
@@ -50,7 +53,9 @@ class CartItemWidget extends StatelessWidget {
                         top: BorderSide(color: Colors.black54, width: 0.5),
                         bottom: BorderSide(color: Colors.black54, width: 0.5))),
                 child: Center(
-                  child: Text('${cartModel.stock}'),
+                  child: Text('${cartModel.stock}',style: const TextStyle(
+                      fontSize: 12
+                  ),),
                 ),
               )),
           Container(
@@ -67,7 +72,9 @@ class CartItemWidget extends StatelessWidget {
                         top: BorderSide(color: Colors.black54, width: 0.5),
                         bottom: BorderSide(color: Colors.black54, width: 0.5))),
                 child: Center(
-                  child: Text('${cartModel.rate}'),
+                  child: Text('${cartModel.rate}',style: const TextStyle(
+                      fontSize: 12
+                  ),),
                 ),
               )),
           Container(
@@ -86,7 +93,9 @@ class CartItemWidget extends StatelessWidget {
                           top: BorderSide(color: Colors.black54, width: 0.5),
                           bottom: BorderSide(color: Colors.black54, width: 0.5))),
                   child: Center(
-                    child: Text('${cartModel.quantity}'),
+                    child: Text('${cartModel.quantity}',style: const TextStyle(
+                        fontSize: 12
+                    ),),
                   ),
                 ),
               )),
@@ -104,7 +113,9 @@ class CartItemWidget extends StatelessWidget {
                         top: BorderSide(color: Colors.black54, width: 0.5),
                         bottom: BorderSide(color: Colors.black54, width: 0.5))),
                 child: Center(
-                  child: Text('${cartModel.orderAmount.to2DigitFraction()}'),
+                  child: Text('${cartModel.orderAmount.to2DigitFraction()}',style: const TextStyle(
+                      fontSize: 12
+                  ),),
                 ),
               )),
           Expanded(

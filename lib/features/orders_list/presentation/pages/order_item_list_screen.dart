@@ -71,6 +71,7 @@ class _OrdersItemListScreenState extends State<OrdersItemListScreen> {
                   backgroundColor: appColor,
                   toolbarHeight: 20,
                   pinned: true,
+                  titleSpacing: 0,
                   flexibleSpace: FlexibleSpaceBar(
                     titlePadding: const EdgeInsetsDirectional.only(
                       start: 10,

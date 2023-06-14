@@ -119,10 +119,10 @@ class _ProductListScreenState extends State<ProductListScreen> {
                   ),
                 ),
                 SliverAppBar(
-                  toolbarHeight: 140,
+                  toolbarHeight: 120,
                   // backgroundColor: appColor,
                   automaticallyImplyLeading: false,
-                  pinned: false,
+                  pinned: true,
                   flexibleSpace: Container(
                     decoration: const BoxDecoration(
                         gradient: LinearGradient(colors: [
@@ -224,10 +224,13 @@ class _ProductListScreenState extends State<ProductListScreen> {
                     ),
                   ),
                 ),
-                SliverToBoxAdapter(
-                  child: Container(
+                SliverAppBar(
+                  toolbarHeight: 20,
+                  automaticallyImplyLeading: false,
+                  pinned: true,
+                  titleSpacing: 0,
+                  flexibleSpace: Container(
                     color: appColor,
-                    padding: const EdgeInsets.only(bottom: 10,top: 10),
                     child: Row(
                       children: [
                         const Expanded(flex: 2, child: SizedBox()),

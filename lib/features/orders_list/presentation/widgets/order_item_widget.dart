@@ -28,7 +28,9 @@ class OrderItemWidget extends StatelessWidget {
                         top: BorderSide(color: Colors.black54, width: 0.5),
                         bottom: BorderSide(color: Colors.black54, width: 0.5))),
                 child: Center(
-                  child: Text('${pendingOrder.slNo}'),
+                  child: Text('${pendingOrder.slNo}',style: const TextStyle(
+                      fontSize: 12
+                  ),),
                 ),
               )),
           Container(
@@ -45,7 +47,9 @@ class OrderItemWidget extends StatelessWidget {
                         top: BorderSide(color: Colors.black54, width: 0.5),
                         bottom: BorderSide(color: Colors.black54, width: 0.5))),
                 child: Center(
-                  child: Text(pendingOrder.customerName),
+                  child: Text(pendingOrder.customerName,style: const TextStyle(
+                      fontSize: 12
+                  ),),
                 ),
               )),
           Container(
@@ -62,7 +66,9 @@ class OrderItemWidget extends StatelessWidget {
                         top: BorderSide(color: Colors.black54, width: 0.5),
                         bottom: BorderSide(color: Colors.black54, width: 0.5))),
                 child: Center(
-                  child: Text('${pendingOrder.amount}'),
+                  child: Text('${pendingOrder.amount}',style: const TextStyle(
+                      fontSize: 12
+                  ),),
                 ),
               )),
           Container(
@@ -79,7 +85,9 @@ class OrderItemWidget extends StatelessWidget {
                         top: BorderSide(color: Colors.black54, width: 0.5),
                         bottom: BorderSide(color: Colors.black54, width: 0.5))),
                 child: Center(
-                  child: Text(getOrderStatusLabel()),
+                  child: Text(getOrderStatusLabel(),style: const TextStyle(
+                      fontSize: 12
+                  ),),
                 ),
               )),
           Container(
