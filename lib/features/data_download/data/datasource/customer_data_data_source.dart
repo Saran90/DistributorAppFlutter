@@ -27,15 +27,13 @@ class CustomerDataDataSourceImpl extends CustomerDataDataSource {
   Future<List<HiveCustomerModel>?> getCustomers(String name) async {
     try {
       var response = await dio.get(AppConfig.instance.endPoint!.customers,
-          queryParameters: {'Name': name},
-          options: Options(headers: {
-            'Authorization': 'Bearer ${sharedPreferenceDataSource.getString(spAccessToken)}'
-          }));
+          queryParameters: {'Name': name},);
       CustomerDataResponse customerDataResponse =
       CustomerDataResponse.fromJson(response.data);
       List<HiveCustomerModel> hiveCustomerModels =
           _getHiveCustomersModels(customerDataResponse);
       await _storeCustomers(hiveCustomerModels);
+      await sharedPreferenceDataSource.setBool(spHasCustomerDataSynced, true);
       return hiveCustomerModels;
     } catch (exception) {
       debugPrint('Customers Call: $exception');

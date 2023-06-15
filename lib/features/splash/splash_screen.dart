@@ -17,13 +17,17 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+
+  final int timerDurationInSec = 2;
+
+  @override
+  void initState() {
+    context.read<AuthCubit>().isLoggedIn();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    Timer(const Duration(seconds: 3), () {
-      if (mounted) {
-        context.read<AuthCubit>().isLoggedIn();
-      }
-    });
     return Scaffold(
       body: SizedBox(
         height: MediaQuery.of(context).size.height,
@@ -35,16 +39,33 @@ class _SplashScreenState extends State<SplashScreen> {
               builder: (context, state) => Container(),
               listener: (context, state) {
                 if (state is Authenticated) {
-                  DataDownloadState dataDownloadState =
-                      context.read<DataDownloadCubit>().state;
-                  if (dataDownloadState is DataNotAvailable) {
-                    AppConfig.appRouter.replace(const DataDownloadRouter());
-                  } else {
-                    AppConfig.appRouter.replace(const CustomerListRouter());
-                  }
+                  context.read<DataDownloadCubit>().isDataAvailable();
                 }
                 if (state is UnAuthenticated) {
-                  AppConfig.appRouter.replace(const LoginRouter());
+                  Timer(Duration(seconds: timerDurationInSec), () {
+                    if (mounted) {
+                      AppConfig.appRouter.replace(const LoginRouter());
+                    }
+                  });
+                }
+              },
+            ),
+            BlocConsumer<DataDownloadCubit, DataDownloadState>(
+              builder: (context, state) => Container(),
+              listener: (context, state) {
+                if (state is DataNotAvailable) {
+                  Timer(Duration(seconds: timerDurationInSec), () {
+                    if (mounted) {
+                      AppConfig.appRouter.replace(const DataDownloadRouter());
+                    }
+                  });
+                }
+                if (state is DataAvailable) {
+                  Timer(Duration(seconds: timerDurationInSec), () {
+                    if (mounted) {
+                      AppConfig.appRouter.replace(const CustomerListRouter());
+                    }
+                  });
                 }
               },
             )

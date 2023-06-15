@@ -56,29 +56,45 @@ Future<void> main() async {
 }
 
 Future<void> initDependencies() async {
+  AppConfig.s1.registerLazySingleton<SharedPreferenceDataSource>(
+      () => SharedPreferenceDataSourceImpl()..init());
+
   Dio dio = Dio()
     ..options.baseUrl = AppConfig.instance.endPoint!.baseUrl
     ..options.connectTimeout = Duration(milliseconds: Constants.connectTimeOut)
     ..options.receiveTimeout = Duration(milliseconds: Constants.receiveTimeOut)
-    ..interceptors.add(PrettyDioLogger(
-        requestHeader: true,
-        requestBody: true,
-        responseBody: true,
-        responseHeader: false,
-        error: true,
-        compact: true,
-        maxWidth: 90));
+    ..interceptors.addAll([
+      PrettyDioLogger(
+          requestHeader: true,
+          requestBody: true,
+          responseBody: true,
+          responseHeader: false,
+          error: true,
+          compact: true,
+          maxWidth: 90),
+      AuthenticatedApiInterceptor(sharedPreferenceDataSource: AppConfig.s1())
+    ]);
 
-  AppConfig.s1.registerLazySingleton<HiveDataSource>(() => HiveDataSourceImpl());
-
-  AppConfig.s1.registerLazySingleton<SharedPreferenceDataSource>(
-      () => SharedPreferenceDataSourceImpl()..init());
-
-  AppConfig.s1.registerLazySingleton<AuthenticatedApiInterceptor>(
-      () => AuthenticatedApiInterceptor(sharedPreferenceDataSource: AppConfig.s1()));
+  AppConfig.s1
+      .registerLazySingleton<HiveDataSource>(() => HiveDataSourceImpl());
 
   //Login
-  AuthInjectionConateinr(dio: dio).initialize();
+  AuthInjectionConateinr(
+          dio: Dio()
+            ..options.baseUrl = AppConfig.instance.endPoint!.baseUrl
+            ..options.connectTimeout =
+                Duration(milliseconds: Constants.connectTimeOut)
+            ..options.receiveTimeout =
+                Duration(milliseconds: Constants.receiveTimeOut)
+            ..interceptors.add(PrettyDioLogger(
+                requestHeader: true,
+                requestBody: true,
+                responseBody: true,
+                responseHeader: false,
+                error: true,
+                compact: true,
+                maxWidth: 90)))
+      .initialize();
 
   //Data
   DataInjectionContainer(dio: dio).initialize();

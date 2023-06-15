@@ -32,76 +32,82 @@ import 'presentation/bloc/is_data_available/data_download_cubit.dart';
 import 'presentation/bloc/location_data/location_data_cubit.dart';
 import 'presentation/bloc/product_data/product_data_cubit.dart';
 
-class DataInjectionContainer{
-
+class DataInjectionContainer {
   DataInjectionContainer({required this.dio});
 
   final Dio dio;
 
-  void initialize(){
-
+  void initialize() {
     //Product Data
     AppConfig.s1.registerLazySingleton<ProductDataDataSource>(() =>
         ProductDataDataSourceImpl(
-            dio: dio, hiveDataSource: AppConfig.s1(), sharedPreferenceDataSource: AppConfig.s1()));
+            dio: dio,
+            hiveDataSource: AppConfig.s1(),
+            sharedPreferenceDataSource: AppConfig.s1()));
     AppConfig.s1.registerLazySingleton<ProductDataRepository>(
-            () => ProductDataRepositoryImpl(productDataDataSource: AppConfig.s1()));
+        () => ProductDataRepositoryImpl(productDataDataSource: AppConfig.s1()));
     AppConfig.s1.registerLazySingleton<ProductDataUseCase>(
-            () => ProductDataUseCase(productDataRepository: AppConfig.s1()));
+        () => ProductDataUseCase(productDataRepository: AppConfig.s1()));
     AppConfig.s1.registerFactory<ProductDataCubit>(
-            () => ProductDataCubit(productDataUseCase: AppConfig.s1()));
+        () => ProductDataCubit(productDataUseCase: AppConfig.s1()));
 
     //Customer Data
     AppConfig.s1.registerLazySingleton<CustomerDataDataSource>(() =>
         CustomerDataDataSourceImpl(
-            dio: dio, hiveDataSource: AppConfig.s1(), sharedPreferenceDataSource: AppConfig.s1()));
-    AppConfig.s1.registerLazySingleton<CustomerDataRepository>(
-            () => CustomerDataRepositoryImpl(customerDataDataSource: AppConfig.s1()));
+            dio: dio,
+            hiveDataSource: AppConfig.s1(),
+            sharedPreferenceDataSource: AppConfig.s1()));
+    AppConfig.s1.registerLazySingleton<CustomerDataRepository>(() =>
+        CustomerDataRepositoryImpl(customerDataDataSource: AppConfig.s1()));
     AppConfig.s1.registerLazySingleton<CustomerDataUseCase>(
-            () => CustomerDataUseCase(customerDataRepository: AppConfig.s1()));
+        () => CustomerDataUseCase(customerDataRepository: AppConfig.s1()));
     AppConfig.s1.registerFactory<CustomerDataCubit>(
-            () => CustomerDataCubit(customerDataUseCase: AppConfig.s1()));
+        () => CustomerDataCubit(customerDataUseCase: AppConfig.s1()));
 
     //Location Data
     AppConfig.s1.registerLazySingleton<LocationDataDataSource>(() =>
         LocationDataDataSourceImpl(
-            dio: dio, hiveDataSource: AppConfig.s1(), sharedPreferenceDataSource: AppConfig.s1()));
-    AppConfig.s1.registerLazySingleton<LocationDataRepository>(
-            () => LocationDataRepositoryImpl(locationDataDataSource: AppConfig.s1()));
+            dio: dio,
+            hiveDataSource: AppConfig.s1(),
+            sharedPreferenceDataSource: AppConfig.s1()));
+    AppConfig.s1.registerLazySingleton<LocationDataRepository>(() =>
+        LocationDataRepositoryImpl(locationDataDataSource: AppConfig.s1()));
     AppConfig.s1.registerLazySingleton<LocationDataUseCase>(
-            () => LocationDataUseCase(locationDataRepository: AppConfig.s1()));
+        () => LocationDataUseCase(locationDataRepository: AppConfig.s1()));
     AppConfig.s1.registerFactory<LocationDataCubit>(
-            () => LocationDataCubit(locationDataUseCase: AppConfig.s1()));
+        () => LocationDataCubit(locationDataUseCase: AppConfig.s1()));
 
     //Data Availability
-    AppConfig.s1.registerLazySingleton<IsDataAvailableDataSource>(
-            () => IsDataAvailableDataSourceImpl(hiveDataSource: AppConfig.s1()));
-    AppConfig.s1.registerLazySingleton<IsDataAvailableRepository>(
-            () => IsDataAvailableRepositoryImpl(isDataAvailableDataSource: AppConfig.s1()));
-    AppConfig.s1.registerLazySingleton<IsDataAvailableUseCase>(
-            () => IsDataAvailableUseCase(isDataAvailableRepository: AppConfig.s1()));
+    AppConfig.s1.registerLazySingleton<IsDataAvailableDataSource>(() =>
+        IsDataAvailableDataSourceImpl(
+            hiveDataSource: AppConfig.s1(),
+            sharedPreferenceDataSource: AppConfig.s1()));
+    AppConfig.s1.registerLazySingleton<IsDataAvailableRepository>(() =>
+        IsDataAvailableRepositoryImpl(
+            isDataAvailableDataSource: AppConfig.s1()));
+    AppConfig.s1.registerLazySingleton<IsDataAvailableUseCase>(() =>
+        IsDataAvailableUseCase(isDataAvailableRepository: AppConfig.s1()));
     AppConfig.s1.registerFactory<DataDownloadCubit>(
-            () => DataDownloadCubit(isDataAvailableUseCase: AppConfig.s1()));
+        () => DataDownloadCubit(isDataAvailableUseCase: AppConfig.s1()));
 
     //Customer List
     AppConfig.s1.registerLazySingleton<CustomerListDataSource>(
-            () => CustomerListDataSourceImpl(hiveDataSource: AppConfig.s1()));
-    AppConfig.s1.registerLazySingleton<CustomerListRepository>(
-            () => CustomerListRepositoryImpl(customerListDataSource: AppConfig.s1()));
+        () => CustomerListDataSourceImpl(hiveDataSource: AppConfig.s1()));
+    AppConfig.s1.registerLazySingleton<CustomerListRepository>(() =>
+        CustomerListRepositoryImpl(customerListDataSource: AppConfig.s1()));
     AppConfig.s1.registerLazySingleton<CustomerListUseCase>(
-            () => CustomerListUseCase(customerListRepository: AppConfig.s1()));
+        () => CustomerListUseCase(customerListRepository: AppConfig.s1()));
     AppConfig.s1.registerFactory<CustomerListCubit>(
-            () => CustomerListCubit(customerListUseCase: AppConfig.s1()));
+        () => CustomerListCubit(customerListUseCase: AppConfig.s1()));
 
     //Location List
     AppConfig.s1.registerLazySingleton<LocationListDataSource>(
-            () => LocationListDataSourceImpl(hiveDataSource: AppConfig.s1()));
-    AppConfig.s1.registerLazySingleton<LocationListRepository>(
-            () => LocationListRepositoryImpl(locationListDataSource: AppConfig.s1()));
+        () => LocationListDataSourceImpl(hiveDataSource: AppConfig.s1()));
+    AppConfig.s1.registerLazySingleton<LocationListRepository>(() =>
+        LocationListRepositoryImpl(locationListDataSource: AppConfig.s1()));
     AppConfig.s1.registerLazySingleton<LocationListUseCase>(
-            () => LocationListUseCase(locationListRepository: AppConfig.s1()));
+        () => LocationListUseCase(locationListRepository: AppConfig.s1()));
     AppConfig.s1.registerFactory<LocationListCubit>(
-            () => LocationListCubit(locationListUseCase: AppConfig.s1()));
-
+        () => LocationListCubit(locationListUseCase: AppConfig.s1()));
   }
 }

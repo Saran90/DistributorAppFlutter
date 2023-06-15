@@ -26,15 +26,13 @@ class LocationDataDataSourceImpl extends LocationDataDataSource {
   @override
   Future<List<HiveLocationModel>?> getLocations() async {
     try {
-      var response = await dio.get(AppConfig.instance.endPoint!.locations,
-          options: Options(headers: {
-            'Authorization': 'Bearer ${sharedPreferenceDataSource.getString(spAccessToken)}'
-          }));
+      var response = await dio.get(AppConfig.instance.endPoint!.locations,);
       LocationDataResponse locationsDataResponse =
           LocationDataResponse.fromJson(response.data);
       List<HiveLocationModel> hiveLocationModels =
           _getHiveLocationsModels(locationsDataResponse);
       await _storeLocations(hiveLocationModels);
+      await sharedPreferenceDataSource.setBool(spHasLocationDataSynced, true);
       return hiveLocationModels;
     } catch (exception) {
       debugPrint('Locations Call: $exception');

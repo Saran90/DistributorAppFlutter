@@ -25,17 +25,16 @@ class ProductDataDataSourceImpl extends ProductDataDataSource {
   @override
   Future<List<HiveProductModel>?> getProducts(String name) async {
     try {
-      var response = await dio.get(AppConfig.instance.endPoint!.products,
-          queryParameters: {'Name': name},
-          options: Options(headers: {
-            'Authorization':
-                'Bearer ${sharedPreferenceDataSource.getString(spAccessToken)}'
-          }));
+      var response = await dio.get(
+        AppConfig.instance.endPoint!.products,
+        queryParameters: {'Name': name},
+      );
       ProductsDataResponse productsDataResponse =
           ProductsDataResponse.fromJson(response.data);
       List<HiveProductModel> hiveProductModels =
           _getHiveProductsModels(productsDataResponse);
       await _storeProducts(hiveProductModels);
+      await sharedPreferenceDataSource.setBool(spHasProductDataSynced, true);
       return hiveProductModels;
     } catch (exception) {
       debugPrint('Products Call: $exception');

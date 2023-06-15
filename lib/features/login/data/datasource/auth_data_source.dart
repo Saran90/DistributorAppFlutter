@@ -40,6 +40,7 @@ class AuthDataSourceImpl extends AuthDataSource {
         queryParameters: {'username': username, 'password': password});
     try {
       LoginResponse loginResponse = LoginResponse.fromJson(response.data);
+      debugPrint('Access Token: ${loginResponse.accessToken}');
       return loginResponse;
     } catch (exception) {
       debugPrint('Login Call: $exception');
@@ -71,6 +72,9 @@ class AuthDataSourceImpl extends AuthDataSource {
     await sharedPreferenceDataSource.setString(spAccessToken, '');
     await sharedPreferenceDataSource.setBool(spIsLoggedIn, false);
     await sharedPreferenceDataSource.setInt(spManufactureId, -1);
+    await sharedPreferenceDataSource.setBool(spHasProductDataSynced, false);
+    await sharedPreferenceDataSource.setBool(spHasLocationDataSynced, false);
+    await sharedPreferenceDataSource.setBool(spHasCustomerDataSynced, false);
     await hiveDataSource.clearAll();
   }
 
