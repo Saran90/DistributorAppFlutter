@@ -68,7 +68,7 @@ class _OrdersListScreenState extends State<OrdersListScreen> {
                   sliver: SliverAppBar(
                     automaticallyImplyLeading: false,
                     backgroundColor: appColor,
-                    toolbarHeight: 20,
+                    toolbarHeight: 30,
                     pinned: true,
                     flexibleSpace: FlexibleSpaceBar(
                       titlePadding: const EdgeInsetsDirectional.only(
@@ -88,6 +88,11 @@ class _OrdersListScreenState extends State<OrdersListScreen> {
                                     ),
                                   ),
                                 )),
+                            Container(
+                              height: 70,
+                              width: 0.5,
+                              color: Colors.transparent,
+                            ),
                             Expanded(
                                 flex: 8,
                                 child: SizedBox(
@@ -98,6 +103,11 @@ class _OrdersListScreenState extends State<OrdersListScreen> {
                                     ),
                                   ),
                                 )),
+                            Container(
+                              height: 70,
+                              width: 0.5,
+                              color: Colors.transparent,
+                            ),
                             Expanded(
                                 flex: 4,
                                 child: SizedBox(
@@ -108,6 +118,11 @@ class _OrdersListScreenState extends State<OrdersListScreen> {
                                     ),
                                   ),
                                 )),
+                            Container(
+                              height: 70,
+                              width: 0.5,
+                              color: Colors.transparent,
+                            ),
                             Expanded(
                                 flex: 4,
                                 child: SizedBox(

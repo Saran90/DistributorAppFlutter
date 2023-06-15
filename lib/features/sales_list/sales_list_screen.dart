@@ -63,8 +63,9 @@ class _SalesListScreenState extends State<SalesListScreen> {
                   sliver: SliverAppBar(
                     automaticallyImplyLeading: false,
                     backgroundColor: appColor,
-                    toolbarHeight: 20,
+                    toolbarHeight: 30,
                     pinned: true,
+                    titleSpacing: 0,
                     flexibleSpace: FlexibleSpaceBar(
                       titlePadding: const EdgeInsetsDirectional.only(
                         start: 10,
@@ -82,7 +83,7 @@ class _SalesListScreenState extends State<SalesListScreen> {
                                   ),
                                 )),
                             Container(
-                              height: 60,
+                              height: 70,
                               width: 0.5,
                               color: Colors.transparent,
                             ),
@@ -95,7 +96,7 @@ class _SalesListScreenState extends State<SalesListScreen> {
                                   ),
                                 )),
                             Container(
-                              height: 60,
+                              height: 70,
                               width: 0.5,
                               color: Colors.transparent,
                             ),
@@ -108,7 +109,7 @@ class _SalesListScreenState extends State<SalesListScreen> {
                                   ),
                                 )),
                             Container(
-                              height: 60,
+                              height: 70,
                               width: 0.5,
                               color: Colors.transparent,
                             ),

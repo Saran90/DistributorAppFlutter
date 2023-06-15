@@ -14,7 +14,7 @@ class OrderDetailItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 60,
+      height: 70,
       color: Colors.white,
       child: Row(
         children: [
@@ -33,7 +33,7 @@ class OrderDetailItemWidget extends StatelessWidget {
                 ),
               )),
           Container(
-            height: 60,
+            height: 70,
             width: 0.5,
             color: Colors.black54,
           ),
@@ -53,7 +53,7 @@ class OrderDetailItemWidget extends StatelessWidget {
                 ),
               )),
           Container(
-            height: 60,
+            height: 70,
             width: 0.5,
             color: Colors.black54,
           ),
@@ -73,7 +73,7 @@ class OrderDetailItemWidget extends StatelessWidget {
                 ),
               )),
           Container(
-            height: 60,
+            height: 70,
             width: 0.5,
             color: Colors.black54,
           ),
@@ -93,7 +93,7 @@ class OrderDetailItemWidget extends StatelessWidget {
                 ),
               )),
           Container(
-            height: 60,
+            height: 70,
             width: 0.5,
             color: Colors.black54,
           ),
@@ -113,7 +113,7 @@ class OrderDetailItemWidget extends StatelessWidget {
                 ),
               )),
           Container(
-            height: 60,
+            height: 70,
             width: 0.5,
             color: Colors.black54,
           ),

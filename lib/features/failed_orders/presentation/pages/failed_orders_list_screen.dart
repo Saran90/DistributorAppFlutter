@@ -67,7 +67,8 @@ class _FailedOrdersListScreenState extends State<FailedOrdersListScreen> {
                   sliver: SliverAppBar(
                     automaticallyImplyLeading: false,
                     backgroundColor: appColor,
-                    toolbarHeight: 20,
+                    toolbarHeight: 30,
+                    titleSpacing: 0,
                     pinned: true,
                     flexibleSpace: FlexibleSpaceBar(
                       titlePadding: const EdgeInsetsDirectional.only(
@@ -87,6 +88,11 @@ class _FailedOrdersListScreenState extends State<FailedOrdersListScreen> {
                                     ),
                                   ),
                                 )),
+                            Container(
+                              height: 70,
+                              width: 0.5,
+                              color: Colors.transparent,
+                            ),
                             Expanded(
                                 flex: 8,
                                 child: SizedBox(
@@ -97,6 +103,11 @@ class _FailedOrdersListScreenState extends State<FailedOrdersListScreen> {
                                     ),
                                   ),
                                 )),
+                            Container(
+                              height: 70,
+                              width: 0.5,
+                              color: Colors.transparent,
+                            ),
                             Expanded(
                                 flex: 4,
                                 child: SizedBox(
@@ -107,6 +118,11 @@ class _FailedOrdersListScreenState extends State<FailedOrdersListScreen> {
                                     ),
                                   ),
                                 )),
+                            Container(
+                              height: 70,
+                              width: 0.5,
+                              color: Colors.transparent,
+                            ),
                             Expanded(
                                 flex: 4,
                                 child: SizedBox(

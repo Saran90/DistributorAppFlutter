@@ -20,7 +20,7 @@ class CartItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 60,
+      height: 70,
       color: (cartModel.quantity > 0) ? Colors.white.withOpacity(0.6) : Colors.white,
       child: Row(
         mainAxisSize: MainAxisSize.max,
@@ -40,7 +40,7 @@ class CartItemWidget extends StatelessWidget {
                 ),
               )),
           Container(
-            height: 60,
+            height: 70,
             width: 0.5,
             color: Colors.black54,
           ),
@@ -59,7 +59,7 @@ class CartItemWidget extends StatelessWidget {
                 ),
               )),
           Container(
-            height: 60,
+            height: 70,
             width: 0.5,
             color: Colors.black54,
           ),
@@ -78,7 +78,7 @@ class CartItemWidget extends StatelessWidget {
                 ),
               )),
           Container(
-            height: 60,
+            height: 70,
             width: 0.5,
             color: Colors.black54,
           ),
@@ -100,7 +100,7 @@ class CartItemWidget extends StatelessWidget {
                 ),
               )),
           Container(
-            height: 60,
+            height: 70,
             width: 0.5,
             color: Colors.black54,
           ),

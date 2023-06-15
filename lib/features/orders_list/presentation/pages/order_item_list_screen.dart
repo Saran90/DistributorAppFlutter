@@ -69,7 +69,7 @@ class _OrdersItemListScreenState extends State<OrdersItemListScreen> {
                 SliverAppBar(
                   automaticallyImplyLeading: false,
                   backgroundColor: appColor,
-                  toolbarHeight: 20,
+                  toolbarHeight: 30,
                   pinned: true,
                   titleSpacing: 0,
                   flexibleSpace: FlexibleSpaceBar(
@@ -89,7 +89,7 @@ class _OrdersItemListScreenState extends State<OrdersItemListScreen> {
                                 ),
                               )),
                           Container(
-                            height: 60,
+                            height: 70,
                             width: 0.5,
                             color: Colors.transparent,
                           ),
@@ -102,7 +102,7 @@ class _OrdersItemListScreenState extends State<OrdersItemListScreen> {
                                 ),
                               )),
                           Container(
-                            height: 60,
+                            height: 70,
                             width: 0.5,
                             color: Colors.transparent,
                           ),
@@ -115,7 +115,7 @@ class _OrdersItemListScreenState extends State<OrdersItemListScreen> {
                                 ),
                               )),
                           Container(
-                            height: 60,
+                            height: 70,
                             width: 0.5,
                             color: Colors.transparent,
                           ),
@@ -128,7 +128,7 @@ class _OrdersItemListScreenState extends State<OrdersItemListScreen> {
                                 ),
                               )),
                           Container(
-                            height: 60,
+                            height: 70,
                             width: 0.5,
                             color: Colors.transparent,
                           ),
@@ -141,7 +141,7 @@ class _OrdersItemListScreenState extends State<OrdersItemListScreen> {
                                 ),
                               )),
                           Container(
-                            height: 60,
+                            height: 70,
                             width: 0.5,
                             color: Colors.transparent,
                           ),

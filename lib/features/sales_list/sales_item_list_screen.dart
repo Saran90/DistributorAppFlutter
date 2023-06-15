@@ -52,7 +52,7 @@ class _SalesItemListScreenState extends State<SalesItemListScreen> {
                 SliverAppBar(
                   automaticallyImplyLeading: false,
                   backgroundColor: appColor,
-                  toolbarHeight: 20,
+                  toolbarHeight: 30,
                   pinned: true,
                   flexibleSpace: FlexibleSpaceBar(
                     titlePadding: const EdgeInsetsDirectional.only(
@@ -71,7 +71,7 @@ class _SalesItemListScreenState extends State<SalesItemListScreen> {
                                 ),
                               )),
                           Container(
-                            height: 60,
+                            height: 70,
                             width: 0.5,
                             color: Colors.transparent,
                           ),
@@ -84,7 +84,7 @@ class _SalesItemListScreenState extends State<SalesItemListScreen> {
                                 ),
                               )),
                           Container(
-                            height: 60,
+                            height: 70,
                             width: 0.5,
                             color: Colors.transparent,
                           ),
@@ -97,7 +97,7 @@ class _SalesItemListScreenState extends State<SalesItemListScreen> {
                                 ),
                               )),
                           Container(
-                            height: 60,
+                            height: 70,
                             width: 0.5,
                             color: Colors.transparent,
                           ),
@@ -110,7 +110,7 @@ class _SalesItemListScreenState extends State<SalesItemListScreen> {
                                 ),
                               )),
                           Container(
-                            height: 60,
+                            height: 70,
                             width: 0.5,
                             color: Colors.transparent,
                           ),
@@ -123,7 +123,7 @@ class _SalesItemListScreenState extends State<SalesItemListScreen> {
                                 ),
                               )),
                           Container(
-                            height: 60,
+                            height: 70,
                             width: 0.5,
                             color: Colors.transparent,
                           ),

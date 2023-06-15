@@ -71,7 +71,8 @@ class _FailedOrdersItemListScreenState
                 SliverAppBar(
                   automaticallyImplyLeading: false,
                   backgroundColor: appColor,
-                  toolbarHeight: 20,
+                  toolbarHeight: 30,
+                  titleSpacing: 0,
                   pinned: true,
                   flexibleSpace: FlexibleSpaceBar(
                     titlePadding: const EdgeInsetsDirectional.only(
@@ -90,7 +91,7 @@ class _FailedOrdersItemListScreenState
                                 ),
                               )),
                           Container(
-                            height: 60,
+                            height: 70,
                             width: 0.5,
                             color: Colors.transparent,
                           ),
@@ -103,7 +104,7 @@ class _FailedOrdersItemListScreenState
                                 ),
                               )),
                           Container(
-                            height: 60,
+                            height: 70,
                             width: 0.5,
                             color: Colors.transparent,
                           ),
@@ -116,7 +117,7 @@ class _FailedOrdersItemListScreenState
                                 ),
                               )),
                           Container(
-                            height: 60,
+                            height: 70,
                             width: 0.5,
                             color: Colors.transparent,
                           ),
@@ -129,7 +130,7 @@ class _FailedOrdersItemListScreenState
                                 ),
                               )),
                           Container(
-                            height: 60,
+                            height: 70,
                             width: 0.5,
                             color: Colors.transparent,
                           ),
@@ -142,7 +143,7 @@ class _FailedOrdersItemListScreenState
                                 ),
                               )),
                           Container(
-                            height: 60,
+                            height: 70,
                             width: 0.5,
                             color: Colors.transparent,
                           ),

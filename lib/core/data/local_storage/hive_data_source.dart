@@ -297,25 +297,34 @@ class HiveDataSourceImpl extends HiveDataSource {
 
   @override
   List<HiveCartModel>? getCustomerCart(int customerId) {
-    List<HiveCartModel>? customerCart =
-        cartBox?.values.toList();
-    customerCart = customerCart?.where((e) => e.customerId == customerId).toList();
+    List<HiveCartModel>? customerCart = cartBox?.values.toList();
+    customerCart =
+        customerCart?.where((e) => e.customerId == customerId).toList();
     return customerCart;
   }
 
   @override
   Future<void> updateCart(HiveCartModel hiveCartModel) async {
-    return await cartBox?.put(
-        (hiveCartModel.customerId + DateTime.now().millisecondsSinceEpoch)
-            .hashCode,
-        hiveCartModel);
+    List<HiveCartModel>? customerCart = cartBox?.values
+        .toList()
+        .where((element) => element.id == hiveCartModel.id)
+        .toList();
+
+    if(customerCart!=null && customerCart.isNotEmpty){
+      return cartBox?.put(customerCart.first.key,hiveCartModel);
+    }
   }
 
   @override
   Future<void>? deleteCustomerCartItem(HiveCartModel hiveCartModel) {
-    return cartBox?.delete(
-        (hiveCartModel.customerId + DateTime.now().millisecondsSinceEpoch)
-            .hashCode);
+    List<HiveCartModel>? customerCart = cartBox?.values
+        .toList()
+        .where((element) => element.id == hiveCartModel.id)
+        .toList();
+
+    if(customerCart!=null && customerCart.isNotEmpty){
+      return cartBox?.delete(customerCart.first.key);
+    }
   }
 
   @override

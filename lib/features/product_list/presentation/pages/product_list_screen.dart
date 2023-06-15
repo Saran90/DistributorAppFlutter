@@ -8,6 +8,7 @@ import 'package:distributor_app_flutter/features/product_list/presentation/widge
 import 'package:distributor_app_flutter/utils/app_router.dart';
 import 'package:distributor_app_flutter/utils/extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -34,7 +35,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
   List<Cart> _cartProducts = [];
 
   final _tableHeaderStyle = const TextStyle(
-      color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500);
+      color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500);
 
   int? _userId;
 
@@ -225,7 +226,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                   ),
                 ),
                 SliverAppBar(
-                  toolbarHeight: 20,
+                  toolbarHeight: 30,
                   automaticallyImplyLeading: false,
                   pinned: true,
                   titleSpacing: 0,
@@ -390,8 +391,9 @@ class _ProductListScreenState extends State<ProductListScreen> {
   }
 
   Future<void> _onCartTapped() async {
-    if(_cartCount!=0){
-      await AppConfig.appRouter.push(CartRouter(hiveCustomerModel: widget.hiveCustomerModel));
+    if (_cartCount != 0) {
+      await AppConfig.appRouter
+          .push(CartRouter(hiveCustomerModel: widget.hiveCustomerModel));
       _updateList();
     }
   }
@@ -420,7 +422,8 @@ class _ProductListScreenState extends State<ProductListScreen> {
         if (_cartProducts[i].productId == '${product.id}') {
           isProductAvailableInCart = true;
           _cartProducts[i].quantity = quantity;
-          _cartProducts[i].orderAmount = (quantity * (product.rate ?? 0)).to2DigitFraction();
+          _cartProducts[i].orderAmount =
+              (quantity * (product.rate ?? 0)).to2DigitFraction();
           if (quantity == 0) {
             context
                 .read<CartCubit>()
@@ -478,10 +481,8 @@ class _ProductListScreenState extends State<ProductListScreen> {
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 12),
           decoration: const BoxDecoration(
-              gradient: LinearGradient(colors: [
-                appColorGradient1,
-                appColorGradient2
-              ]),
+              gradient: LinearGradient(
+                  colors: [appColorGradient1, appColorGradient2]),
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20), topRight: Radius.circular(20))),
           padding: EdgeInsets.only(
@@ -526,6 +527,10 @@ class _ProductListScreenState extends State<ProductListScreen> {
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
                     ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'^[1-9][0-9]*'))
+                    ],
+                    enableInteractiveSelection: false,
                     controller: quantityController,
                     keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
@@ -550,11 +555,10 @@ class _ProductListScreenState extends State<ProductListScreen> {
                     endColor: appColorGradient2,
                     onSubmit: () async {
                       if (quantityController.text.isNotEmpty) {
-                        double quantity =
-                            double.parse(quantityController.text);
+                        double quantity = double.parse(quantityController.text);
                         await AppConfig.appRouter.pop();
                         _onQuantitySelected(quantity, product);
-                      }else{
+                      } else {
                         double quantity = 0;
                         await AppConfig.appRouter.pop();
                         _onQuantitySelected(quantity, product);

@@ -112,7 +112,7 @@ class MyApp extends StatelessWidget {
           title: 'Distributor App',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
-            primarySwatch: Colors.teal,
+            primarySwatch: Colors.red,
           ),
           routerDelegate: AppConfig.appRouter.delegate(),
           routeInformationParser: AppConfig.appRouter.defaultRouteParser(),

@@ -37,7 +37,7 @@ class ProductItemWidget extends StatelessWidget {
                             fit: BoxFit.scaleDown),
                       ))),
               Container(
-                height: 60,
+                height: 70,
                 width: 0.5,
                 color: Colors.black54,
               ),
@@ -48,12 +48,12 @@ class ProductItemWidget extends StatelessWidget {
                     child: Center(
                       child: Text(
                         '${productModel.name}',
-                        style: const TextStyle(fontSize: 12),
+                        style: const TextStyle(fontSize: 10),
                       ),
                     ),
                   )),
               Container(
-                height: 60,
+                height: 70,
                 width: 0.5,
                 color: Colors.black54,
               ),
@@ -69,7 +69,7 @@ class ProductItemWidget extends StatelessWidget {
                     ),
                   )),
               Container(
-                height: 60,
+                height: 70,
                 width: 0.5,
                 color: Colors.black54,
               ),
@@ -85,7 +85,7 @@ class ProductItemWidget extends StatelessWidget {
                     ),
                   )),
               Container(
-                height: 60,
+                height: 70,
                 width: 0.5,
                 color: Colors.black54,
               ),
@@ -101,7 +101,7 @@ class ProductItemWidget extends StatelessWidget {
                     ),
                   )),
               Container(
-                height: 60,
+                height: 70,
                 width: 0.5,
                 color: Colors.black54,
               ),

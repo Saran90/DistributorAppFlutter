@@ -29,7 +29,7 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   final _tableHeaderStyle = const TextStyle(
-      color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500);
+      color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500);
 
   List<Cart> _cartProducts = [];
 
@@ -75,13 +75,13 @@ class _CartScreenState extends State<CartScreen> {
                   ),
                 ),
                 SliverAppBar(
-                  toolbarHeight: 70,
+                  toolbarHeight: 60,
                   backgroundColor: appColor,
                   automaticallyImplyLeading: false,
                   pinned: false,
                   flexibleSpace: Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 20),
+                        horizontal: 20, vertical: 10),
                     decoration: const BoxDecoration(
                         gradient: LinearGradient(
                             colors: [appColorGradient1, appColorGradient2])),
@@ -108,7 +108,7 @@ class _CartScreenState extends State<CartScreen> {
                 SliverAppBar(
                   automaticallyImplyLeading: false,
                   backgroundColor: appColor,
-                  toolbarHeight: 20,
+                  toolbarHeight: 30,
                   titleSpacing: 0,
                   pinned: true,
                   title: Container(
