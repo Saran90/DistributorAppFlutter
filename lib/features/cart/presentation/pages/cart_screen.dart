@@ -252,6 +252,7 @@ class _CartScreenState extends State<CartScreen> {
                   _cartProducts = state.carts;
                 });
                 if (_cartProducts.isEmpty) {
+                  context.showMessage('Cart cleared');
                   AppConfig.appRouter.pop();
                 }
               }
@@ -269,6 +270,9 @@ class _CartScreenState extends State<CartScreen> {
                 context.showMessage(state.message);
               }
               if (state is CartItemDeleted) {
+                if(_cartProducts.length>1){
+                  context.showMessage('Item deleted');
+                }
                 context
                     .read<CartCubit>()
                     .getCustomerCart(widget.hiveCustomerModel.id!);
@@ -416,7 +420,7 @@ class _CartScreenState extends State<CartScreen> {
                       fontWeight: FontWeight.w500,
                     ),
                     inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r'^[1-9][0-9]*'))
+                      FilteringTextInputFormatter.allow(RegExp(r'^[0-9]+'))
                     ],
                     controller: quantityController,
                     enableInteractiveSelection: false,
@@ -447,7 +451,7 @@ class _CartScreenState extends State<CartScreen> {
                         await AppConfig.appRouter.pop();
                         onQuantitySelected(quantity, cart);
                       } else {
-                        int quantity = int.parse(quantityController.text);
+                        int quantity = 0;
                         await AppConfig.appRouter.pop();
                         onQuantitySelected(quantity, cart);
                       }

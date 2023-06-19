@@ -528,7 +528,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                       fontWeight: FontWeight.w500,
                     ),
                     inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r'^[1-9][0-9]*'))
+                      FilteringTextInputFormatter.allow(RegExp(r'^[0-9]+'))
                     ],
                     enableInteractiveSelection: false,
                     controller: quantityController,
@@ -556,6 +556,10 @@ class _ProductListScreenState extends State<ProductListScreen> {
                     onSubmit: () async {
                       if (quantityController.text.isNotEmpty) {
                         int quantity = int.parse(quantityController.text);
+                        await AppConfig.appRouter.pop();
+                        _onQuantitySelected(quantity, product);
+                      }else {
+                        int quantity = 0;
                         await AppConfig.appRouter.pop();
                         _onQuantitySelected(quantity, product);
                       }

@@ -75,7 +75,7 @@ class OrderDetailItemWidget extends StatelessWidget {
                         bottom: BorderSide(color: Colors.black54, width: 0.5))),
                 child: Center(
                   child: Text(
-                    '${orderItem.mrp}',
+                    '${orderItem.mrp.to2DigitFraction()}',
                     style: const TextStyle(fontSize: 12),
                   ),
                 ),
@@ -95,7 +95,7 @@ class OrderDetailItemWidget extends StatelessWidget {
                         bottom: BorderSide(color: Colors.black54, width: 0.5))),
                 child: Center(
                   child: Text(
-                    '${orderItem.rate}',
+                    '${orderItem.rate.to2DigitFraction()}',
                     style: const TextStyle(fontSize: 12),
                   ),
                 ),

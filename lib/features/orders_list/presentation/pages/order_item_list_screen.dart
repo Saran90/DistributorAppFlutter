@@ -205,8 +205,10 @@ class _OrdersItemListScreenState extends State<OrdersItemListScreen> {
                 setState(() {
                   _orderItems = state.orderDtails;
                 });
-                if(_orderItems.isEmpty){
-                  AppConfig.appRouter.pop();
+                if (_orderItems.isEmpty) {
+                  context
+                      .read<OrderSummaryCubit>()
+                      .deleteSummary(hiveOrderSummaryModel!.orderId);
                 }
               }
               if (state is OrderDetailsFetchingFailed) {
@@ -228,19 +230,21 @@ class _OrdersItemListScreenState extends State<OrdersItemListScreen> {
               if (state is OrderDetailsUpdationFailed) {
                 context.showMessage(state.message);
               }
-              if(state is OrderDetailItemDeleted){
-                context.showMessage('Order item deleted!');
+              if (state is OrderDetailItemDeleted) {
+                if (_orderItems.length > 1) {
+                  context.showMessage('Order item deleted!');
+                }
                 context
                     .read<OrderDetailsCubit>()
                     .getOrderDetailsForOrder(widget.orderId);
-                if (hiveOrderSummaryModel != null) {
+                if (hiveOrderSummaryModel != null && _orderItems.length > 1) {
                   _updateOrderSummary();
                   context
                       .read<OrderSummaryCubit>()
                       .updateOrderSummary(hiveOrderSummaryModel!);
                 }
               }
-              if(state is OrderDetailItemDeletionFailed){
+              if (state is OrderDetailItemDeletionFailed) {
                 context.showMessage(state.message);
               }
             },
@@ -271,7 +275,7 @@ class _OrdersItemListScreenState extends State<OrdersItemListScreen> {
                 context.showMessage(state.message);
               }
               if (state is OrderSummaryUpdated) {
-                context.showMessage('Order updated');
+
               }
               if (state is OrderSummaryUpdationFailed) {
                 context.showMessage(state.message);
@@ -453,7 +457,7 @@ class _OrdersItemListScreenState extends State<OrdersItemListScreen> {
                       fontWeight: FontWeight.w500,
                     ),
                     inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r'^[1-9][0-9]*'))
+                      FilteringTextInputFormatter.allow(RegExp(r'^[0-9]+'))
                     ],
                     controller: quantityController,
                     keyboardType: TextInputType.number,
@@ -484,7 +488,7 @@ class _OrdersItemListScreenState extends State<OrdersItemListScreen> {
                         await AppConfig.appRouter.pop();
                         onQuantitySelected(quantity, orderDetailsModel);
                       } else {
-                        int quantity = int.parse(quantityController.text);
+                        int quantity = 0;
                         await AppConfig.appRouter.pop();
                         onQuantitySelected(quantity, orderDetailsModel);
                       }

@@ -1,4 +1,5 @@
 import 'package:distributor_app_flutter/features/orders_list/presentation/pages/models/order.dart';
+import 'package:distributor_app_flutter/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -66,7 +67,7 @@ class OrderItemWidget extends StatelessWidget {
                         top: BorderSide(color: Colors.black54, width: 0.5),
                         bottom: BorderSide(color: Colors.black54, width: 0.5))),
                 child: Center(
-                  child: Text('${pendingOrder.amount}',style: const TextStyle(
+                  child: Text('${pendingOrder.amount.to2DigitFraction()}',style: const TextStyle(
                       fontSize: 12
                   ),),
                 ),
