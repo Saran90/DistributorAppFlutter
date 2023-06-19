@@ -2,7 +2,7 @@ import 'package:distributor_app_flutter/core/data/local_storage/hive_data_source
 import 'package:distributor_app_flutter/core/data/local_storage/models/hive_order_details_model.dart';
 
 abstract class OrderDetailsDataSource {
-  Future<int> addOrderItems(List<HiveOrderDetailsModel> models);
+  Future<void> addOrderItems(List<HiveOrderDetailsModel> models);
 
   Future<void> deleteOrderItems(int orderId);
 
@@ -11,6 +11,10 @@ abstract class OrderDetailsDataSource {
   Future<int?> deleteAllOrderItems();
 
   Future<void> updateOrderDetailStatus(int orderId, int status);
+
+  Future<void> updateOrderDetails(HiveOrderDetailsModel hiveOrderDetailsModel);
+
+  Future<void> deleteOrderDetailsForId(int id);
 }
 
 class OrderDetailsDataSourceImpl extends OrderDetailsDataSource {
@@ -19,7 +23,7 @@ class OrderDetailsDataSourceImpl extends OrderDetailsDataSource {
   final HiveDataSource hiveDataSource;
 
   @override
-  Future<int> addOrderItems(List<HiveOrderDetailsModel> models) {
+  Future<void> addOrderItems(List<HiveOrderDetailsModel> models) {
     return hiveDataSource.addOrderDetails(models);
   }
 
@@ -41,5 +45,15 @@ class OrderDetailsDataSourceImpl extends OrderDetailsDataSource {
   @override
   Future<void> updateOrderDetailStatus(int orderId, int status) {
     return hiveDataSource.updateOrderDetailStatus(orderId, status);
+  }
+
+  @override
+  Future<void> updateOrderDetails(HiveOrderDetailsModel hiveOrderDetailsModel) async {
+    return hiveDataSource.updateOrderDetails(hiveOrderDetailsModel);
+  }
+
+  @override
+  Future<void> deleteOrderDetailsForId(int id) {
+    return hiveDataSource.deleteOrderDetailsForId(id);
   }
 }

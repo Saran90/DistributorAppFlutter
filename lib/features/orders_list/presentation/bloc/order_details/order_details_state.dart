@@ -15,7 +15,6 @@ class OrderDetailsLoading extends OrderDetailsState {
 }
 
 class OrderDetailsPopulated extends OrderDetailsState {
-
   List<HiveOrderDetailsModel> orderDtails;
 
   OrderDetailsPopulated({required this.orderDtails});
@@ -25,7 +24,6 @@ class OrderDetailsPopulated extends OrderDetailsState {
 }
 
 class OrderDetailsFetchingFailed extends OrderDetailsState {
-
   final String message;
 
   const OrderDetailsFetchingFailed({required this.message});
@@ -40,7 +38,6 @@ class OrderDetailsDeleted extends OrderDetailsState {
 }
 
 class OrderDetailsDeletionFailed extends OrderDetailsState {
-
   final String message;
 
   const OrderDetailsDeletionFailed({required this.message});
@@ -55,7 +52,6 @@ class OrderDetailsAdded extends OrderDetailsState {
 }
 
 class OrderDetailsAdditionFailed extends OrderDetailsState {
-
   final String message;
 
   const OrderDetailsAdditionFailed({required this.message});
@@ -70,7 +66,6 @@ class AllOrderDetailsDeleted extends OrderDetailsState {
 }
 
 class AllOrderDetailsDeletionFailed extends OrderDetailsState {
-
   final String message;
 
   const AllOrderDetailsDeletionFailed({required this.message});
@@ -85,10 +80,37 @@ class OrderDetailsStatusUpdated extends OrderDetailsState {
 }
 
 class OrderDetailsStatusUpdationFailed extends OrderDetailsState {
-
   final String message;
 
   const OrderDetailsStatusUpdationFailed({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}
+
+class OrderDetailsUpdated extends OrderDetailsState {
+  @override
+  List<Object> get props => ['Order Details Updated'];
+}
+
+class OrderDetailsUpdationFailed extends OrderDetailsState {
+  final String message;
+
+  const OrderDetailsUpdationFailed({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}
+
+class OrderDetailItemDeleted extends OrderDetailsState {
+  @override
+  List<Object> get props => ['Order Detail item Deleted'];
+}
+
+class OrderDetailItemDeletionFailed extends OrderDetailsState {
+  final String message;
+
+  const OrderDetailItemDeletionFailed({required this.message});
 
   @override
   List<Object> get props => [message];

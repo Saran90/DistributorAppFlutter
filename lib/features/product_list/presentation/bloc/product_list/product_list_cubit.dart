@@ -39,7 +39,7 @@ class ProductListCubit extends Cubit<ProductListState> {
         if ('${products[i].id}' == carts[j].productId) {
           products[i].quantity = carts[j].quantity;
           products[i].total =
-              (carts[j].quantity * (products[i].rate ?? 0)).to2DigitFraction();
+              (carts[j].quantity.toDouble() * (products[i].rate ?? 0)).to2DigitFraction();
         }
       }
     }

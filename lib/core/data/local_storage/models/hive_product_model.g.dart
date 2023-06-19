@@ -23,7 +23,7 @@ class HiveProductModelAdapter extends TypeAdapter<HiveProductModel> {
       category: fields[2] as String?,
       image: fields[7] as String?,
       mrp: fields[4] as double?,
-      quantity: fields[8] as double?,
+      quantity: fields[8] as int?,
       rate: fields[5] as double?,
       stock: fields[6] as double?,
       unit: fields[3] as String?,

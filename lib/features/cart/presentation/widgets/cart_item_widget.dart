@@ -89,12 +89,14 @@ class CartItemWidget extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.all(5),
                   decoration: const BoxDecoration(
+                      color: appColorGradient2,
                       border: Border(
                           top: BorderSide(color: Colors.black54, width: 0.5),
                           bottom: BorderSide(color: Colors.black54, width: 0.5))),
                   child: Center(
                     child: Text('${cartModel.quantity}',style: const TextStyle(
-                        fontSize: 12
+                        fontSize: 12,
+                      color: Colors.white
                     ),),
                   ),
                 ),

@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:distributor_app_flutter/core/data/error/failures.dart';
 import 'package:distributor_app_flutter/core/data/local_storage/models/hive_order_summary_model.dart';
 import 'package:distributor_app_flutter/core/data/usecase/usecase.dart';
+import 'package:distributor_app_flutter/features/orders_list/data/datasource/models/SendSalesOrderUpdateRequest.dart';
 import 'package:distributor_app_flutter/features/orders_list/domain/usecase/add_order_summary_use_case.dart';
 import 'package:distributor_app_flutter/features/orders_list/domain/usecase/delete_all_order_summaries_use_case.dart';
 import 'package:distributor_app_flutter/features/orders_list/domain/usecase/delete_all_order_summary_by_customer_id_use_case.dart';
@@ -10,6 +11,7 @@ import 'package:distributor_app_flutter/features/orders_list/domain/usecase/get_
 import 'package:distributor_app_flutter/features/orders_list/domain/usecase/get_order_summary_by_customer_use_case.dart';
 import 'package:distributor_app_flutter/features/orders_list/domain/usecase/get_order_summary_by_id_use_case.dart';
 import 'package:distributor_app_flutter/features/orders_list/domain/usecase/update_order_summary_status_use_case.dart';
+import 'package:distributor_app_flutter/features/orders_list/domain/usecase/update_order_summary_use_case.dart';
 import 'package:distributor_app_flutter/features/orders_list/presentation/pages/models/order.dart';
 import 'package:equatable/equatable.dart';
 
@@ -29,6 +31,7 @@ class OrderSummaryCubit extends Cubit<OrderSummaryState> {
     required this.getOrderSummaryByCustomerIdUseCase,
     required this.getOrderSummaryByIdUseCase,
     required this.updateOrderSummaryStatusUseCase,
+    required this.updateOrderSummaryUseCase,
   }) : super(OrderSummaryInitial());
 
   final AddOrderSummaryUseCase addOrderSummaryUseCase;
@@ -41,6 +44,7 @@ class OrderSummaryCubit extends Cubit<OrderSummaryState> {
   final GetOrderSummaryByCustomerIdUseCase getOrderSummaryByCustomerIdUseCase;
   final GetOrderSummaryByIdUseCase getOrderSummaryByIdUseCase;
   final UpdateOrderSummaryStatusUseCase updateOrderSummaryStatusUseCase;
+  final UpdateOrderSummaryUseCase updateOrderSummaryUseCase;
 
   Future<void> addOrderSummary(
       HiveOrderSummaryModel hiveOrderSummaryModel) async {
@@ -181,6 +185,21 @@ class OrderSummaryCubit extends Cubit<OrderSummaryState> {
     }, (r) => emit(OrderSummaryStatusUpdated()));
   }
 
+  Future<void> updateOrderSummary(
+      HiveOrderSummaryModel hiveOrderSummaryModel) async {
+    emit(OrderSummaryLoading());
+    var result = await updateOrderSummaryUseCase.call(
+        UpdateOrderSummaryParams(hiveOrderSummaryModel: hiveOrderSummaryModel));
+    result.fold((l) {
+      if (l is CacheFailure) {
+        emit(const OrderSummaryUpdationFailed(message: cacheFailureMessage));
+      } else {
+        emit(
+            const OrderSummaryUpdationFailed(message: 'Order updation failed'));
+      }
+    }, (r) => emit(OrderSummaryUpdated()));
+  }
+
   Future<void> deleteSummary(int orderId) async {
     emit(OrderSummaryLoading());
     var orderSummary = await getOrderSummaryByIdUseCase
@@ -209,5 +228,27 @@ class OrderSummaryCubit extends Cubit<OrderSummaryState> {
     } else {
       emit(const OrderSummaryDeletionFailed(message: 'Order deletion failed'));
     }
+  }
+
+  Future<void> getOrderSummary(int orderId) async {
+    emit(OrderSummaryLoading());
+    var result = await getOrderSummaryByIdUseCase
+        .call(GetOrderSummaryByIdParams(orderId: orderId));
+    result.fold((l) {
+      if (l is CacheFailure) {
+        emit(
+            const OrderSummaryByIdFetchingFailed(message: cacheFailureMessage));
+      } else {
+        emit(const OrderSummaryByIdFetchingFailed(
+            message: 'Order fetching failed'));
+      }
+    }, (r) {
+      if (r != null) {
+        emit(OrderSummaryByIdFetched(hiveOrderSummaryModel: r));
+      } else {
+        emit(const OrderSummaryByIdFetchingFailed(
+            message: 'Order fetching failed'));
+      }
+    });
   }
 }

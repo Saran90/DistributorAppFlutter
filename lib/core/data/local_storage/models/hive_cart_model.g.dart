@@ -21,7 +21,7 @@ class HiveCartModelAdapter extends TypeAdapter<HiveCartModel> {
       customerId: fields[7] as int,
       orderId: fields[2] as String,
       mrp: fields[10] as double,
-      quantity: fields[5] as double,
+      quantity: fields[5] as int,
       rate: fields[6] as double,
       id: fields[0] as int,
       unit: fields[9] as String,

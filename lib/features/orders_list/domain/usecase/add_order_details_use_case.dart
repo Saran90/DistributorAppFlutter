@@ -6,13 +6,13 @@ import '../../../../core/data/local_storage/models/hive_order_details_model.dart
 import '../../../../core/data/usecase/usecase.dart';
 import '../repository/order_details_repository.dart';
 
-class AddOrderDetailsUseCase extends UseCase<int, AddOrderDetailsParams> {
+class AddOrderDetailsUseCase extends UseCase<void, AddOrderDetailsParams> {
   final OrderDetailsRepository orderDetailsRepository;
 
   AddOrderDetailsUseCase({required this.orderDetailsRepository});
 
   @override
-  Future<Either<Failure, int>> call(params) {
+  Future<Either<Failure, void>> call(params) {
     return orderDetailsRepository.addOrderItems(params.hiveOrderDetailsModels);
   }
 }

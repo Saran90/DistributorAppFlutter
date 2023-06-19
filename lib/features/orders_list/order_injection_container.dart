@@ -1,7 +1,10 @@
 import 'package:dio/dio.dart';
+import 'package:distributor_app_flutter/features/orders_list/domain/usecase/delete_order_item_by_id_use_case.dart';
 import 'package:distributor_app_flutter/features/orders_list/domain/usecase/get_all_failed_order_summaries_use_case.dart';
 import 'package:distributor_app_flutter/features/orders_list/domain/usecase/get_all_unsend_order_summaries_use_case.dart';
 import 'package:distributor_app_flutter/features/orders_list/domain/usecase/send_sales_order_update_forcefully_use_case.dart';
+import 'package:distributor_app_flutter/features/orders_list/domain/usecase/update_order_details_use_case.dart';
+import 'package:distributor_app_flutter/features/orders_list/domain/usecase/update_order_summary_use_case.dart';
 
 import '../../app_config.dart';
 import 'data/datasource/order_details_data_source.dart';
@@ -65,6 +68,8 @@ class OrderInjectionContainer {
     AppConfig.s1.registerLazySingleton<GetAllFailedOrderSummariesUseCase>(() =>
         GetAllFailedOrderSummariesUseCase(
             orderSummaryRepository: AppConfig.s1()));
+    AppConfig.s1.registerLazySingleton<UpdateOrderSummaryUseCase>(() =>
+        UpdateOrderSummaryUseCase(orderSummaryRepository: AppConfig.s1()));
 
     AppConfig.s1.registerFactory<OrderSummaryCubit>(() => OrderSummaryCubit(
           addOrderSummaryUseCase: AppConfig.s1(),
@@ -76,6 +81,7 @@ class OrderInjectionContainer {
           getOrderSummaryByIdUseCase: AppConfig.s1(),
           updateOrderSummaryStatusUseCase: AppConfig.s1(),
           getAllFailedOrderSummariesUseCase: AppConfig.s1(),
+          updateOrderSummaryUseCase: AppConfig.s1(),
         ));
 
     AppConfig.s1.registerLazySingleton<OrderDetailsDataSource>(
@@ -93,13 +99,20 @@ class OrderInjectionContainer {
     AppConfig.s1.registerLazySingleton<UpdateOrderDetailsStatusUseCase>(() =>
         UpdateOrderDetailsStatusUseCase(
             orderDetailsRepository: AppConfig.s1()));
+    AppConfig.s1.registerLazySingleton<UpdateOrderDetailsUseCase>(() =>
+        UpdateOrderDetailsUseCase(orderDetailsRepository: AppConfig.s1()));
+    AppConfig.s1.registerLazySingleton<DeleteOrderItemByIdUseCase>(() =>
+        DeleteOrderItemByIdUseCase(orderDetailsRepository: AppConfig.s1()));
 
     AppConfig.s1.registerFactory<OrderDetailsCubit>(() => OrderDetailsCubit(
-        addOrderDetailsUseCase: AppConfig.s1(),
-        deleteOrderDetailsUseCase: AppConfig.s1(),
-        getOrderDetailsForOrderUseCase: AppConfig.s1(),
-        deleteAllOrderDetailsUseCase: AppConfig.s1(),
-        updateOrderDetailsStatusUseCase: AppConfig.s1()));
+          addOrderDetailsUseCase: AppConfig.s1(),
+          deleteOrderDetailsUseCase: AppConfig.s1(),
+          getOrderDetailsForOrderUseCase: AppConfig.s1(),
+          deleteAllOrderDetailsUseCase: AppConfig.s1(),
+          updateOrderDetailsStatusUseCase: AppConfig.s1(),
+          updateOrderDetailsUseCase: AppConfig.s1(),
+          deleteOrderItemByIdUseCase: AppConfig.s1(),
+        ));
 
     AppConfig.s1.registerLazySingleton<SalesOrderDataSource>(() =>
         SalesOrderDataSourceImpl(

@@ -9,7 +9,7 @@ class Product {
   double? rate;
   double? stock;
   String? image;
-  double? quantity;
+  int? quantity;
   double? total;
   int? status;
 

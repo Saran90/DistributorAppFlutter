@@ -6,7 +6,7 @@ class Cart {
   String orderId;
   String productId;
   String productName;
-  double quantity;
+  int quantity;
   double rate;
   int customerId;
   double orderAmount;

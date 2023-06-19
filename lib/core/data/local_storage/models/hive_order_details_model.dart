@@ -13,7 +13,7 @@ class HiveOrderDetailsModel extends HiveObject {
   @HiveField(3)
   String productName;
   @HiveField(4)
-  double quantity;
+  int quantity;
   @HiveField(5)
   double rate;
   @HiveField(6)

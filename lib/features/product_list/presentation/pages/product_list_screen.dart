@@ -415,7 +415,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
     _closeKeyboard();
   }
 
-  void _onQuantitySelected(double quantity, Product product) {
+  void _onQuantitySelected(int quantity, Product product) {
     bool isProductAvailableInCart = false;
     if (_cartProducts.isNotEmpty) {
       for (int i = 0; i < _cartProducts.length; i++) {
@@ -423,7 +423,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
           isProductAvailableInCart = true;
           _cartProducts[i].quantity = quantity;
           _cartProducts[i].orderAmount =
-              (quantity * (product.rate ?? 0)).to2DigitFraction();
+              (quantity.toDouble() * (product.rate ?? 0)).to2DigitFraction();
           if (quantity == 0) {
             context
                 .read<CartCubit>()
@@ -466,7 +466,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
   }
 
   Future<void> _showQuantitySelectionBottomSheet(Product product,
-      Function(double quantity, Product product) onQuantitySelected) async {
+      Function(int quantity, Product product) onQuantitySelected) async {
     final quantityFieldFocusNode = FocusNode();
     final quantityController = TextEditingController();
     if (product.quantity != null && product.quantity! > 0) {
@@ -555,11 +555,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                     endColor: appColorGradient2,
                     onSubmit: () async {
                       if (quantityController.text.isNotEmpty) {
-                        double quantity = double.parse(quantityController.text);
-                        await AppConfig.appRouter.pop();
-                        _onQuantitySelected(quantity, product);
-                      } else {
-                        double quantity = 0;
+                        int quantity = int.parse(quantityController.text);
                         await AppConfig.appRouter.pop();
                         _onQuantitySelected(quantity, product);
                       }

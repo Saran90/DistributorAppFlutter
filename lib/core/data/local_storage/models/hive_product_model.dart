@@ -22,7 +22,7 @@ class HiveProductModel extends HiveObject {
   @HiveField(7)
   String? image;
   @HiveField(8)
-  double? quantity;
+  int? quantity;
   @HiveField(9)
   double? total;
   @HiveField(10)

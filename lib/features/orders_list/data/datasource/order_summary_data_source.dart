@@ -12,6 +12,7 @@ abstract class OrderSummaryDataSource{
   Future<List<HiveOrderSummaryModel>?> getAllUnSendOrders();
   Future<HiveOrderSummaryModel?> getOrder(int orderId);
   Future<void> updateOrderSummaryStatus(int orderId, int status);
+  Future<void> updateOrderSummary(HiveOrderSummaryModel hiveOrderSummaryModel);
 }
 
 class OrderSummaryDataSourceImpl extends OrderSummaryDataSource{
@@ -68,6 +69,11 @@ class OrderSummaryDataSourceImpl extends OrderSummaryDataSource{
   @override
   Future<void> updateOrderSummaryStatus(int orderId, int status) {
     return hiveDataSource.updateOrderSummaryStatus(orderId, status);
+  }
+
+  @override
+  Future<void> updateOrderSummary(HiveOrderSummaryModel hiveOrderSummaryModel) {
+    return hiveDataSource.updateOrderSummary(hiveOrderSummaryModel);
   }
 
 

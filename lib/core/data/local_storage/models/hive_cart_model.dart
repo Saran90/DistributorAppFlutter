@@ -17,7 +17,7 @@ class HiveCartModel extends HiveObject {
   @HiveField(4)
   String productName;
   @HiveField(5)
-  double quantity;
+  int quantity;
   @HiveField(6)
   double rate;
   @HiveField(7)

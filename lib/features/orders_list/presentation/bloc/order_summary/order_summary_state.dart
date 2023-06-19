@@ -93,3 +93,38 @@ class OrderSummaryStatusUpdationFailed extends OrderSummaryState {
   @override
   List<Object> get props => [message];
 }
+
+class OrderSummaryUpdated extends OrderSummaryState {
+  @override
+  List<Object> get props => ['Order Summary Updated'];
+}
+
+class OrderSummaryUpdationFailed extends OrderSummaryState {
+
+  final String message;
+
+  const OrderSummaryUpdationFailed({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}
+
+class OrderSummaryByIdFetched extends OrderSummaryState {
+
+  OrderSummaryByIdFetched({required this.hiveOrderSummaryModel});
+
+  HiveOrderSummaryModel hiveOrderSummaryModel;
+
+  @override
+  List<Object> get props => [hiveOrderSummaryModel];
+}
+
+class OrderSummaryByIdFetchingFailed extends OrderSummaryState {
+
+  final String message;
+
+  const OrderSummaryByIdFetchingFailed({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}

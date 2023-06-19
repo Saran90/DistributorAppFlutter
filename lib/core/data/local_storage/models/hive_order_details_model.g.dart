@@ -19,7 +19,7 @@ class HiveOrderDetailsModelAdapter extends TypeAdapter<HiveOrderDetailsModel> {
     return HiveOrderDetailsModel(
       id: fields[0] as int,
       rate: fields[5] as double,
-      quantity: fields[4] as double,
+      quantity: fields[4] as int,
       mrp: fields[6] as double,
       status: fields[8] as int,
       orderDate: fields[9] as DateTime,

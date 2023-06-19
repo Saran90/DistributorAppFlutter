@@ -10,12 +10,14 @@ import 'package:distributor_app_flutter/features/orders_list/domain/usecase/dele
 import 'package:distributor_app_flutter/features/orders_list/domain/usecase/delete_all_order_summaries_use_case.dart';
 import 'package:distributor_app_flutter/features/orders_list/domain/usecase/delete_all_order_summary_by_customer_id_use_case.dart';
 import 'package:distributor_app_flutter/features/orders_list/domain/usecase/delete_order_details_use_case.dart';
+import 'package:distributor_app_flutter/features/orders_list/domain/usecase/delete_order_item_by_id_use_case.dart';
 import 'package:distributor_app_flutter/features/orders_list/domain/usecase/delete_order_summary_use_case.dart';
 import 'package:distributor_app_flutter/features/orders_list/domain/usecase/get_all_order_summaries_use_case.dart';
 import 'package:distributor_app_flutter/features/orders_list/domain/usecase/get_order_details_for_order_use_case.dart';
 import 'package:distributor_app_flutter/features/orders_list/domain/usecase/get_order_summary_by_customer_use_case.dart';
 import 'package:distributor_app_flutter/features/orders_list/domain/usecase/get_order_summary_by_id_use_case.dart';
 import 'package:distributor_app_flutter/features/orders_list/domain/usecase/update_order_details_status_use_case.dart';
+import 'package:distributor_app_flutter/features/orders_list/domain/usecase/update_order_details_use_case.dart';
 import 'package:distributor_app_flutter/features/orders_list/presentation/pages/models/order.dart';
 import 'package:equatable/equatable.dart';
 
@@ -30,6 +32,8 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
     required this.getOrderDetailsForOrderUseCase,
     required this.deleteAllOrderDetailsUseCase,
     required this.updateOrderDetailsStatusUseCase,
+    required this.updateOrderDetailsUseCase,
+    required this.deleteOrderItemByIdUseCase,
   }) : super(OrderDetailsInitial());
 
   final AddOrderDetailsUseCase addOrderDetailsUseCase;
@@ -37,6 +41,8 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
   final GetOrderDetailsForOrderUseCase getOrderDetailsForOrderUseCase;
   final DeleteAllOrderDetailsUseCase deleteAllOrderDetailsUseCase;
   final UpdateOrderDetailsStatusUseCase updateOrderDetailsStatusUseCase;
+  final UpdateOrderDetailsUseCase updateOrderDetailsUseCase;
+  final DeleteOrderItemByIdUseCase deleteOrderItemByIdUseCase;
 
   Future<void> addOrderDetails(
       List<HiveOrderDetailsModel> hiveOrderDetailsModels) async {
@@ -107,6 +113,35 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
             message: 'Order Details status updation failed'));
       }
     }, (r) => emit(OrderDetailsStatusUpdated()));
+  }
+
+  Future<void> updateOrderDetails(
+      HiveOrderDetailsModel hiveOrderDetailsModel) async {
+    emit(OrderDetailsLoading());
+    var result = await updateOrderDetailsUseCase.call(
+        UpdateOrderDetailsParams(hiveOrderDetailsModel: hiveOrderDetailsModel));
+    result.fold((l) {
+      if (l is CacheFailure) {
+        emit(const OrderDetailsUpdationFailed(message: cacheFailureMessage));
+      } else {
+        emit(const OrderDetailsUpdationFailed(
+            message: 'Order Details updation failed'));
+      }
+    }, (r) => emit(OrderDetailsUpdated()));
+  }
+
+  Future<void> deleteOrderDetailById(int id) async {
+    emit(OrderDetailsLoading());
+    var result = await deleteOrderItemByIdUseCase
+        .call(DeleteOrderItemByIdParams(id: id));
+    result.fold((l) {
+      if (l is CacheFailure) {
+        emit(const OrderDetailItemDeletionFailed(message: cacheFailureMessage));
+      } else {
+        emit(const OrderDetailItemDeletionFailed(
+            message: 'Order Details item deletion failed'));
+      }
+    }, (r) => emit(OrderDetailItemDeleted()));
   }
 
 }

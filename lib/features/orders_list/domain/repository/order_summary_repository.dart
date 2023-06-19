@@ -27,4 +27,7 @@ abstract class OrderSummaryRepository {
 
   Future<Either<Failure, void>> updateOrderSummaryStatus(
       int orderId, int status);
+
+  Future<Either<Failure, void>> updateOrderSummary(
+      HiveOrderSummaryModel hiveOrderSummaryModel);
 }

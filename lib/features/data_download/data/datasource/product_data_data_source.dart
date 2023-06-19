@@ -53,7 +53,7 @@ class ProductDataDataSourceImpl extends ProductDataDataSource {
         stock: products.stock,
         unit: products.unit,
         status: products.status,
-        quantity: 0.0,
+        quantity: 0,
         total: 0.0);
   }
 

@@ -13,7 +13,7 @@ class OrderDetailsRepositoryImpl extends OrderDetailsRepository {
   final OrderDetailsDataSource orderDetailsDataSource;
 
   @override
-  Future<Either<Failure, int>> addOrderItems(
+  Future<Either<Failure, void>> addOrderItems(
       List<HiveOrderDetailsModel> models) async {
     try {
       var result = await orderDetailsDataSource.addOrderItems(models);
@@ -55,9 +55,33 @@ class OrderDetailsRepositoryImpl extends OrderDetailsRepository {
   }
 
   @override
-  Future<Either<Failure, void>> updateOrderDetailStatus(int orderId, int status) async {
+  Future<Either<Failure, void>> updateOrderDetailStatus(
+      int orderId, int status) async {
     try {
-      var result = await orderDetailsDataSource.updateOrderDetailStatus(orderId, status);
+      var result =
+          await orderDetailsDataSource.updateOrderDetailStatus(orderId, status);
+      return Right(result);
+    } catch (exception) {
+      return Left(CacheFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> updateOrderDetails(
+      HiveOrderDetailsModel hiveOrderDetailsModel) async {
+    try {
+      var result = await orderDetailsDataSource
+          .updateOrderDetails(hiveOrderDetailsModel);
+      return Right(result);
+    } catch (exception) {
+      return Left(CacheFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> deleteOrderItem(int id) async {
+    try {
+      var result = await orderDetailsDataSource.deleteOrderDetailsForId(id);
       return Right(result);
     } catch (exception) {
       return Left(CacheFailure());

@@ -5,6 +5,7 @@ import 'package:distributor_app_flutter/core/data/local_storage/models/hive_orde
 import 'package:distributor_app_flutter/core/data/local_storage/models/hive_order_summary_model.dart';
 import 'package:distributor_app_flutter/core/data/local_storage/models/hive_product_model.dart';
 import 'package:distributor_app_flutter/core/data/local_storage/models/hive_user_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
 
 abstract class HiveDataSource {
@@ -91,12 +92,16 @@ abstract class HiveDataSource {
 
   Future<void> updateOrderSummaryStatus(int orderId, int status);
 
-  Future<int> addOrderDetails(
+  Future<void> addOrderDetails(
       List<HiveOrderDetailsModel> hiveOrderDetailsModels);
+
+  Future<void> updateOrderDetails(HiveOrderDetailsModel hiveOrderDetailsModel);
 
   Future<List<HiveOrderDetailsModel>?> getAllOrderDetailsByOrder(int orderId);
 
   Future<void> deleteOrderDetailsForOrder(int orderId);
+
+  Future<void> deleteOrderDetailsForId(int id);
 
   Future<int?> deleteAllOrderDetails();
 
@@ -310,8 +315,8 @@ class HiveDataSourceImpl extends HiveDataSource {
         .where((element) => element.id == hiveCartModel.id)
         .toList();
 
-    if(customerCart!=null && customerCart.isNotEmpty){
-      return cartBox?.put(customerCart.first.key,hiveCartModel);
+    if (customerCart != null && customerCart.isNotEmpty) {
+      return cartBox?.put(customerCart.first.key, hiveCartModel);
     }
   }
 
@@ -322,7 +327,7 @@ class HiveDataSourceImpl extends HiveDataSource {
         .where((element) => element.id == hiveCartModel.id)
         .toList();
 
-    if(customerCart!=null && customerCart.isNotEmpty){
+    if (customerCart != null && customerCart.isNotEmpty) {
       return cartBox?.delete(customerCart.first.key);
     }
   }
@@ -438,17 +443,24 @@ class HiveDataSourceImpl extends HiveDataSource {
   }
 
   @override
-  Future<int> addOrderDetails(
+  Future<void> addOrderDetails(
       List<HiveOrderDetailsModel> hiveOrderDetailsModels) async {
-    int status = 0;
-    for (int i = 0; i < hiveOrderDetailsModels.length; i++) {
-      int? status0 = await orderDetailsBox?.add(hiveOrderDetailsModels[i]);
-      if (status0 == null) {
-        status = 1;
-        break;
-      }
+    int i = 0;
+    while (i < hiveOrderDetailsModels.length) {
+      await orderDetailsBox?.put(
+          hiveOrderDetailsModels[i].id, hiveOrderDetailsModels[i]);
+      i++;
     }
-    return status;
+    var orders =
+        await getAllOrderDetailsByOrder(hiveOrderDetailsModels[0].orderId);
+    debugPrint('Order list: $orders');
+  }
+
+  @override
+  Future<void> updateOrderDetails(
+      HiveOrderDetailsModel hiveOrderDetailsModel) async {
+    return await orderDetailsBox?.put(
+        hiveOrderDetailsModel.id, hiveOrderDetailsModel);
   }
 
   @override
@@ -494,8 +506,18 @@ class HiveDataSourceImpl extends HiveDataSource {
     if (orderDetails != null) {
       for (int i = 0; i < orderDetails.length; i++) {
         await orderDetailsBox?.put(
-            orderDetails[i].key, orderDetails[i]..status = status);
+            orderDetails[i].id, orderDetails[i]..status = status);
       }
+    }
+  }
+
+  @override
+  Future<void> deleteOrderDetailsForId(int id) async {
+    List<HiveOrderDetailsModel>? orderDetails =
+        orderDetailsBox?.values.where((e) => e.id == id).toList();
+    if (orderDetails != null) {
+      List<dynamic> keys = orderDetails.map((e) => e.key).toList();
+      await orderDetailsBox?.deleteAll(keys);
     }
   }
 }

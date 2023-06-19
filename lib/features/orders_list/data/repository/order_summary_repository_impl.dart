@@ -64,7 +64,8 @@ class OrderSummaryRepositoryImpl extends OrderSummaryRepository {
   }
 
   @override
-  Future<Either<Failure, List<HiveOrderSummaryModel>?>> getAllFailedOrders() async {
+  Future<Either<Failure, List<HiveOrderSummaryModel>?>>
+      getAllFailedOrders() async {
     try {
       var result = await orderSummaryDataSource.getAllFailedOrders();
       return Right(result);
@@ -74,7 +75,8 @@ class OrderSummaryRepositoryImpl extends OrderSummaryRepository {
   }
 
   @override
-  Future<Either<Failure, List<HiveOrderSummaryModel>?>> getAllUnSendOrders() async {
+  Future<Either<Failure, List<HiveOrderSummaryModel>?>>
+      getAllUnSendOrders() async {
     try {
       var result = await orderSummaryDataSource.getAllUnSendOrders();
       return Right(result);
@@ -105,9 +107,23 @@ class OrderSummaryRepositoryImpl extends OrderSummaryRepository {
   }
 
   @override
-  Future<Either<Failure, void>> updateOrderSummaryStatus(int orderId, int status) async {
+  Future<Either<Failure, void>> updateOrderSummaryStatus(
+      int orderId, int status) async {
     try {
-      var result = await orderSummaryDataSource.updateOrderSummaryStatus(orderId,status);
+      var result = await orderSummaryDataSource.updateOrderSummaryStatus(
+          orderId, status);
+      return Right(result);
+    } catch (exception) {
+      return Left(CacheFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> updateOrderSummary(
+      HiveOrderSummaryModel hiveOrderSummaryModel) async {
+    try {
+      var result = await orderSummaryDataSource
+          .updateOrderSummary(hiveOrderSummaryModel);
       return Right(result);
     } catch (exception) {
       return Left(CacheFailure());

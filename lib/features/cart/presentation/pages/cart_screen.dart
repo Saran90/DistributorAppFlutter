@@ -5,6 +5,7 @@ import 'package:distributor_app_flutter/features/orders_list/presentation/bloc/o
 import 'package:distributor_app_flutter/utils/app_router.dart';
 import 'package:distributor_app_flutter/utils/extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/data/local_storage/models/hive_customer_model.dart';
@@ -351,7 +352,7 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   void _showQuantitySelectionBottomSheet(Cart cart,
-      Function(double quantity, Cart cart) onQuantitySelected) async {
+      Function(int quantity, Cart cart) onQuantitySelected) async {
     final quantityFieldFocusNode = FocusNode();
     final quantityController = TextEditingController();
     if (cart.quantity > 0) {
@@ -414,7 +415,11 @@ class _CartScreenState extends State<CartScreen> {
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
                     ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'^[1-9][0-9]*'))
+                    ],
                     controller: quantityController,
+                    enableInteractiveSelection: false,
                     keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
                       hintText: 'Enter quantity',
@@ -438,11 +443,11 @@ class _CartScreenState extends State<CartScreen> {
                     endColor: appColorGradient2,
                     onSubmit: () async {
                       if (quantityController.text.isNotEmpty) {
-                        double quantity = double.parse(quantityController.text);
+                        int quantity = int.parse(quantityController.text);
                         await AppConfig.appRouter.pop();
                         onQuantitySelected(quantity, cart);
                       } else {
-                        double quantity = double.parse(quantityController.text);
+                        int quantity = int.parse(quantityController.text);
                         await AppConfig.appRouter.pop();
                         onQuantitySelected(quantity, cart);
                       }
@@ -458,7 +463,7 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
-  void _onQuantitySelected(double quantity, Cart cart) {
+  void _onQuantitySelected(int quantity, Cart cart) {
     for (int i = 0; i < _cartProducts.length; i++) {
       if (_cartProducts[i].productId == cart.productId) {
         _cartProducts[i].quantity = quantity;
