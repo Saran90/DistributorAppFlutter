@@ -72,7 +72,7 @@ Future<void> initDependencies() async {
           error: true,
           compact: true,
           maxWidth: 90),
-      AuthenticatedApiInterceptor(sharedPreferenceDataSource: AppConfig.s1())
+      AuthenticatedApiInterceptor(sharedPreferenceDataSource: AppConfig.s1(),authCubit: AppConfig.s1())
     ]);
 
   AppConfig.s1

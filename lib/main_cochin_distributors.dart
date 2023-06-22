@@ -74,7 +74,7 @@ Future<void> initDependencies() async {
       () => SharedPreferenceDataSourceImpl()..init());
 
   AppConfig.s1.registerLazySingleton<AuthenticatedApiInterceptor>(
-      () => AuthenticatedApiInterceptor(sharedPreferenceDataSource: AppConfig.s1()));
+      () => AuthenticatedApiInterceptor(sharedPreferenceDataSource: AppConfig.s1(),authCubit: AppConfig.s1()));
 
   //Login
   AuthInjectionConateinr(dio: dio).initialize();

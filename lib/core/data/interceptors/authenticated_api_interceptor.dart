@@ -9,9 +9,10 @@ import 'package:distributor_app_flutter/utils/app_router.dart';
 import 'package:flutter/cupertino.dart';
 
 class AuthenticatedApiInterceptor extends Interceptor {
-  AuthenticatedApiInterceptor({required this.sharedPreferenceDataSource});
+  AuthenticatedApiInterceptor({required this.sharedPreferenceDataSource,required this.authCubit});
 
   final SharedPreferenceDataSource sharedPreferenceDataSource;
+  final AuthCubit authCubit;
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
@@ -28,7 +29,6 @@ class AuthenticatedApiInterceptor extends Interceptor {
   Future<void> onError(DioError err, ErrorInterceptorHandler handler) async {
     debugPrint('Interceptor Access Token: ${err.requestOptions.headers['Authorization']}');
     if (err.response?.statusCode == 401) {
-      AuthCubit authCubit = AppConfig.s1();
       await authCubit.logout();
       AppConfig.appRouter.replaceAll([
         const LoginRouter()
