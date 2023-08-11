@@ -46,12 +46,8 @@ Future<void> main() async {
   await Hive.initFlutter();
   await HiveDataSourceImpl.initHiveBoxes();
   await initDependencies();
-  BlocOverrides.runZoned(
-    () {
-      runApp(const MyApp());
-    },
-    blocObserver: SimpleBlocObserver(),
-  );
+  Bloc.observer = SimpleBlocObserver();
+  runApp(const MyApp());
 }
 
 Future<void> initDependencies() async {

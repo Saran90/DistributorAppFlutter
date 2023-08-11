@@ -12,22 +12,20 @@ import 'package:distributor_app_flutter/features/login/presentation/bloc/manufac
 import 'package:distributor_app_flutter/features/orders_list/order_injection_container.dart';
 import 'package:distributor_app_flutter/features/product_list/product_injection_container.dart';
 import 'package:distributor_app_flutter/utils/constants.dart';
-import 'package:distributor_app_flutter/utils/endpoints.dart';
-import 'package:distributor_app_flutter/utils/strings.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import 'app_config.dart';
 import 'firebase_options.dart';
-import 'utils/app_router.dart';
 import 'utils/bloc_observer.dart';
 
 Future<void> main() async {
+  BindingBase.debugZoneErrorsAreFatal = true;
   WidgetsFlutterBinding.ensureInitialized();
 
   //Setting AppConfig
@@ -47,12 +45,8 @@ Future<void> main() async {
   await Hive.initFlutter();
   await HiveDataSourceImpl.initHiveBoxes();
   await initDependencies();
-  BlocOverrides.runZoned(
-    () {
-      runApp(const MyApp());
-    },
-    blocObserver: SimpleBlocObserver(),
-  );
+  Bloc.observer = SimpleBlocObserver();
+  runApp(const MyApp());
 }
 
 Future<void> initDependencies() async {
@@ -71,8 +65,7 @@ Future<void> initDependencies() async {
           responseHeader: false,
           error: true,
           compact: true,
-          maxWidth: 90),
-      AuthenticatedApiInterceptor(sharedPreferenceDataSource: AppConfig.s1(),authCubit: AppConfig.s1())
+          maxWidth: 90)
     ]);
 
   AppConfig.s1
@@ -97,7 +90,14 @@ Future<void> initDependencies() async {
       .initialize();
 
   //Data
-  DataInjectionContainer(dio: dio).initialize();
+  DataInjectionContainer(
+          dio: dio
+            ..interceptors.addAll([
+              AuthenticatedApiInterceptor(
+                  sharedPreferenceDataSource: AppConfig.s1(),
+                  authCubit: AppConfig.s1())
+            ]))
+      .initialize();
 
   //Product List
   ProductInjectionContainer.initialize();
@@ -106,7 +106,14 @@ Future<void> initDependencies() async {
   CartInjectionContainer.initialize();
 
   //Order
-  OrderInjectionContainer(dio: dio).initialize();
+  OrderInjectionContainer(
+          dio: dio
+            ..interceptors.addAll([
+              AuthenticatedApiInterceptor(
+                  sharedPreferenceDataSource: AppConfig.s1(),
+                  authCubit: AppConfig.s1())
+            ]))
+      .initialize();
 }
 
 class MyApp extends StatelessWidget {
