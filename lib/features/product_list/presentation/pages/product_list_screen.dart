@@ -433,7 +433,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
           }
         }
       }
-      if (!isProductAvailableInCart) {
+      if (!isProductAvailableInCart && quantity > 0) {
         context.read<CartCubit>().addCart(Cart(
             orderAmount: (product.rate ?? 0) * quantity,
             customerId: widget.hiveCustomerModel.id!,
@@ -449,19 +449,23 @@ class _ProductListScreenState extends State<ProductListScreen> {
             productName: product.name ?? ''));
       }
     } else {
-      context.read<CartCubit>().addCart(Cart(
-          orderAmount: (product.rate ?? 0) * quantity,
-          customerId: widget.hiveCustomerModel.id!,
-          orderId: '',
-          mrp: product.mrp ?? 0.0,
-          quantity: quantity,
-          rate: product.rate ?? 0.0,
-          id: DateTime.now().microsecondsSinceEpoch,
-          unit: product.unit ?? '',
-          stock: product.stock ?? 0,
-          userId: _userId ?? -1,
-          productId: product.id != null ? '${product.id}' : '',
-          productName: product.name ?? ''));
+      if(quantity>0) {
+        context.read<CartCubit>().addCart(Cart(
+            orderAmount: (product.rate ?? 0) * quantity,
+            customerId: widget.hiveCustomerModel.id!,
+            orderId: '',
+            mrp: product.mrp ?? 0.0,
+            quantity: quantity,
+            rate: product.rate ?? 0.0,
+            id: DateTime
+                .now()
+                .microsecondsSinceEpoch,
+            unit: product.unit ?? '',
+            stock: product.stock ?? 0,
+            userId: _userId ?? -1,
+            productId: product.id != null ? '${product.id}' : '',
+            productName: product.name ?? ''));
+      }
     }
   }
 
