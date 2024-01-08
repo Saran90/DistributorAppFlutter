@@ -7,8 +7,6 @@ import 'package:distributor_app_flutter/utils/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../utils/strings.dart';
-
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
 
@@ -17,7 +15,6 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-
   final int timerDurationInSec = 2;
 
   @override
@@ -44,7 +41,13 @@ class _SplashScreenState extends State<SplashScreen> {
                 if (state is UnAuthenticated) {
                   Timer(Duration(seconds: timerDurationInSec), () {
                     if (mounted) {
-                      AppConfig.appRouter.replace(const LoginRouter());
+                      if (AppConfig.instance.flavor ==
+                          AppFlavor.varsha.name) {
+                        //Navigate to Landing page
+                        AppConfig.appRouter.replace(const LandingRouter());
+                      } else {
+                        AppConfig.appRouter.replace(const LoginRouter());
+                      }
                     }
                   });
                 }

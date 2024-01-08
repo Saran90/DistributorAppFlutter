@@ -1,5 +1,7 @@
 const String splashRoute = '/';
 const String loginRoute = '/login';
+const String customerLoginRoute = '/customerLogin';
+const String landingRoute = '/landing';
 const String dataDownloadRoute = '/dataDownload';
 const String customerListRoute = '/customerList';
 const String productListRoute = '/productList';

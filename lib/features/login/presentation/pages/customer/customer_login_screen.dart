@@ -5,18 +5,18 @@ import 'package:distributor_app_flutter/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../app_config.dart';
-import '../../../../core/widgets/icon_text_field.dart';
-import '../bloc/auth/auth_cubit.dart';
+import '../../../../../app_config.dart';
+import '../../../../../core/widgets/icon_text_field.dart';
+import '../../bloc/auth/auth_cubit.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class CustomerLoginScreen extends StatefulWidget {
+  const CustomerLoginScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<CustomerLoginScreen> createState() => _CustomerLoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
   final _userNameController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -93,7 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return const Padding(
       padding: EdgeInsets.only(top: 40),
       child: Text(
-        'Agent Login',
+        'Customer Login',
         style: TextStyle(
             color: Colors.white, fontSize: 20, fontWeight: FontWeight.w600),
       ),

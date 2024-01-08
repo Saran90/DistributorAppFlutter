@@ -37,6 +37,22 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const SplashWrapper(),
       );
     },
+    FailedOrdersListRouter.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const FailedOrdersListWrapper(),
+      );
+    },
+    FailedOrdersItemListRouter.name: (routeData) {
+      final args = routeData.argsAs<FailedOrdersItemListRouterArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: FailedOrdersItemListWrapper(
+          key: args.key,
+          orderId: args.orderId,
+        ),
+      );
+    },
     CustomerListRouter.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -69,6 +85,12 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    LandingRouter.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const LandingWrapper(),
+      );
+    },
     SalesListRouter.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -91,20 +113,10 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const LoginWrapper(),
       );
     },
-    FailedOrdersListRouter.name: (routeData) {
+    CustomerLoginRouter.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const FailedOrdersListWrapper(),
-      );
-    },
-    FailedOrdersItemListRouter.name: (routeData) {
-      final args = routeData.argsAs<FailedOrdersItemListRouterArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: FailedOrdersItemListWrapper(
-          key: args.key,
-          orderId: args.orderId,
-        ),
+        child: const CustomerLoginWrapper(),
       );
     },
   };
@@ -174,6 +186,59 @@ class SplashRouter extends PageRouteInfo<void> {
   static const String name = 'SplashRouter';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [FailedOrdersListWrapper]
+class FailedOrdersListRouter extends PageRouteInfo<void> {
+  const FailedOrdersListRouter({List<PageRouteInfo>? children})
+      : super(
+          FailedOrdersListRouter.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'FailedOrdersListRouter';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [FailedOrdersItemListWrapper]
+class FailedOrdersItemListRouter
+    extends PageRouteInfo<FailedOrdersItemListRouterArgs> {
+  FailedOrdersItemListRouter({
+    Key? key,
+    required int orderId,
+    List<PageRouteInfo>? children,
+  }) : super(
+          FailedOrdersItemListRouter.name,
+          args: FailedOrdersItemListRouterArgs(
+            key: key,
+            orderId: orderId,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'FailedOrdersItemListRouter';
+
+  static const PageInfo<FailedOrdersItemListRouterArgs> page =
+      PageInfo<FailedOrdersItemListRouterArgs>(name);
+}
+
+class FailedOrdersItemListRouterArgs {
+  const FailedOrdersItemListRouterArgs({
+    this.key,
+    required this.orderId,
+  });
+
+  final Key? key;
+
+  final int orderId;
+
+  @override
+  String toString() {
+    return 'FailedOrdersItemListRouterArgs{key: $key, orderId: $orderId}';
+  }
 }
 
 /// generated route for
@@ -280,6 +345,20 @@ class CartRouterArgs {
 }
 
 /// generated route for
+/// [LandingWrapper]
+class LandingRouter extends PageRouteInfo<void> {
+  const LandingRouter({List<PageRouteInfo>? children})
+      : super(
+          LandingRouter.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'LandingRouter';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [SalesListWrapper]
 class SalesListRouter extends PageRouteInfo<void> {
   const SalesListRouter({List<PageRouteInfo>? children})
@@ -346,54 +425,15 @@ class LoginRouter extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [FailedOrdersListWrapper]
-class FailedOrdersListRouter extends PageRouteInfo<void> {
-  const FailedOrdersListRouter({List<PageRouteInfo>? children})
+/// [CustomerLoginWrapper]
+class CustomerLoginRouter extends PageRouteInfo<void> {
+  const CustomerLoginRouter({List<PageRouteInfo>? children})
       : super(
-          FailedOrdersListRouter.name,
+          CustomerLoginRouter.name,
           initialChildren: children,
         );
 
-  static const String name = 'FailedOrdersListRouter';
+  static const String name = 'CustomerLoginRouter';
 
   static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [FailedOrdersItemListWrapper]
-class FailedOrdersItemListRouter
-    extends PageRouteInfo<FailedOrdersItemListRouterArgs> {
-  FailedOrdersItemListRouter({
-    Key? key,
-    required int orderId,
-    List<PageRouteInfo>? children,
-  }) : super(
-          FailedOrdersItemListRouter.name,
-          args: FailedOrdersItemListRouterArgs(
-            key: key,
-            orderId: orderId,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'FailedOrdersItemListRouter';
-
-  static const PageInfo<FailedOrdersItemListRouterArgs> page =
-      PageInfo<FailedOrdersItemListRouterArgs>(name);
-}
-
-class FailedOrdersItemListRouterArgs {
-  const FailedOrdersItemListRouterArgs({
-    this.key,
-    required this.orderId,
-  });
-
-  final Key? key;
-
-  final int orderId;
-
-  @override
-  String toString() {
-    return 'FailedOrdersItemListRouterArgs{key: $key, orderId: $orderId}';
-  }
 }

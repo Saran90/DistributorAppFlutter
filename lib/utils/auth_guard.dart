@@ -12,7 +12,13 @@ class AuthGuard extends AutoRouteGuard {
     if(authState is Authenticated){
       resolver.next(true);
     }else{
-      router.navigate(const LoginRouter());
+      if (AppConfig.instance.flavor ==
+          AppFlavor.varsha.name) {
+        //Navigate to Landing page
+        AppConfig.appRouter.replace(const LandingRouter());
+      } else {
+        AppConfig.appRouter.replace(const LoginRouter());
+      }
     }
   }
 }
