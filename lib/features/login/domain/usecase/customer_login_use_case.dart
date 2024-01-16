@@ -5,22 +5,22 @@ import 'package:equatable/equatable.dart';
 import '../../../../core/data/error/failures.dart';
 import '../../../../core/data/usecase/usecase.dart';
 
-class LoginUseCase extends UseCase<void, LoginParams> {
+class CustomerLoginUseCase extends UseCase<void, CustomerLoginParams> {
   final AuthRepository authRepository;
 
-  LoginUseCase({required this.authRepository});
+  CustomerLoginUseCase({required this.authRepository});
 
   @override
   Future<Either<Failure, int?>> call(params) {
-    return authRepository.login(params.username, params.password);
+    return authRepository.customerLogin(params.username, params.password);
   }
 }
 
-class LoginParams extends Equatable {
+class CustomerLoginParams extends Equatable {
   final String username;
   final String password;
 
-  const LoginParams({required this.username, required this.password});
+  const CustomerLoginParams({required this.username, required this.password});
 
   @override
   List<Object> get props => [username, password];

@@ -2,7 +2,6 @@ import 'package:dartz/dartz.dart';
 import 'package:distributor_app_flutter/core/data/error/failures.dart';
 import 'package:distributor_app_flutter/core/data/interceptors/network_checker.dart';
 import 'package:distributor_app_flutter/features/login/data/datasource/auth_data_source.dart';
-import 'package:distributor_app_flutter/features/login/data/datasource/models/login_response.dart';
 import 'package:distributor_app_flutter/features/login/domain/repository/auth_repository.dart';
 
 class AuthRepositoryImpl extends AuthRepository {
@@ -11,7 +10,7 @@ class AuthRepositoryImpl extends AuthRepository {
   final AuthDataSource authDataSource;
 
   @override
-  Future<Either<Failure, void>> login(String username, String password) async {
+  Future<Either<Failure, int?>> login(String username, String password) async {
     try {
       if (await NetworkChecker.isConnected()) {
         var result = await authDataSource.login(username, password);
@@ -21,6 +20,29 @@ class AuthRepositoryImpl extends AuthRepository {
           }
           await authDataSource.saveLogin(result);
           return Right(result.salesmanId);
+        } else {
+          return Left(ServerFailure());
+        }
+      } else {
+        return Left(NetworkFailure());
+      }
+    } catch (exception) {
+      return Left(ServerFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, int?>> customerLogin(
+      String username, String password) async {
+    try {
+      if (await NetworkChecker.isConnected()) {
+        var result = await authDataSource.customerLogin(username, password);
+        if (result != null) {
+          if (result.error != null && result.error!.isNotEmpty) {
+            return Left(ServerFailure(message: result.errorDescription));
+          }
+          await authDataSource.saveCustomerLogin(result);
+          return Right(result.customerId);
         } else {
           return Left(ServerFailure());
         }
@@ -73,6 +95,16 @@ class AuthRepositoryImpl extends AuthRepository {
       }
     } catch (exception) {
       return Left(ServerFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool?>> isCustomerUser() async {
+    try {
+      var result = await authDataSource.isCustomerUser();
+      return Right(result);
+    } catch (exception) {
+      return Left(CacheFailure());
     }
   }
 }

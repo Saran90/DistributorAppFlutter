@@ -82,6 +82,7 @@ abstract class _$AppRouter extends RootStackRouter {
         child: CartWrapper(
           key: args.key,
           hiveCustomerModel: args.hiveCustomerModel,
+          isCustomer: args.isCustomer,
         ),
       );
     },
@@ -313,12 +314,14 @@ class CartRouter extends PageRouteInfo<CartRouterArgs> {
   CartRouter({
     Key? key,
     required HiveCustomerModel hiveCustomerModel,
+    bool? isCustomer,
     List<PageRouteInfo>? children,
   }) : super(
           CartRouter.name,
           args: CartRouterArgs(
             key: key,
             hiveCustomerModel: hiveCustomerModel,
+            isCustomer: isCustomer,
           ),
           initialChildren: children,
         );
@@ -332,15 +335,18 @@ class CartRouterArgs {
   const CartRouterArgs({
     this.key,
     required this.hiveCustomerModel,
+    this.isCustomer,
   });
 
   final Key? key;
 
   final HiveCustomerModel hiveCustomerModel;
 
+  final bool? isCustomer;
+
   @override
   String toString() {
-    return 'CartRouterArgs{key: $key, hiveCustomerModel: $hiveCustomerModel}';
+    return 'CartRouterArgs{key: $key, hiveCustomerModel: $hiveCustomerModel, isCustomer: $isCustomer}';
   }
 }
 

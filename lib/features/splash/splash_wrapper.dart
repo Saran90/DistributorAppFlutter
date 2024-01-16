@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:distributor_app_flutter/features/data_download/presentation/bloc/customer_data/customer_data_cubit.dart';
 import 'package:distributor_app_flutter/features/data_download/presentation/bloc/is_data_available/data_download_cubit.dart';
 import 'package:distributor_app_flutter/features/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,9 @@ class SplashWrapper extends StatelessWidget {
     return MultiBlocProvider(providers: [
       BlocProvider<DataDownloadCubit>(
         create: (context) => AppConfig.s1()..isDataAvailable(),
+      ),
+      BlocProvider<CustomerDataCubit>(
+        create: (context) => AppConfig.s1(),
       )
     ], child: const SplashScreen());
   }

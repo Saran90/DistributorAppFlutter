@@ -33,3 +33,53 @@ class CustomerDataFetchingFailed extends CustomerDataState {
   @override
   List<Object> get props => [message];
 }
+
+class SaveCustomerSelectionSuccess extends CustomerDataState {
+  @override
+  List<Object> get props => [];
+}
+
+class SaveCustomerSelectionFailed extends CustomerDataState {
+
+  final String message;
+
+  const SaveCustomerSelectionFailed({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}
+
+class DeleteCustomerSelectionSuccess extends CustomerDataState {
+  @override
+  List<Object> get props => [];
+}
+
+class DeleteCustomerSelectionFailed extends CustomerDataState {
+
+  final String message;
+
+  const DeleteCustomerSelectionFailed({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}
+
+class GetCustomerSelectionSuccess extends CustomerDataState {
+
+  HiveCustomerModel? hiveCustomerModel;
+
+  GetCustomerSelectionSuccess({required this.hiveCustomerModel});
+
+  @override
+  List<Object> get props => [];
+}
+
+class GetCustomerSelectionFailed extends CustomerDataState {
+
+  final String message;
+
+  const GetCustomerSelectionFailed({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}

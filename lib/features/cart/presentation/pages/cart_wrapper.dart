@@ -11,17 +11,20 @@ import '../bloc/cart_cubit.dart';
 
 @RoutePage(name: 'CartRouter')
 class CartWrapper extends StatelessWidget {
-  const CartWrapper({Key? key, required this.hiveCustomerModel})
+  const CartWrapper(
+      {Key? key, required this.hiveCustomerModel, this.isCustomer})
       : super(key: key);
 
   final HiveCustomerModel hiveCustomerModel;
+  final bool? isCustomer;
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
         providers: [
           BlocProvider<CartCubit>(
-            create: (context) => AppConfig.s1()..getCustomerCart(hiveCustomerModel.id!),
+            create: (context) =>
+                AppConfig.s1()..getCustomerCart(hiveCustomerModel.id!),
           ),
           BlocProvider<OrderSummaryCubit>(
             create: (context) => AppConfig.s1(),
@@ -32,6 +35,7 @@ class CartWrapper extends StatelessWidget {
         ],
         child: CartScreen(
           hiveCustomerModel: hiveCustomerModel,
+          isCustomer: isCustomer ?? false,
         ));
   }
 }

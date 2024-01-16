@@ -7,6 +7,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../app_config.dart';
 import '../../../../core/data/local_storage/models/hive_customer_model.dart';
+import '../../../orders_list/presentation/bloc/order_details/order_details_cubit.dart';
+import '../../../orders_list/presentation/bloc/order_summary/order_summary_cubit.dart';
+import '../../../orders_list/presentation/bloc/sales_order/sales_order_cubit.dart';
 
 @RoutePage(name: 'ProductListRouter')
 class ProductListWrapper extends StatelessWidget {
@@ -21,6 +24,15 @@ class ProductListWrapper extends StatelessWidget {
         create: (context) => AppConfig.s1(),
       ),
       BlocProvider<CartCubit>(
+        create: (context) => AppConfig.s1(),
+      ),
+      BlocProvider<SalesOrderCubit>(
+        create: (context) => AppConfig.s1(),
+      ),
+      BlocProvider<OrderSummaryCubit>(
+        create: (context) => AppConfig.s1(),
+      ),
+      BlocProvider<OrderDetailsCubit>(
         create: (context) => AppConfig.s1(),
       )
     ], child: ProductListScreen(hiveCustomerModel: hiveCustomerModel,));

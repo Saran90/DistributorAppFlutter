@@ -1,8 +1,8 @@
-import 'dart:async';
-
+import 'package:distributor_app_flutter/core/data/local_storage/models/hive_customer_model.dart';
 import 'package:distributor_app_flutter/features/data_download/presentation/bloc/customer_data/customer_data_cubit.dart';
 import 'package:distributor_app_flutter/features/data_download/presentation/bloc/location_data/location_data_cubit.dart';
 import 'package:distributor_app_flutter/features/data_download/presentation/bloc/product_data/product_data_cubit.dart';
+import 'package:distributor_app_flutter/features/login/presentation/bloc/auth/auth_cubit.dart';
 import 'package:distributor_app_flutter/utils/app_router.dart';
 import 'package:distributor_app_flutter/utils/extensions.dart';
 import 'package:flutter/material.dart';
@@ -25,11 +25,12 @@ class _DataDownloadScreenState extends State<DataDownloadScreen> {
   bool? _isProductFetchingSuccess;
   bool? _isCustomerFetchingSuccess;
   bool? _isLocationFetchingSuccess;
+  bool? _isCustomerUser;
+  int? _customerId;
 
   @override
   void initState() {
-    context.read<ProductDataCubit>().getProducts('');
-    _downloadMessage = 'Downloading product details';
+    context.read<AuthCubit>().isLoggedIn();
     super.initState();
   }
 
@@ -45,18 +46,46 @@ class _DataDownloadScreenState extends State<DataDownloadScreen> {
               children: [_title(), _progressIndicator(), _description()],
             ),
           ),
+          BlocConsumer<AuthCubit, AuthState>(
+            builder: (context, state) {
+              return Container();
+            },
+            listener: (context, state) {
+              if (state is Authenticated) {
+                setState(() {
+                  _customerId = state.userId;
+                  _isCustomerUser = state.isCustomer;
+                });
+                if (state.isCustomer) {
+                  context.read<ProductDataCubit>().getCustomerProducts('');
+                  _downloadMessage = 'Downloading product details';
+                } else {
+                  context.read<ProductDataCubit>().getProducts('');
+                  _downloadMessage = 'Downloading product details';
+                }
+              }
+            },
+          ),
           BlocConsumer<ProductDataCubit, ProductDataState>(
             builder: (context, state) {
               return Container();
             },
             listener: (context, state) {
               if (state is ProductDataPopulated) {
-                setState(() {
-                  _isProductFetchingSuccess = true;
-                  _progress = 0.33;
-                  _downloadMessage = 'Downloading customer details';
-                });
-                context.read<CustomerDataCubit>().getCustomers('');
+                if (_isCustomerUser ?? false) {
+                  setState(() {
+                    _isProductFetchingSuccess = true;
+                    _progress = 0.50;
+                  });
+                  context.read<CustomerDataCubit>().getCustomers('');
+                } else {
+                  setState(() {
+                    _isProductFetchingSuccess = true;
+                    _progress = 0.33;
+                    _downloadMessage = 'Downloading customer details';
+                  });
+                  context.read<CustomerDataCubit>().getCustomers('');
+                }
               }
               if (state is ProductDataFetchingFailed) {
                 setState(() {
@@ -72,12 +101,29 @@ class _DataDownloadScreenState extends State<DataDownloadScreen> {
             },
             listener: (context, state) {
               if (state is CustomerDataPopulated) {
-                setState(() {
-                  _isCustomerFetchingSuccess = true;
-                  _progress = 0.66;
-                  _downloadMessage = 'Downloading location details';
-                });
-                context.read<LocationDataCubit>().getLocations();
+                if (_isCustomerUser ?? false) {
+                  setState(() {
+                    _isCustomerFetchingSuccess = true;
+                    _progress = 1;
+                  });
+                  if(state.customers.any((e) => e.id == _customerId)){
+                    HiveCustomerModel selectedCustomer =
+                        state.customers.where((e) => e.id == _customerId).first;
+                    context.read<CustomerDataCubit>().saveCustomerSelection(selectedCustomer);
+                    AppConfig.appRouter
+                        .replace(ProductListRouter(hiveCustomerModel: selectedCustomer));
+                  }else{
+                    context.showMessage('Unknown customer');
+                    context.read<AuthCubit>().logout();
+                  }
+                } else {
+                  setState(() {
+                    _isCustomerFetchingSuccess = true;
+                    _progress = 0.66;
+                    _downloadMessage = 'Downloading location details';
+                  });
+                  context.read<LocationDataCubit>().getLocations();
+                }
               }
               if (state is CustomerDataFetchingFailed) {
                 setState(() {
@@ -134,7 +180,8 @@ class _DataDownloadScreenState extends State<DataDownloadScreen> {
             Text(
               _downloadMessage,
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+              style:
+                  const TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
             )
           ],
         ),

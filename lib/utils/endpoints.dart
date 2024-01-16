@@ -7,7 +7,9 @@ class EndPoint {
   }
 
   String login = 'authenticate';
+  String customerLogin = 'customerauthenticate';
   String products = 'GetProductByName';
+  String customerProducts = 'GetProductByCustomer';
   String locations = 'GetAllCustomerLocation';
   String customers = 'GetCustomerByName';
   String sendSalesOrder = 'SalesOrderUpdateList';

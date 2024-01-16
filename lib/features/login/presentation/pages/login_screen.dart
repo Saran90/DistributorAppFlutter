@@ -30,27 +30,32 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: SizedBox(
         height: MediaQuery.of(context).size.height,
-        child: Stack(
-          children: [
-            _backgroundImage(),
-            _content(),
-            BlocConsumer<AuthCubit, AuthState>(
-              builder: (context, state) {
-                if (state is AuthLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                return Container();
-              },
-              listener: (context, state) {
-                if (state is Authenticated) {
-                  AppConfig.appRouter.replace(const DataDownloadRouter());
-                }
-                if (state is AuthenticationFailed) {
-                  context.showMessage(state.message);
-                }
-              },
+        child: SingleChildScrollView(
+          child: IntrinsicHeight(
+            child: Stack(
+              children: [
+                _backgroundImage(),
+                _content(),
+                BlocConsumer<AuthCubit, AuthState>(
+                  builder: (context, state) {
+                    if (state is AuthLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    return Container();
+                  },
+                  listener: (context, state) {
+                    if (state is Authenticated) {
+                      AppConfig.appRouter
+                          .replaceAll([const DataDownloadRouter()]);
+                    }
+                    if (state is AuthenticationFailed) {
+                      context.showMessage(state.message);
+                    }
+                  },
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

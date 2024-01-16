@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:distributor_app_flutter/features/login/data/datasource/manufacture_data_source.dart';
 import 'package:distributor_app_flutter/features/login/data/repository/manufacture_repository_impl.dart';
 import 'package:distributor_app_flutter/features/login/domain/repository/manufacture_repository.dart';
+import 'package:distributor_app_flutter/features/login/domain/usecase/customer_login_use_case.dart';
+import 'package:distributor_app_flutter/features/login/domain/usecase/is_customer_user_use_case.dart';
 import 'package:distributor_app_flutter/features/login/domain/usecase/login_with_manufacture_use_case.dart';
 import 'package:distributor_app_flutter/features/login/domain/usecase/manufacture_use_case.dart';
 import 'package:distributor_app_flutter/features/login/presentation/bloc/manufacture/manufacture_cubit.dart';
@@ -29,18 +31,25 @@ class AuthInjectionConateinr {
         () => AuthRepositoryImpl(authDataSource: AppConfig.s1()));
     AppConfig.s1.registerLazySingleton<LoginUseCase>(
         () => LoginUseCase(authRepository: AppConfig.s1()));
+    AppConfig.s1.registerLazySingleton<CustomerLoginUseCase>(
+            () => CustomerLoginUseCase(authRepository: AppConfig.s1()));
     AppConfig.s1.registerLazySingleton<LogoutUseCase>(
         () => LogoutUseCase(authRepository: AppConfig.s1()));
     AppConfig.s1.registerLazySingleton<IsLoggedInUseCase>(
         () => IsLoggedInUseCase(authRepository: AppConfig.s1()));
+    AppConfig.s1.registerLazySingleton<IsCustomerUserUseCase>(
+            () => IsCustomerUserUseCase(authRepository: AppConfig.s1()));
     AppConfig.s1.registerLazySingleton<LoginWithManufactureUseCase>(
         () => LoginWithManufactureUseCase(authRepository: AppConfig.s1()));
     AppConfig.s1.registerLazySingleton<AuthCubit>(
       () => AuthCubit(
+          customerLoginUseCase: AppConfig.s1(),
           loginUseCase: AppConfig.s1(),
           logoutUseCase: AppConfig.s1(),
           isLoggedInUseCase: AppConfig.s1(),
-          loginWithManufactureUseCase: AppConfig.s1()),
+          isCustomerUserUseCase: AppConfig.s1(),
+          loginWithManufactureUseCase: AppConfig.s1(),
+      ),
     );
 
     AppConfig.s1.registerLazySingleton<ManufactureDataSource>(() =>

@@ -1,4 +1,8 @@
 import 'package:dio/dio.dart';
+import 'package:distributor_app_flutter/features/data_download/domain/usecase/customer_product_data_use_case.dart';
+import 'package:distributor_app_flutter/features/data_download/domain/usecase/delete_customer_selection_use_case.dart';
+import 'package:distributor_app_flutter/features/data_download/domain/usecase/get_customer_selection_use_case.dart';
+import 'package:distributor_app_flutter/features/data_download/domain/usecase/save_customer_selection_use_case.dart';
 
 import '../../app_config.dart';
 import '../customer_list/data/datasource/customer_list_data_source.dart';
@@ -48,8 +52,11 @@ class DataInjectionContainer {
         () => ProductDataRepositoryImpl(productDataDataSource: AppConfig.s1()));
     AppConfig.s1.registerLazySingleton<ProductDataUseCase>(
         () => ProductDataUseCase(productDataRepository: AppConfig.s1()));
-    AppConfig.s1.registerFactory<ProductDataCubit>(
-        () => ProductDataCubit(productDataUseCase: AppConfig.s1()));
+    AppConfig.s1.registerLazySingleton<CustomerProductDataUseCase>(() =>
+        CustomerProductDataUseCase(productDataRepository: AppConfig.s1()));
+    AppConfig.s1.registerFactory<ProductDataCubit>(() => ProductDataCubit(
+        productDataUseCase: AppConfig.s1(),
+        customerProductDataUseCase: AppConfig.s1()));
 
     //Customer Data
     AppConfig.s1.registerLazySingleton<CustomerDataDataSource>(() =>
@@ -61,8 +68,17 @@ class DataInjectionContainer {
         CustomerDataRepositoryImpl(customerDataDataSource: AppConfig.s1()));
     AppConfig.s1.registerLazySingleton<CustomerDataUseCase>(
         () => CustomerDataUseCase(customerDataRepository: AppConfig.s1()));
-    AppConfig.s1.registerFactory<CustomerDataCubit>(
-        () => CustomerDataCubit(customerDataUseCase: AppConfig.s1()));
+    AppConfig.s1.registerLazySingleton<SaveCustomerSelectionUseCase>(() =>
+        SaveCustomerSelectionUseCase(customerDataRepository: AppConfig.s1()));
+    AppConfig.s1.registerLazySingleton<DeleteCustomerSelectionUseCase>(() =>
+        DeleteCustomerSelectionUseCase(customerDataRepository: AppConfig.s1()));
+    AppConfig.s1.registerLazySingleton<GetCustomerSelectionUseCase>(() =>
+        GetCustomerSelectionUseCase(customerDataRepository: AppConfig.s1()));
+    AppConfig.s1.registerFactory<CustomerDataCubit>(() => CustomerDataCubit(
+        customerDataUseCase: AppConfig.s1(),
+        deleteCustomerSelectionUseCase: AppConfig.s1(),
+        getCustomerSelectionUseCase: AppConfig.s1(),
+        saveCustomerSelectionUseCase: AppConfig.s1()));
 
     //Location Data
     AppConfig.s1.registerLazySingleton<LocationDataDataSource>(() =>

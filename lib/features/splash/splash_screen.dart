@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:distributor_app_flutter/app_config.dart';
+import 'package:distributor_app_flutter/features/data_download/presentation/bloc/customer_data/customer_data_cubit.dart';
 import 'package:distributor_app_flutter/features/data_download/presentation/bloc/is_data_available/data_download_cubit.dart';
 import 'package:distributor_app_flutter/features/login/presentation/bloc/auth/auth_cubit.dart';
 import 'package:distributor_app_flutter/utils/app_router.dart';
+import 'package:distributor_app_flutter/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -16,6 +18,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   final int timerDurationInSec = 2;
+  bool? _isCustomerUser;
 
   @override
   void initState() {
@@ -36,17 +39,19 @@ class _SplashScreenState extends State<SplashScreen> {
               builder: (context, state) => Container(),
               listener: (context, state) {
                 if (state is Authenticated) {
+                  setState(() {
+                    _isCustomerUser = state.isCustomer;
+                  });
                   context.read<DataDownloadCubit>().isDataAvailable();
                 }
                 if (state is UnAuthenticated) {
                   Timer(Duration(seconds: timerDurationInSec), () {
                     if (mounted) {
-                      if (AppConfig.instance.flavor ==
-                          AppFlavor.varsha.name) {
+                      if (AppConfig.instance.flavor == AppFlavor.varsha.name) {
                         //Navigate to Landing page
                         AppConfig.appRouter.replace(const LandingRouter());
                       } else {
-                        AppConfig.appRouter.replace(const LoginRouter());
+                        AppConfig.appRouter.replaceAll([const LoginRouter()]);
                       }
                     }
                   });
@@ -66,9 +71,30 @@ class _SplashScreenState extends State<SplashScreen> {
                 if (state is DataAvailable) {
                   Timer(Duration(seconds: timerDurationInSec), () {
                     if (mounted) {
-                      AppConfig.appRouter.replace(const CustomerListRouter());
+                      if (_isCustomerUser ?? false) {
+                        context
+                            .read<CustomerDataCubit>()
+                            .getCustomerSelection();
+                      } else {
+                        AppConfig.appRouter.replace(const CustomerListRouter());
+                      }
                     }
                   });
+                }
+              },
+            ),
+            BlocConsumer<CustomerDataCubit, CustomerDataState>(
+              builder: (context, state) => Container(),
+              listener: (context, state) {
+                if (state is GetCustomerSelectionSuccess) {
+                  if (state.hiveCustomerModel != null) {
+                    AppConfig.appRouter.replace(ProductListRouter(
+                        hiveCustomerModel: state.hiveCustomerModel!));
+                  } else {
+                    context.showMessage(
+                        'Customer selection failed. Please relogin');
+                    // context.read<CustomerDataCubit>().getCustomers('');
+                  }
                 }
               },
             )

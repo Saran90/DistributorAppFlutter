@@ -30,27 +30,31 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
     return Scaffold(
       body: SizedBox(
         height: MediaQuery.of(context).size.height,
-        child: Stack(
-          children: [
-            _backgroundImage(),
-            _content(),
-            BlocConsumer<AuthCubit, AuthState>(
-              builder: (context, state) {
-                if (state is AuthLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                return Container();
-              },
-              listener: (context, state) {
-                if (state is Authenticated) {
-                  AppConfig.appRouter.replace(const DataDownloadRouter());
-                }
-                if (state is AuthenticationFailed) {
-                  context.showMessage(state.message);
-                }
-              },
+        child: SingleChildScrollView(
+          child: IntrinsicHeight(
+            child: Stack(
+              children: [
+                _backgroundImage(),
+                _content(),
+                BlocConsumer<AuthCubit, AuthState>(
+                  builder: (context, state) {
+                    if (state is AuthLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    return Container();
+                  },
+                  listener: (context, state) {
+                    if (state is Authenticated) {
+                      AppConfig.appRouter.replaceAll([const DataDownloadRouter()]);
+                    }
+                    if (state is AuthenticationFailed) {
+                      context.showMessage(state.message);
+                    }
+                  },
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -165,7 +169,7 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
   void _onLoginClicked() {
     if (_userNameController.text.isNotEmpty &&
         _passwordController.text.isNotEmpty) {
-      context.read<AuthCubit>().login(
+      context.read<AuthCubit>().customerLogin(
           _userNameController.text.trim(), _passwordController.text.trim());
     } else {
       context.showMessage('Please provide required information.');
