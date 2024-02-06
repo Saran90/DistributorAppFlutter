@@ -18,7 +18,7 @@ class IsDataAvailableDataSourceImpl extends IsDataAvailableDataSource {
 
   @override
   Future<bool> isDataAvailable() async {
-    int customerId = sharedPreferenceDataSource.getInt(spCustomerId) ?? -1;
+    int customerId = sharedPreferenceDataSource.getInt(spCustomerId) ?? 0;
     bool hasProductSynced =
         sharedPreferenceDataSource.getBool(spHasProductDataSynced) ?? false;
     bool hasLocationSynced =

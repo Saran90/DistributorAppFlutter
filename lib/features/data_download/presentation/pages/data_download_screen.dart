@@ -53,7 +53,7 @@ class _DataDownloadScreenState extends State<DataDownloadScreen> {
             listener: (context, state) {
               if (state is Authenticated) {
                 setState(() {
-                  _customerId = state.userId;
+                  _customerId = state.customerId;
                   _isCustomerUser = state.isCustomer;
                 });
                 if (state.isCustomer) {

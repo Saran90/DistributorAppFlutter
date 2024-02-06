@@ -20,6 +20,8 @@ class HiveCustomerModel extends HiveObject {
   String? contactNumber;
   @HiveField(7)
   int? status;
+  @HiveField(8)
+  double? accountBalance;
 
   HiveCustomerModel(
       {this.id,
@@ -29,5 +31,6 @@ class HiveCustomerModel extends HiveObject {
       this.contactPerson,
       this.location,
       this.pincode,
-      this.status});
+      this.status,
+      this.accountBalance});
 }

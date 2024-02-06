@@ -11,6 +11,9 @@ import '../features/failed_orders/presentation/pages/failed_order_item_list_wrap
 import '../features/failed_orders/presentation/pages/failed_orders_list_wrapper.dart';
 import '../features/login/presentation/pages/customer/customer_login_wrapper.dart';
 import '../features/login/presentation/pages/login_wrapper.dart';
+import '../features/order_history/presentation/models/order_history.dart';
+import '../features/order_history/presentation/pages/detail/order_history_detail_wrapper.dart';
+import '../features/order_history/presentation/pages/order_history_wrapper.dart';
 import '../features/orders_list/presentation/pages/order_item_list_wrapper.dart';
 import '../features/orders_list/presentation/pages/orders_list_wrapper.dart';
 import '../features/product_list/presentation/pages/product_list_wrapper.dart';
@@ -67,6 +70,14 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
             page: FailedOrdersItemListRouter.page,
             path: failedOrdersItemListRoute,
+            guards: [AuthGuard()]),
+        AutoRoute(
+            page: OrderHistoryRouter.page,
+            path: orderHistoryRoute,
+            guards: [AuthGuard()]),
+        AutoRoute(
+            page: OrderHistoryDetailRouter.page,
+            path: orderHistoryDetailRoute,
             guards: [AuthGuard()]),
       ];
 }

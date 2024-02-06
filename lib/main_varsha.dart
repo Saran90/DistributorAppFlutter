@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:dio/dio.dart';
 import 'package:distributor_app_flutter/core/data/interceptors/authenticated_api_interceptor.dart';
 import 'package:distributor_app_flutter/core/data/local_storage/hive_data_source.dart';
@@ -9,6 +7,7 @@ import 'package:distributor_app_flutter/features/data_download/data_injection_co
 import 'package:distributor_app_flutter/features/login/auth_injection_container.dart';
 import 'package:distributor_app_flutter/features/login/presentation/bloc/auth/auth_cubit.dart';
 import 'package:distributor_app_flutter/features/login/presentation/bloc/manufacture/manufacture_cubit.dart';
+import 'package:distributor_app_flutter/features/order_history/order_history_injector.dart';
 import 'package:distributor_app_flutter/features/orders_list/order_injection_container.dart';
 import 'package:distributor_app_flutter/features/product_list/product_injection_container.dart';
 import 'package:distributor_app_flutter/utils/constants.dart';
@@ -107,6 +106,16 @@ Future<void> initDependencies() async {
 
   //Order
   OrderInjectionContainer(
+          dio: dio
+            ..interceptors.addAll([
+              AuthenticatedApiInterceptor(
+                  sharedPreferenceDataSource: AppConfig.s1(),
+                  authCubit: AppConfig.s1())
+            ]))
+      .initialize();
+
+  //Order History
+  OrderHistoryInjector(
           dio: dio
             ..interceptors.addAll([
               AuthenticatedApiInterceptor(

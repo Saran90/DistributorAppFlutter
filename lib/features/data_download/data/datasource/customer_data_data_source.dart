@@ -57,7 +57,8 @@ class CustomerDataDataSourceImpl extends CustomerDataDataSource {
         contactNumber: customers.contactNo,
         contactPerson: customers.contactPerson,
         location: customers.location,
-        pincode: customers.pinCode);
+        pincode: customers.pinCode,
+        accountBalance: customers.accountBalance?.toDouble());
   }
 
   List<HiveCustomerModel> _getHiveCustomersModels(
@@ -84,20 +85,21 @@ class CustomerDataDataSourceImpl extends CustomerDataDataSource {
   @override
   Future<void> saveCustomerSelection(
       HiveCustomerModel hiveCustomerModel) async {
-    sharedPreferenceDataSource.setInt(spSelectedCustomerId, hiveCustomerModel.id??-1);
+    sharedPreferenceDataSource.setInt(
+        spSelectedCustomerId, hiveCustomerModel.id ?? 0);
     hiveDataSource.saveSelectedCustomer(hiveCustomerModel);
   }
 
   @override
   Future<void> deleteCustomerSelection() async {
-    sharedPreferenceDataSource.setInt(spSelectedCustomerId, -1);
+    sharedPreferenceDataSource.setInt(spSelectedCustomerId, 0);
     hiveDataSource.deleteSelectedCustomer();
   }
 
   @override
   Future<HiveCustomerModel?> getCustomerSelection() async {
     int? selectedId = sharedPreferenceDataSource.getInt(spSelectedCustomerId);
-    if(selectedId != null){
+    if (selectedId != null) {
       return hiveDataSource.getSelectedCustomer(selectedId);
     }
     return null;

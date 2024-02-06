@@ -120,6 +120,22 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const CustomerLoginWrapper(),
       );
     },
+    OrderHistoryRouter.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const OrderHistoryWrapper(),
+      );
+    },
+    OrderHistoryDetailRouter.name: (routeData) {
+      final args = routeData.argsAs<OrderHistoryDetailRouterArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: OrderHistoryDetailWrapper(
+          key: args.key,
+          orderHistory: args.orderHistory,
+        ),
+      );
+    },
   };
 }
 
@@ -442,4 +458,57 @@ class CustomerLoginRouter extends PageRouteInfo<void> {
   static const String name = 'CustomerLoginRouter';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [OrderHistoryWrapper]
+class OrderHistoryRouter extends PageRouteInfo<void> {
+  const OrderHistoryRouter({List<PageRouteInfo>? children})
+      : super(
+          OrderHistoryRouter.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'OrderHistoryRouter';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [OrderHistoryDetailWrapper]
+class OrderHistoryDetailRouter
+    extends PageRouteInfo<OrderHistoryDetailRouterArgs> {
+  OrderHistoryDetailRouter({
+    Key? key,
+    required OrderHistory orderHistory,
+    List<PageRouteInfo>? children,
+  }) : super(
+          OrderHistoryDetailRouter.name,
+          args: OrderHistoryDetailRouterArgs(
+            key: key,
+            orderHistory: orderHistory,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'OrderHistoryDetailRouter';
+
+  static const PageInfo<OrderHistoryDetailRouterArgs> page =
+      PageInfo<OrderHistoryDetailRouterArgs>(name);
+}
+
+class OrderHistoryDetailRouterArgs {
+  const OrderHistoryDetailRouterArgs({
+    this.key,
+    required this.orderHistory,
+  });
+
+  final Key? key;
+
+  final OrderHistory orderHistory;
+
+  @override
+  String toString() {
+    return 'OrderHistoryDetailRouterArgs{key: $key, orderHistory: $orderHistory}';
+  }
 }

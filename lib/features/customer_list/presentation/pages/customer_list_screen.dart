@@ -403,10 +403,18 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
           value: 3,
           child: Text('Failed Orders'),
         ));
-        list.add(const PopupMenuItem(
-          value: 4,
-          child: Text('Logout'),
-        ));
+        if (_showOrderHistory()) {
+          list.add(const PopupMenuItem(
+            value: 4,
+            child: Text('Order History'),
+          ));
+        }
+        if (_showOrderHistory()) {
+          list.add(const PopupMenuItem(
+            value: 5,
+            child: Text('Logout'),
+          ));
+        }
         return list;
       },
       position: PopupMenuPosition.under,
@@ -424,6 +432,11 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
             AppConfig.appRouter.push(const FailedOrdersListRouter());
             break;
           case 4:
+            _showOrderHistory()
+                ? AppConfig.appRouter.push(const OrderHistoryRouter())
+                : _showLogoutConfirmationBottomSheet();
+            break;
+          case 5:
             _showLogoutConfirmationBottomSheet();
             break;
         }
@@ -651,5 +664,13 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
       ),
     );
     // FocusManager.instance.primaryFocus?.unfocus();
+  }
+
+  bool _showOrderHistory() {
+    if (AppConfig.instance.flavor == AppFlavor.varsha.name) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

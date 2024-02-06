@@ -15,9 +15,27 @@ extension DoublePrecisionExtension on double {
     return double.parse(toStringAsFixed(2));
   }
 }
+
 extension DateTimeApiFormatExtension on DateTime {
   String toApiFormat() {
     final DateFormat formatter = DateFormat('yyyy-MM-dd, hh:mm:ss');
     return formatter.format(this);
+  }
+
+  String toDDMMYYYYFormat() {
+    final DateFormat formatter = DateFormat('dd-MM-yyyy');
+    return formatter.format(this);
+  }
+
+  String toDDMMYYYYHHMMSSFormat() {
+    final DateFormat formatter = DateFormat('dd-MM-yyyy, HH:mm:ss');
+    return formatter.format(this);
+  }
+}
+
+extension StringToDateExtension on String {
+  DateTime toDate() {
+    final DateFormat formatter = DateFormat('yyyy-MM-ddTHH:mm:ss');
+    return formatter.parse(this);
   }
 }

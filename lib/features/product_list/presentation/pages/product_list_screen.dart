@@ -62,7 +62,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
       onWillPop: _onBackPressed,
       child: Scaffold(
         bottomNavigationBar: Visibility(
-          visible: _isCustomer??false,
+          visible: _isCustomer ?? false,
           child: Container(
             decoration: const BoxDecoration(
                 gradient: LinearGradient(
@@ -121,8 +121,9 @@ class _ProductListScreenState extends State<ProductListScreen> {
                   leadingWidth: 50,
                   actions: [
                     Visibility(
-                      visible: _isCustomer??false,
-                      child: _popupMenu(),),
+                      visible: _isCustomer ?? false,
+                      child: _popupMenu(),
+                    ),
                     InkWell(
                       onTap: _onCartTapped,
                       child: SizedBox(
@@ -170,7 +171,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                   ),
                 ),
                 SliverAppBar(
-                  toolbarHeight: 120,
+                  toolbarHeight: 170,
                   // backgroundColor: appColor,
                   automaticallyImplyLeading: false,
                   pinned: true,
@@ -193,6 +194,27 @@ class _ProductListScreenState extends State<ProductListScreen> {
                               fontWeight: FontWeight.w500,
                             ),
                             textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              const Text('Account balance:',
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.white)),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Text('₹ ${widget.hiveCustomerModel.accountBalance}',
+                                  style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.white))
+                            ],
                           ),
                           const SizedBox(
                             height: 20,
@@ -355,11 +377,14 @@ class _ProductListScreenState extends State<ProductListScreen> {
                       ),
               ],
             ),
-            BlocConsumer<AuthCubit,AuthState>(builder: (context, state) => Container(), listener: (context, state) {
-              if(state is Authenticated){
-                _isCustomer = state.isCustomer;
-              }
-            },),
+            BlocConsumer<AuthCubit, AuthState>(
+              builder: (context, state) => Container(),
+              listener: (context, state) {
+                if (state is Authenticated) {
+                  _isCustomer = state.isCustomer;
+                }
+              },
+            ),
             BlocConsumer<ProductListCubit, ProductListState>(
               builder: (context, state) {
                 if (state is ProductListLoading) {
@@ -487,8 +512,9 @@ class _ProductListScreenState extends State<ProductListScreen> {
 
   Future<void> _onCartTapped() async {
     if (_cartCount != 0) {
-      await AppConfig.appRouter
-          .push(CartRouter(hiveCustomerModel: widget.hiveCustomerModel,isCustomer: _isCustomer));
+      await AppConfig.appRouter.push(CartRouter(
+          hiveCustomerModel: widget.hiveCustomerModel,
+          isCustomer: _isCustomer));
       _updateList();
     }
   }
@@ -539,7 +565,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
             id: DateTime.now().microsecondsSinceEpoch,
             unit: product.unit ?? '',
             stock: product.stock ?? 0,
-            userId: _userId ?? -1,
+            userId: _userId ?? 0,
             productId: product.id != null ? '${product.id}' : '',
             productName: product.name ?? ''));
       }
@@ -555,7 +581,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
             id: DateTime.now().microsecondsSinceEpoch,
             unit: product.unit ?? '',
             stock: product.stock ?? 0,
-            userId: _userId ?? -1,
+            userId: _userId ?? 0,
             productId: product.id != null ? '${product.id}' : '',
             productName: product.name ?? ''));
       }
@@ -796,8 +822,14 @@ class _ProductListScreenState extends State<ProductListScreen> {
           value: 3,
           child: Text('Failed Orders'),
         ));
+        if (_showOrderHistory()) {
+          list.add(const PopupMenuItem(
+            value: 4,
+            child: Text('Order History'),
+          ));
+        }
         list.add(const PopupMenuItem(
-          value: 4,
+          value: 5,
           child: Text('Logout'),
         ));
         return list;
@@ -817,6 +849,11 @@ class _ProductListScreenState extends State<ProductListScreen> {
             AppConfig.appRouter.push(const FailedOrdersListRouter());
             break;
           case 4:
+            _showOrderHistory()
+                ? AppConfig.appRouter.push(const OrderHistoryRouter())
+                : _showLogoutConfirmationBottomSheet();
+            break;
+          case 5:
             _showLogoutConfirmationBottomSheet();
             break;
         }
@@ -1044,5 +1081,13 @@ class _ProductListScreenState extends State<ProductListScreen> {
         ),
       ),
     );
+  }
+
+  bool _showOrderHistory() {
+    if (AppConfig.instance.flavor == AppFlavor.varsha.name) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

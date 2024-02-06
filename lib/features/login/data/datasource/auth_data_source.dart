@@ -19,7 +19,7 @@ abstract class AuthDataSource {
 
   Future<void> logout();
 
-  Future<int?> isLoggedIn();
+  Future<Map<String,dynamic>?> isLoggedIn();
 
   Future<bool?> isCustomerUser();
 
@@ -91,26 +91,26 @@ class AuthDataSourceImpl extends AuthDataSource {
 
   @override
   Future<void> logout() async {
-    await sharedPreferenceDataSource.setInt(spUserId, -1);
+    await sharedPreferenceDataSource.setInt(spUserId, 0);
     await sharedPreferenceDataSource.setString(spAccessToken, '');
     await sharedPreferenceDataSource.setBool(spIsLoggedIn, false);
-    await sharedPreferenceDataSource.setInt(spManufactureId, -1);
-    await sharedPreferenceDataSource.setInt(spCustomerId, -1);
+    await sharedPreferenceDataSource.setInt(spManufactureId, 0);
+    await sharedPreferenceDataSource.setInt(spCustomerId, 0);
     await sharedPreferenceDataSource.setBool(spHasProductDataSynced, false);
     await sharedPreferenceDataSource.setBool(spHasLocationDataSynced, false);
     await sharedPreferenceDataSource.setBool(spHasCustomerDataSynced, false);
-    await sharedPreferenceDataSource.setInt(spSelectedCustomerId, -1);
+    await sharedPreferenceDataSource.setInt(spSelectedCustomerId, 0);
     await hiveDataSource.clearAll();
     await hiveDataSource.deleteSelectedCustomer();
   }
 
   @override
-  Future<int?> isLoggedIn() async {
+  Future<Map<String,dynamic>?> isLoggedIn() async {
     bool isLoggedIn = sharedPreferenceDataSource.getBool(spIsLoggedIn) ?? false;
     int? userId = sharedPreferenceDataSource.getInt(spUserId);
     int? customerId = sharedPreferenceDataSource.getInt(spCustomerId);
     if (isLoggedIn) {
-      return (customerId??0)>0?customerId:userId;
+      return {'userId':userId,'customerId':customerId};
     } else {
       return null;
     }
@@ -121,7 +121,7 @@ class AuthDataSourceImpl extends AuthDataSource {
     await sharedPreferenceDataSource.setString(
         spAccessToken, loginResponse.accessToken ?? '');
     await sharedPreferenceDataSource.setInt(
-        spUserId, loginResponse.salesmanId ?? -1);
+        spUserId, loginResponse.salesmanId ?? 0);
     await sharedPreferenceDataSource.setBool(spIsLoggedIn, true);
   }
 
@@ -131,7 +131,7 @@ class AuthDataSourceImpl extends AuthDataSource {
         spAccessToken, loginResponse.accessToken ?? '');
     await sharedPreferenceDataSource.setInt(spUserId, 0);
     await sharedPreferenceDataSource.setInt(
-        spCustomerId, loginResponse.customerId ?? -1);
+        spCustomerId, loginResponse.customerId ?? 0);
     await sharedPreferenceDataSource.setBool(spIsLoggedIn, true);
   }
 
@@ -141,7 +141,7 @@ class AuthDataSourceImpl extends AuthDataSource {
     await sharedPreferenceDataSource.setString(
         spAccessToken, loginResponse.accessToken ?? '');
     await sharedPreferenceDataSource.setInt(
-        spUserId, loginResponse.salesmanId ?? -1);
+        spUserId, loginResponse.salesmanId ?? 0);
     await sharedPreferenceDataSource.setInt(spManufactureId, manufactureId);
     await sharedPreferenceDataSource.setBool(spIsLoggedIn, true);
   }

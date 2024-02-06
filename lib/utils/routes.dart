@@ -12,3 +12,5 @@ const String orderItemListRoute = '/orderItems';
 const String salesItemListRoute = '/salesItems';
 const String failedOrdersListRoute = '/failedOrders';
 const String failedOrdersItemListRoute = '/failedOrderItems';
+const String orderHistoryRoute = '/orderHistory';
+const String orderHistoryDetailRoute = '/orderHistoryDetail';

@@ -52,6 +52,7 @@ class CustomerDataResponse {
 /// ContactPerson : ""
 /// ContactNo : "7356802020"
 /// Status : 1
+/// AccountBalance : 0.0
 
 Customers customersFromJson(String str) => Customers.fromJson(json.decode(str));
 
@@ -67,6 +68,7 @@ class Customers {
     String? contactPerson,
     String? contactNo,
     int? status,
+    num? accountBalance,
   }) {
     _id = id;
     _name = name;
@@ -76,6 +78,7 @@ class Customers {
     _contactPerson = contactPerson;
     _contactNo = contactNo;
     _status = status;
+    _accountBalance = accountBalance;
   }
 
   Customers.fromJson(dynamic json) {
@@ -87,6 +90,7 @@ class Customers {
     _contactPerson = json['ContactPerson'];
     _contactNo = json['ContactNo'];
     _status = json['Status'];
+    _accountBalance = json['AccountBalance'];
   }
 
   int? _id;
@@ -97,6 +101,7 @@ class Customers {
   String? _contactPerson;
   String? _contactNo;
   int? _status;
+  num? _accountBalance;
 
   Customers copyWith({
     int? id,
@@ -107,6 +112,7 @@ class Customers {
     String? contactPerson,
     String? contactNo,
     int? status,
+    num? accountBalance,
   }) =>
       Customers(
         id: id ?? _id,
@@ -117,6 +123,7 @@ class Customers {
         contactPerson: contactPerson ?? _contactPerson,
         contactNo: contactNo ?? _contactNo,
         status: status ?? _status,
+        accountBalance: accountBalance ?? _accountBalance,
       );
 
   int? get id => _id;
@@ -135,6 +142,8 @@ class Customers {
 
   int? get status => _status;
 
+  num? get accountBalance => _accountBalance;
+
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['ID'] = _id;
@@ -145,6 +154,7 @@ class Customers {
     map['ContactPerson'] = _contactPerson;
     map['ContactNo'] = _contactNo;
     map['Status'] = _status;
+    map['AccountBalance'] = _accountBalance;
     return map;
   }
 }

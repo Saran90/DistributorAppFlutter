@@ -8,23 +8,20 @@ import 'package:distributor_app_flutter/features/login/domain/usecase/logout_use
 import 'package:distributor_app_flutter/utils/strings.dart';
 import 'package:flutter/cupertino.dart';
 
-import '../../../../../core/data/local_storage/models/hive_customer_model.dart';
-import '../../../../data_download/domain/usecase/delete_customer_selection_use_case.dart';
 import '../../../domain/usecase/customer_login_use_case.dart';
 import '../../../domain/usecase/is_customer_user_use_case.dart';
 
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
-  AuthCubit(
-      {required this.loginUseCase,
-      required this.customerLoginUseCase,
-      required this.logoutUseCase,
-      required this.isLoggedInUseCase,
-      required this.isCustomerUserUseCase,
-      required this.loginWithManufactureUseCase,
-      })
-      : super(AuthInitial());
+  AuthCubit({
+    required this.loginUseCase,
+    required this.customerLoginUseCase,
+    required this.logoutUseCase,
+    required this.isLoggedInUseCase,
+    required this.isCustomerUserUseCase,
+    required this.loginWithManufactureUseCase,
+  }) : super(AuthInitial());
 
   final LoginUseCase loginUseCase;
   final CustomerLoginUseCase customerLoginUseCase;
@@ -49,7 +46,17 @@ class AuthCubit extends Cubit<AuthState> {
         emit(AuthenticationFailed(message: 'Login Failed'));
         emit(UnAuthenticated());
       }
-    }, (r) => emit(Authenticated(userId: r ?? 0)));
+    }, (r) {
+      if (r != null) {
+        emit(Authenticated(
+            userId: r['userId']??0,
+            customerId: r['customerId']??0,
+            isCustomer: (r['customerId']??0) != 0));
+      } else {
+        emit(AuthenticationFailed(message: 'Login Failed'));
+        emit(UnAuthenticated());
+      }
+    });
   }
 
   Future<void> customerLogin(String username, String password) async {
@@ -68,7 +75,17 @@ class AuthCubit extends Cubit<AuthState> {
         emit(AuthenticationFailed(message: 'Login Failed'));
         emit(UnAuthenticated());
       }
-    }, (r) => emit(Authenticated(userId: r ?? 0)));
+    }, (r) {
+      if (r != null) {
+        emit(Authenticated(
+            userId: r['userId']??0,
+            customerId: r['customerId']??0,
+            isCustomer: (r['customerId']??0) != 0));
+      } else {
+        emit(AuthenticationFailed(message: 'Login Failed'));
+        emit(UnAuthenticated());
+      }
+    });
   }
 
   Future<void> loginWithManufacture(
@@ -89,7 +106,17 @@ class AuthCubit extends Cubit<AuthState> {
         emit(AuthenticationFailed(message: 'Login Failed'));
         emit(UnAuthenticated());
       }
-    }, (r) => emit(Authenticated(userId: r)));
+    }, (r) {
+      if (r != null) {
+        emit(Authenticated(
+            userId: r['userId']??0,
+            customerId: r['customerId']??0,
+            isCustomer: (r['customerId']??0) != 0));
+      } else {
+        emit(AuthenticationFailed(message: 'Login Failed'));
+        emit(UnAuthenticated());
+      }
+    });
   }
 
   Future<void> logout() async {
@@ -120,13 +147,12 @@ class AuthCubit extends Cubit<AuthState> {
         emit(LogoutFailed(message: 'Logout Failed'));
         emit(UnAuthenticated());
       }
-    }, (r) async {
+    }, (r) {
       if (r != null) {
-        var res = await isCustomerUserUseCase.call(NoParams());
-        res.fold(
-            (left) => emit(Authenticated(userId: r)),
-            (right) =>
-                emit(Authenticated(userId: r, isCustomer: right ?? false)));
+        emit(Authenticated(
+            userId: r['userId']??0,
+            customerId: r['customerId']??0,
+            isCustomer: (r['customerId']??0) != 0));
       } else {
         emit(UnAuthenticated());
       }

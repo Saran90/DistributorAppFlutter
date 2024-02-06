@@ -15,7 +15,7 @@ class SplashWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(providers: [
       BlocProvider<DataDownloadCubit>(
-        create: (context) => AppConfig.s1()..isDataAvailable(),
+        create: (context) => AppConfig.s1(),
       ),
       BlocProvider<CustomerDataCubit>(
         create: (context) => AppConfig.s1(),

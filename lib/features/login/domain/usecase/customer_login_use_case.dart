@@ -5,13 +5,13 @@ import 'package:equatable/equatable.dart';
 import '../../../../core/data/error/failures.dart';
 import '../../../../core/data/usecase/usecase.dart';
 
-class CustomerLoginUseCase extends UseCase<void, CustomerLoginParams> {
+class CustomerLoginUseCase extends UseCase<Map<String,dynamic>?, CustomerLoginParams> {
   final AuthRepository authRepository;
 
   CustomerLoginUseCase({required this.authRepository});
 
   @override
-  Future<Either<Failure, int?>> call(params) {
+  Future<Either<Failure, Map<String,dynamic>?>> call(params) {
     return authRepository.customerLogin(params.username, params.password);
   }
 }
