@@ -171,7 +171,8 @@ class _ProductListScreenState extends State<ProductListScreen> {
                   ),
                 ),
                 SliverAppBar(
-                  toolbarHeight: 170,
+                  toolbarHeight: AppConfig.instance.flavor ==
+                      AppFlavor.varsha.name ? 170 : 120,
                   // backgroundColor: appColor,
                   automaticallyImplyLeading: false,
                   pinned: true,
@@ -195,26 +196,31 @@ class _ProductListScreenState extends State<ProductListScreen> {
                             ),
                             textAlign: TextAlign.center,
                           ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              const Text('Account balance:',
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.white)),
-                              const SizedBox(
-                                width: 5,
+                          Visibility(
+                            visible: AppConfig.instance.flavor ==
+                                AppFlavor.varsha.name,
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 20),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  const Text('Account balance:',
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.normal,
+                                          color: Colors.white)),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                      '₹ ${widget.hiveCustomerModel.accountBalance}',
+                                      style: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.normal,
+                                          color: Colors.white))
+                                ],
                               ),
-                              Text('₹ ${widget.hiveCustomerModel.accountBalance}',
-                                  style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.white))
-                            ],
+                            ),
                           ),
                           const SizedBox(
                             height: 20,

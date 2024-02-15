@@ -1,3 +1,4 @@
+import 'package:distributor_app_flutter/app_config.dart';
 import 'package:distributor_app_flutter/core/data/local_storage/models/hive_customer_model.dart';
 import 'package:flutter/material.dart';
 
@@ -28,23 +29,28 @@ class CustomerItemWidget extends StatelessWidget {
                 fontWeight: FontWeight.normal,
                 color: Colors.black87),
           ),
-          const SizedBox(height: 10,),
-          Row(
-            children: [
-              const Text('Account balance:',
-                  style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.black54)),
-              const SizedBox(
-                width: 5,
+          Visibility(
+            visible: AppConfig.instance.flavor == AppFlavor.varsha.name,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Row(
+                children: [
+                  const Text('Account balance:',
+                      style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.black54)),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Text('₹ ${customerModel.accountBalance}',
+                      style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.black87))
+                ],
               ),
-              Text('₹ ${customerModel.accountBalance}',
-                  style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.black87))
-            ],
+            ),
           )
         ],
       ),

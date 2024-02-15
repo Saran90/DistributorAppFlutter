@@ -1,3 +1,4 @@
+import 'package:distributor_app_flutter/app_config.dart';
 import 'package:distributor_app_flutter/core/data/local_storage/models/hive_cart_model.dart';
 import 'package:distributor_app_flutter/core/data/local_storage/models/hive_customer_model.dart';
 import 'package:distributor_app_flutter/core/data/local_storage/models/hive_location_model.dart';
@@ -260,40 +261,47 @@ class HiveDataSourceImpl extends HiveDataSource {
     List<HiveProductModel>? products = productBox?.values.toList();
     if (products != null) {
       if (search.isNotEmpty) {
-        if (search.startsWith(RegExp(r'\D[0-9]'))) {
-          //Search product with mrp
-          String mrpString = search[1].replaceAll(RegExp(r'\D'), '');
-          int mrp = int.parse(mrpString);
-          products =
-              products.where((element) => element.mrp == mrp.toDouble())
-                  .toList();
-        } else {
-          if (search.contains('.')) {
-            List<String> searchItems = search.split('.');
-            if (searchItems.length > 1) {
-              //Search product with name
+        if(AppConfig.instance.flavor == AppFlavor.varsha.name){
+          if (search.startsWith(RegExp(r'\D[0-9]'))) {
+            //Search product with mrp
+            String mrpString = search[1].replaceAll(RegExp(r'\D'), '');
+            int mrp = int.parse(mrpString);
+            products =
+                products.where((element) => element.mrp == mrp.toDouble())
+                    .toList();
+          } else {
+            if (search.contains('.')) {
+              List<String> searchItems = search.split('.');
+              if (searchItems.length > 1) {
+                //Search product with name
+                products = products
+                    .where((element) =>
+                    element.name!.toLowerCase().contains(
+                        searchItems[0].toLowerCase()))
+                    .toList();
+
+                //Search product with mrp
+                String mrpString = searchItems[1].replaceAll(RegExp(r'\D'), '');
+                if (mrpString.isNotEmpty) {
+                  int mrp = int.parse(mrpString);
+                  products =
+                      products.where((element) =>
+                          element.mrp.toString().startsWith(mrpString))
+                          .toList();
+                }
+              }
+            } else {
               products = products
                   .where((element) =>
-                  element.name!.toLowerCase().contains(
-                      searchItems[0].toLowerCase()))
+                  element.name!.toLowerCase().contains(search.toLowerCase()))
                   .toList();
-
-              //Search product with mrp
-              String mrpString = searchItems[1].replaceAll(RegExp(r'\D'), '');
-              if (mrpString.isNotEmpty) {
-                int mrp = int.parse(mrpString);
-                products =
-                    products.where((element) =>
-                        element.mrp.toString().startsWith(mrpString))
-                        .toList();
-              }
             }
-          } else {
-            products = products
-                .where((element) =>
-                element.name!.toLowerCase().contains(search.toLowerCase()))
-                .toList();
           }
+        }else{
+          products = products
+              .where((element) =>
+              element.name!.toLowerCase().contains(search.toLowerCase()))
+              .toList();
         }
       }
       products.sort(
