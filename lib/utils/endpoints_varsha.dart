@@ -1,19 +1,24 @@
 import 'endpoints.dart';
 
 class EndPointVarsha extends EndPoint {
+  // @override
+  // String get testingUrl {
+  //   return 'http://varsha.atintellilabs.live/api/';
+  // }
+
   @override
   String get testingUrl {
-    return 'http://varsha.atintellilabs.live/api/';
+    return 'http://varshatest.atintellilabs.live/api/';
   }
 
   @override
   String get liveUrl {
-    return 'http://sales.cochindistributor.in/api/';
+    return 'http://varsha.atintellilabs.live/api/';
   }
 
   @override
   String get baseUrl {
-    return testingUrl;
+    return liveUrl;
   }
 
   @override

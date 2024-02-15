@@ -25,13 +25,14 @@ class HiveCustomerModelAdapter extends TypeAdapter<HiveCustomerModel> {
       location: fields[4] as String?,
       pincode: fields[3] as String?,
       status: fields[7] as int?,
+      accountBalance: fields[8] as double?,
     );
   }
 
   @override
   void write(BinaryWriter writer, HiveCustomerModel obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -47,7 +48,9 @@ class HiveCustomerModelAdapter extends TypeAdapter<HiveCustomerModel> {
       ..writeByte(6)
       ..write(obj.contactNumber)
       ..writeByte(7)
-      ..write(obj.status);
+      ..write(obj.status)
+      ..writeByte(8)
+      ..write(obj.accountBalance);
   }
 
   @override

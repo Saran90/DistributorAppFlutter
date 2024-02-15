@@ -16,6 +16,8 @@ import '../../../../app_config.dart';
 import '../../../../utils/colors.dart';
 import '../../../../utils/strings.dart';
 import '../../../cart/presentation/pages/models/cart.dart';
+import '../../../orders_list/presentation/bloc/sales_order/sales_order_cubit.dart';
+import '../../../orders_list/presentation/widgets/sales_upload_widget.dart';
 
 class ProductListScreen extends StatefulWidget {
   const ProductListScreen({Key? key, required this.hiveCustomerModel})
@@ -39,8 +41,11 @@ class _ProductListScreenState extends State<ProductListScreen> {
 
   int? _userId;
 
+  bool? _isCustomer;
+
   @override
   void initState() {
+    context.read<AuthCubit>().isLoggedIn();
     _products = [];
     _cartProducts = [];
     _updateList();
@@ -56,6 +61,48 @@ class _ProductListScreenState extends State<ProductListScreen> {
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: Scaffold(
+        bottomNavigationBar: Visibility(
+          visible: _isCustomer ?? false,
+          child: Container(
+            decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                    colors: [appColorGradient1, appColorGradient2])),
+            child: BottomNavigationBar(
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              selectedLabelStyle:
+                  const TextStyle(color: Colors.white, fontSize: 15),
+              unselectedLabelStyle:
+                  const TextStyle(color: Colors.white, fontSize: 15),
+              fixedColor: Colors.white,
+              unselectedItemColor: Colors.white,
+              onTap: (value) {
+                if (value == 0) {
+                  _showSalesUploadingBottomSheet();
+                } else {
+                  _showSyncDataConfirmationBottomSheet();
+                }
+              },
+              items: [
+                BottomNavigationBarItem(
+                  icon: Image.asset(
+                    'assets/icons/send.png',
+                    width: 20,
+                    height: 20,
+                  ),
+                  label: 'Send Sales Order',
+                ),
+                BottomNavigationBarItem(
+                    icon: Image.asset(
+                      'assets/icons/update.png',
+                      width: 20,
+                      height: 20,
+                    ),
+                    label: 'Sync Data')
+              ],
+            ),
+          ),
+        ),
         body: Stack(
           children: [
             CustomScrollView(
@@ -73,6 +120,10 @@ class _ProductListScreenState extends State<ProductListScreen> {
                   automaticallyImplyLeading: true,
                   leadingWidth: 50,
                   actions: [
+                    Visibility(
+                      visible: _isCustomer ?? false,
+                      child: _popupMenu(),
+                    ),
                     InkWell(
                       onTap: _onCartTapped,
                       child: SizedBox(
@@ -89,7 +140,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                                   color: Colors.white,
                                 )),
                             Visibility(
-                              visible: _cartCount>0,
+                              visible: _cartCount > 0,
                               child: Align(
                                 alignment: Alignment.topRight,
                                 child: CircleAvatar(
@@ -120,17 +171,14 @@ class _ProductListScreenState extends State<ProductListScreen> {
                   ),
                 ),
                 SliverAppBar(
-                  toolbarHeight: 120,
+                  toolbarHeight: 170,
                   // backgroundColor: appColor,
                   automaticallyImplyLeading: false,
                   pinned: true,
                   flexibleSpace: Container(
                     decoration: const BoxDecoration(
-                        gradient: LinearGradient(colors: [
-                          appColorGradient1,
-                          appColorGradient2
-                        ])
-                    ),
+                        gradient: LinearGradient(
+                            colors: [appColorGradient1, appColorGradient2])),
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 20, vertical: 20),
@@ -150,11 +198,32 @@ class _ProductListScreenState extends State<ProductListScreen> {
                           const SizedBox(
                             height: 20,
                           ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              const Text('Account balance:',
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.white)),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Text('₹ ${widget.hiveCustomerModel.accountBalance}',
+                                  style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.white))
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
                           Container(
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 border:
-                                Border.all(color: Colors.white, width: 1)),
+                                    Border.all(color: Colors.white, width: 1)),
                             height: 40,
                             padding: const EdgeInsets.symmetric(horizontal: 20),
                             child: Row(
@@ -308,6 +377,14 @@ class _ProductListScreenState extends State<ProductListScreen> {
                       ),
               ],
             ),
+            BlocConsumer<AuthCubit, AuthState>(
+              builder: (context, state) => Container(),
+              listener: (context, state) {
+                if (state is Authenticated) {
+                  _isCustomer = state.isCustomer;
+                }
+              },
+            ),
             BlocConsumer<ProductListCubit, ProductListState>(
               builder: (context, state) {
                 if (state is ProductListLoading) {
@@ -383,6 +460,49 @@ class _ProductListScreenState extends State<ProductListScreen> {
                   context.showMessage(state.message);
                 }
               },
+            ),
+            BlocConsumer<AuthCubit, AuthState>(
+              builder: (context, state) {
+                if (state is AuthLoading) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                return Container();
+              },
+              listener: (context, state) {
+                if (state is UnAuthenticated) {
+                  if (AppConfig.instance.flavor == AppFlavor.varsha.name) {
+                    AppConfig.appRouter.replace(const LandingRouter());
+                  } else {
+                    AppConfig.appRouter.replace(const LoginRouter());
+                  }
+                }
+                if (state is LogoutFailed) {
+                  context.showMessage(state.message);
+                }
+              },
+            ),
+            BlocConsumer<SalesOrderCubit, SalesOrderState>(
+              builder: (context, state) {
+                if (state is SalesOrderLoading) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                return Container();
+              },
+              listener: (context, state) {
+                if (state is SalesOrdersSendSuccessfully) {
+                  context.showMessage(state.message);
+                }
+                if (state is SalesOrdersSendingFailed) {
+                  context.showMessage(state.message);
+                }
+                if (state is NoSalesOrderAvailableForSending) {
+                  context.showMessage(state.message);
+                }
+              },
             )
           ],
         ),
@@ -392,8 +512,9 @@ class _ProductListScreenState extends State<ProductListScreen> {
 
   Future<void> _onCartTapped() async {
     if (_cartCount != 0) {
-      await AppConfig.appRouter
-          .push(CartRouter(hiveCustomerModel: widget.hiveCustomerModel));
+      await AppConfig.appRouter.push(CartRouter(
+          hiveCustomerModel: widget.hiveCustomerModel,
+          isCustomer: _isCustomer));
       _updateList();
     }
   }
@@ -444,12 +565,12 @@ class _ProductListScreenState extends State<ProductListScreen> {
             id: DateTime.now().microsecondsSinceEpoch,
             unit: product.unit ?? '',
             stock: product.stock ?? 0,
-            userId: _userId ?? -1,
+            userId: _userId ?? 0,
             productId: product.id != null ? '${product.id}' : '',
             productName: product.name ?? ''));
       }
     } else {
-      if(quantity>0) {
+      if (quantity > 0) {
         context.read<CartCubit>().addCart(Cart(
             orderAmount: (product.rate ?? 0) * quantity,
             customerId: widget.hiveCustomerModel.id!,
@@ -457,12 +578,10 @@ class _ProductListScreenState extends State<ProductListScreen> {
             mrp: product.mrp ?? 0.0,
             quantity: quantity,
             rate: product.rate ?? 0.0,
-            id: DateTime
-                .now()
-                .microsecondsSinceEpoch,
+            id: DateTime.now().microsecondsSinceEpoch,
             unit: product.unit ?? '',
             stock: product.stock ?? 0,
-            userId: _userId ?? -1,
+            userId: _userId ?? 0,
             productId: product.id != null ? '${product.id}' : '',
             productName: product.name ?? ''));
       }
@@ -562,7 +681,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                         int quantity = int.parse(quantityController.text);
                         await AppConfig.appRouter.pop();
                         _onQuantitySelected(quantity, product);
-                      }else {
+                      } else {
                         int quantity = 0;
                         await AppConfig.appRouter.pop();
                         _onQuantitySelected(quantity, product);
@@ -586,110 +705,389 @@ class _ProductListScreenState extends State<ProductListScreen> {
         isScrollControlled: true,
         isDismissible: false,
         backgroundColor: Colors.transparent,
-        builder: (ctx) =>
-            SingleChildScrollView(
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 12),
-                decoration: const BoxDecoration(
-                    gradient: LinearGradient(colors: [
-                      appColorGradient1,
-                      appColorGradient2
-                    ]),
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20))),
-                padding: EdgeInsets.only(
-                    bottom: MediaQuery
-                        .of(context)
-                        .viewInsets
-                        .bottom,
-                    top: 24,
-                    left: 24,
-                    right: 24),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10)),
-                      height: 5,
-                      width: 80,
-                      margin: const EdgeInsets.only(top: 2),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 30),
-                      child: Text(
-                        'Cart',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w800),
-                      ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 30),
-                      child: Text(
-                        clearCartConfirmationMessage,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 30, bottom: 30),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Center(
-                              child: SizedBox(
-                                height: 40,
-                                child: AppButton(
-                                  startColor: appColorGradient1,
-                                  endColor: appColorGradient2,
-                                  onSubmit: () async {
-                                    AppConfig.appRouter.pop();
-                                  },
-                                  label: 'No',
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          Expanded(
-                            child: Center(
-                              child: SizedBox(
-                                height: 40,
-                                child: AppButton(
-                                  startColor: appColorGradient1,
-                                  endColor: appColorGradient2,
-                                  onSubmit: () async {
-                                    await context
-                                        .read<CartCubit>()
-                                        .deleteCart(widget.hiveCustomerModel.id!);
-                                    AppConfig.appRouter.pop();
-                                  },
-                                  label: 'Yes',
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
+        builder: (ctx) => SingleChildScrollView(
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 12),
+            decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                    colors: [appColorGradient1, appColorGradient2]),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20))),
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+                top: 24,
+                left: 24,
+                right: 24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10)),
+                  height: 5,
+                  width: 80,
+                  margin: const EdgeInsets.only(top: 2),
                 ),
-              ),
+                const Padding(
+                  padding: EdgeInsets.only(top: 30),
+                  child: Text(
+                    'Cart',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w800),
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(top: 30),
+                  child: Text(
+                    clearCartConfirmationMessage,
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 30, bottom: 30),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Center(
+                          child: SizedBox(
+                            height: 40,
+                            child: AppButton(
+                              startColor: appColorGradient1,
+                              endColor: appColorGradient2,
+                              onSubmit: () async {
+                                AppConfig.appRouter.pop();
+                              },
+                              label: 'No',
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      Expanded(
+                        child: Center(
+                          child: SizedBox(
+                            height: 40,
+                            child: AppButton(
+                              startColor: appColorGradient1,
+                              endColor: appColorGradient2,
+                              onSubmit: () async {
+                                await context
+                                    .read<CartCubit>()
+                                    .deleteCart(widget.hiveCustomerModel.id!);
+                                AppConfig.appRouter.pop();
+                              },
+                              label: 'Yes',
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
             ),
+          ),
+        ),
       );
       return true;
     } else {
       return true;
+    }
+  }
+
+  Widget _popupMenu() {
+    return PopupMenuButton(
+      itemBuilder: (context) {
+        var list = <PopupMenuEntry<Object>>[];
+        list.add(const PopupMenuItem(
+          value: 1,
+          child: Text('Sales Orders'),
+        ));
+        list.add(const PopupMenuItem(
+          value: 2,
+          child: Text('Pending Orders'),
+        ));
+        list.add(const PopupMenuItem(
+          value: 3,
+          child: Text('Failed Orders'),
+        ));
+        if (_showOrderHistory()) {
+          list.add(const PopupMenuItem(
+            value: 4,
+            child: Text('Order History'),
+          ));
+        }
+        list.add(const PopupMenuItem(
+          value: 5,
+          child: Text('Logout'),
+        ));
+        return list;
+      },
+      position: PopupMenuPosition.under,
+      initialValue: 0,
+      onCanceled: () => _closeKeyboard(),
+      onSelected: (value) {
+        switch (value) {
+          case 1:
+            AppConfig.appRouter.push(const SalesListRouter());
+            break;
+          case 2:
+            AppConfig.appRouter.push(const OrdersListRouter());
+            break;
+          case 3:
+            AppConfig.appRouter.push(const FailedOrdersListRouter());
+            break;
+          case 4:
+            _showOrderHistory()
+                ? AppConfig.appRouter.push(const OrderHistoryRouter())
+                : _showLogoutConfirmationBottomSheet();
+            break;
+          case 5:
+            _showLogoutConfirmationBottomSheet();
+            break;
+        }
+        _closeKeyboard();
+      },
+      icon: Image.asset(
+        'assets/icons/settings.png',
+        color: Colors.white,
+        height: 24,
+        width: 24,
+      ),
+    );
+  }
+
+  void _showLogoutConfirmationBottomSheet() async {
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => SingleChildScrollView(
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 12),
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                  colors: [appColorGradient1, appColorGradient2]),
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+          padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+              top: 24,
+              left: 24,
+              right: 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10)),
+                height: 5,
+                width: 80,
+                margin: const EdgeInsets.only(top: 2),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(top: 30),
+                child: Text(
+                  'Logout',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w800),
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(top: 30),
+                child: Text(
+                  logoutConfirmationMessage,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 30, bottom: 30),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Center(
+                        child: SizedBox(
+                          height: 40,
+                          child: AppButton(
+                            startColor: appColorGradient1,
+                            endColor: appColorGradient2,
+                            onSubmit: () async {
+                              AppConfig.appRouter.pop();
+                            },
+                            label: 'Cancel',
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    Expanded(
+                      child: Center(
+                        child: SizedBox(
+                          height: 40,
+                          child: AppButton(
+                            startColor: appColorGradient1,
+                            endColor: appColorGradient2,
+                            onSubmit: () async {
+                              context.read<AuthCubit>().logout();
+                              AppConfig.appRouter.pop();
+                            },
+                            label: 'Logout',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+    // FocusManager.instance.primaryFocus?.unfocus();
+  }
+
+  Future<void> _showSalesUploadingBottomSheet() async {
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      isDismissible: false,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => StatefulBuilder(
+        builder: (context, setState) => BlocProvider<SalesOrderCubit>(
+          create: (context) => AppConfig.s1(),
+          child: const SalesUploadWidget(),
+        ),
+      ),
+    );
+    // FocusManager.instance.primaryFocus?.unfocus();
+  }
+
+  void _showSyncDataConfirmationBottomSheet() async {
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => SingleChildScrollView(
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 12),
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                  colors: [appColorGradient1, appColorGradient2]),
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+          padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+              top: 24,
+              left: 24,
+              right: 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10)),
+                height: 5,
+                width: 80,
+                margin: const EdgeInsets.only(top: 2),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(top: 30),
+                child: Text(
+                  'Sync Data',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w800),
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(top: 30),
+                child: Text(
+                  syncDataConfirmationDialogMessage,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 30, bottom: 30),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Center(
+                        child: SizedBox(
+                          height: 40,
+                          child: AppButton(
+                            startColor: appColorGradient1,
+                            endColor: appColorGradient2,
+                            onSubmit: () async {
+                              AppConfig.appRouter.pop();
+                            },
+                            label: 'Cancel',
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    Expanded(
+                      child: Center(
+                        child: SizedBox(
+                          height: 40,
+                          child: AppButton(
+                            startColor: appColorGradient1,
+                            endColor: appColorGradient2,
+                            onSubmit: () async {
+                              context.read<AuthCubit>().logout();
+                              AppConfig.appRouter.pop();
+                            },
+                            label: 'Sync Data',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  bool _showOrderHistory() {
+    if (AppConfig.instance.flavor == AppFlavor.varsha.name) {
+      return true;
+    } else {
+      return false;
     }
   }
 }

@@ -6,13 +6,13 @@ import '../../../../core/data/error/failures.dart';
 import '../../../../core/data/usecase/usecase.dart';
 
 class LoginWithManufactureUseCase
-    extends UseCase<void, LoginWithManufactureParams> {
+    extends UseCase<Map<String,dynamic>?, LoginWithManufactureParams> {
   final AuthRepository authRepository;
 
   LoginWithManufactureUseCase({required this.authRepository});
 
   @override
-  Future<Either<Failure, dynamic>> call(params) {
+  Future<Either<Failure, Map<String,dynamic>?>> call(params) {
     return authRepository.loginWithManufacture(
         params.username, params.password, params.manufacture);
   }

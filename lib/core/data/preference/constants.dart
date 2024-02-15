@@ -1,6 +1,8 @@
 const String spIsLoggedIn = 'isLoggedIn';
 const String spAccessToken = 'accessToken';
 const String spUserId = 'userId';
+const String spCustomerId = 'customerId';
+const String spSelectedCustomerId = 'selectedCustomerId';
 const String spManufactureId = 'manufactureId';
 const String spHasProductDataSynced = 'hasProductDataSynced';
 const String spHasLocationDataSynced = 'hasLocationDataSynced';

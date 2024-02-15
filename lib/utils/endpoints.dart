@@ -7,11 +7,14 @@ class EndPoint {
   }
 
   String login = 'authenticate';
+  String customerLogin = 'customerauthenticate';
   String products = 'GetProductByName';
+  String customerProducts = 'GetProductByCustomer';
   String locations = 'GetAllCustomerLocation';
   String customers = 'GetCustomerByName';
   String sendSalesOrder = 'SalesOrderUpdateList';
   String sendSalesOrderUpdate = 'SalesOrderUpdate';
   String manufactureList = 'GetManufactureList';
   String salesForceFullyUpdate = 'SalesOrderForcefullySaving';
+  String orderHistory = 'GetSavedOrderDetails';
 }

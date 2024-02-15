@@ -29,4 +29,36 @@ class CustomerDataRepositoryImpl extends CustomerDataRepository {
       return Left(ServerFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, void>> deleteCustomerSelection() async {
+    try {
+      var result = await customerDataDataSource.deleteCustomerSelection();
+      return Right(result);
+    } catch (exception) {
+      return Left(CacheFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> saveCustomerSelection(
+      HiveCustomerModel hiveCustomerModel) async {
+    try {
+      var result =
+          await customerDataDataSource.saveCustomerSelection(hiveCustomerModel);
+      return Right(result);
+    } catch (exception) {
+      return Left(CacheFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, HiveCustomerModel?>> getCustomerSelection() async {
+    try {
+      var result = await customerDataDataSource.getCustomerSelection();
+      return Right(result);
+    } catch (exception) {
+      return Left(CacheFailure());
+    }
+  }
 }

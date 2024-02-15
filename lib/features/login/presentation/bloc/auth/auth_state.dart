@@ -9,12 +9,16 @@ class AuthLoading extends AuthState {}
 
 class Authenticated extends AuthState {
   int userId;
+  int customerId;
+  bool isCustomer;
 
-  Authenticated({required this.userId});
+  Authenticated(
+      {required this.userId,
+      required this.customerId,
+      this.isCustomer = false});
 }
 
-class UnAuthenticated extends AuthState {
-}
+class UnAuthenticated extends AuthState {}
 
 class AuthenticationFailed extends AuthState {
   final String message;

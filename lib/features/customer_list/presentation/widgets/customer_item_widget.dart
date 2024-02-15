@@ -17,10 +17,36 @@ class CustomerItemWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       alignment: Alignment.centerLeft,
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: Text(
-        customerModel.name ?? '',
-        style: const TextStyle(
-            fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black87),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            customerModel.name ?? '',
+            style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.normal,
+                color: Colors.black87),
+          ),
+          const SizedBox(height: 10,),
+          Row(
+            children: [
+              const Text('Account balance:',
+                  style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.normal,
+                      color: Colors.black54)),
+              const SizedBox(
+                width: 5,
+              ),
+              Text('₹ ${customerModel.accountBalance}',
+                  style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.normal,
+                      color: Colors.black87))
+            ],
+          )
+        ],
       ),
     );
   }

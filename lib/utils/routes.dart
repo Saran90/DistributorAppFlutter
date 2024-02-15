@@ -1,5 +1,7 @@
 const String splashRoute = '/';
 const String loginRoute = '/login';
+const String customerLoginRoute = '/customerLogin';
+const String landingRoute = '/landing';
 const String dataDownloadRoute = '/dataDownload';
 const String customerListRoute = '/customerList';
 const String productListRoute = '/productList';
@@ -10,3 +12,5 @@ const String orderItemListRoute = '/orderItems';
 const String salesItemListRoute = '/salesItems';
 const String failedOrdersListRoute = '/failedOrders';
 const String failedOrdersItemListRoute = '/failedOrderItems';
+const String orderHistoryRoute = '/orderHistory';
+const String orderHistoryDetailRoute = '/orderHistoryDetail';

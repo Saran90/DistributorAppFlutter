@@ -18,6 +18,7 @@ class IsDataAvailableDataSourceImpl extends IsDataAvailableDataSource {
 
   @override
   Future<bool> isDataAvailable() async {
+    int customerId = sharedPreferenceDataSource.getInt(spCustomerId) ?? 0;
     bool hasProductSynced =
         sharedPreferenceDataSource.getBool(spHasProductDataSynced) ?? false;
     bool hasLocationSynced =
@@ -27,9 +28,18 @@ class IsDataAvailableDataSourceImpl extends IsDataAvailableDataSource {
     debugPrint('Product Synced: $hasProductSynced');
     debugPrint('Location Synced: $hasLocationSynced');
     debugPrint('Customer Synced: $hasCustomerSynced');
-    return Future.value(await hiveDataSource.isDataAvailable() &&
-        hasCustomerSynced &&
-        hasLocationSynced &&
-        hasProductSynced);
+    if (customerId > 0) {
+      //Customer Login
+      return Future.value(
+          await hiveDataSource.isDataAvailableForCustomerLogin() &&
+              hasCustomerSynced &&
+              hasProductSynced);
+    } else {
+      //SalesMan Login
+      return Future.value(await hiveDataSource.isDataAvailable() &&
+          hasCustomerSynced &&
+          hasLocationSynced &&
+          hasProductSynced);
+    }
   }
 }

@@ -7,21 +7,27 @@ import 'package:distributor_app_flutter/features/login/domain/usecase/login_with
 import 'package:distributor_app_flutter/features/login/domain/usecase/logout_use_case.dart';
 import 'package:distributor_app_flutter/utils/strings.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:meta/meta.dart';
+
+import '../../../domain/usecase/customer_login_use_case.dart';
+import '../../../domain/usecase/is_customer_user_use_case.dart';
 
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
-  AuthCubit(
-      {required this.loginUseCase,
-      required this.logoutUseCase,
-      required this.isLoggedInUseCase,
-      required this.loginWithManufactureUseCase})
-      : super(AuthInitial());
+  AuthCubit({
+    required this.loginUseCase,
+    required this.customerLoginUseCase,
+    required this.logoutUseCase,
+    required this.isLoggedInUseCase,
+    required this.isCustomerUserUseCase,
+    required this.loginWithManufactureUseCase,
+  }) : super(AuthInitial());
 
   final LoginUseCase loginUseCase;
+  final CustomerLoginUseCase customerLoginUseCase;
   final LogoutUseCase logoutUseCase;
   final IsLoggedInUseCase isLoggedInUseCase;
+  final IsCustomerUserUseCase isCustomerUserUseCase;
   final LoginWithManufactureUseCase loginWithManufactureUseCase;
 
   Future<void> login(String username, String password) async {
@@ -40,7 +46,46 @@ class AuthCubit extends Cubit<AuthState> {
         emit(AuthenticationFailed(message: 'Login Failed'));
         emit(UnAuthenticated());
       }
-    }, (r) => emit(Authenticated(userId: r)));
+    }, (r) {
+      if (r != null) {
+        emit(Authenticated(
+            userId: r['userId']??0,
+            customerId: r['customerId']??0,
+            isCustomer: (r['customerId']??0) != 0));
+      } else {
+        emit(AuthenticationFailed(message: 'Login Failed'));
+        emit(UnAuthenticated());
+      }
+    });
+  }
+
+  Future<void> customerLogin(String username, String password) async {
+    debugPrint('Customer Login Clicked');
+    emit(AuthLoading());
+    var result = await customerLoginUseCase
+        .call(CustomerLoginParams(username: username, password: password));
+    result.fold((l) {
+      if (l is ServerFailure) {
+        emit(AuthenticationFailed(message: l.message ?? serverFailureMessage));
+        emit(UnAuthenticated());
+      } else if (l is NetworkFailure) {
+        emit(AuthenticationFailed(message: networkFailureMessage));
+        emit(UnAuthenticated());
+      } else {
+        emit(AuthenticationFailed(message: 'Login Failed'));
+        emit(UnAuthenticated());
+      }
+    }, (r) {
+      if (r != null) {
+        emit(Authenticated(
+            userId: r['userId']??0,
+            customerId: r['customerId']??0,
+            isCustomer: (r['customerId']??0) != 0));
+      } else {
+        emit(AuthenticationFailed(message: 'Login Failed'));
+        emit(UnAuthenticated());
+      }
+    });
   }
 
   Future<void> loginWithManufacture(
@@ -61,7 +106,17 @@ class AuthCubit extends Cubit<AuthState> {
         emit(AuthenticationFailed(message: 'Login Failed'));
         emit(UnAuthenticated());
       }
-    }, (r) => emit(Authenticated(userId: r)));
+    }, (r) {
+      if (r != null) {
+        emit(Authenticated(
+            userId: r['userId']??0,
+            customerId: r['customerId']??0,
+            isCustomer: (r['customerId']??0) != 0));
+      } else {
+        emit(AuthenticationFailed(message: 'Login Failed'));
+        emit(UnAuthenticated());
+      }
+    });
   }
 
   Future<void> logout() async {
@@ -75,7 +130,9 @@ class AuthCubit extends Cubit<AuthState> {
       } else {
         emit(LogoutFailed(message: 'Logout Failed'));
       }
-    }, (r) => emit(UnAuthenticated()));
+    }, (r) async {
+      emit(UnAuthenticated());
+    });
   }
 
   Future<void> isLoggedIn() async {
@@ -92,7 +149,10 @@ class AuthCubit extends Cubit<AuthState> {
       }
     }, (r) {
       if (r != null) {
-        emit(Authenticated(userId: r));
+        emit(Authenticated(
+            userId: r['userId']??0,
+            customerId: r['customerId']??0,
+            isCustomer: (r['customerId']??0) != 0));
       } else {
         emit(UnAuthenticated());
       }

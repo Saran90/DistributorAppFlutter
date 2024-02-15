@@ -30,4 +30,22 @@ class ProductDataRepositoryImpl extends ProductDataRepository {
       return Left(ServerFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, List<HiveProductModel>?>> getCustomerProducts(String name) async {
+    try {
+      if (await NetworkChecker.isConnected()) {
+        var result = await productDataDataSource.getCustomerProducts(name);
+        if(result!=null) {
+          return Right(result);
+        }else{
+          return Left(ServerFailure());
+        }
+      } else {
+        return Left(NetworkFailure());
+      }
+    } catch (exception) {
+      return Left(ServerFailure());
+    }
+  }
 }

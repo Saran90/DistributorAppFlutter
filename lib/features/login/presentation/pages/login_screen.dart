@@ -1,6 +1,4 @@
 import 'package:distributor_app_flutter/core/widgets/app_button.dart';
-import 'package:distributor_app_flutter/features/login/presentation/bloc/manufacture/manufacture_cubit.dart';
-import 'package:distributor_app_flutter/features/login/presentation/pages/models/manufacture.dart';
 import 'package:distributor_app_flutter/utils/app_router.dart';
 import 'package:distributor_app_flutter/utils/colors.dart';
 import 'package:distributor_app_flutter/utils/extensions.dart';
@@ -8,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../app_config.dart';
-import '../../../../core/widgets/icon_drop_down.dart';
 import '../../../../core/widgets/icon_text_field.dart';
 import '../bloc/auth/auth_cubit.dart';
 
@@ -33,27 +30,32 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: SizedBox(
         height: MediaQuery.of(context).size.height,
-        child: Stack(
-          children: [
-            _backgroundImage(),
-            _content(),
-            BlocConsumer<AuthCubit, AuthState>(
-              builder: (context, state) {
-                if (state is AuthLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                return Container();
-              },
-              listener: (context, state) {
-                if (state is Authenticated) {
-                  AppConfig.appRouter.replace(const DataDownloadRouter());
-                }
-                if (state is AuthenticationFailed) {
-                  context.showMessage(state.message);
-                }
-              },
+        child: SingleChildScrollView(
+          child: IntrinsicHeight(
+            child: Stack(
+              children: [
+                _backgroundImage(),
+                _content(),
+                BlocConsumer<AuthCubit, AuthState>(
+                  builder: (context, state) {
+                    if (state is AuthLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    return Container();
+                  },
+                  listener: (context, state) {
+                    if (state is Authenticated) {
+                      AppConfig.appRouter
+                          .replaceAll([const DataDownloadRouter()]);
+                    }
+                    if (state is AuthenticationFailed) {
+                      context.showMessage(state.message);
+                    }
+                  },
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -77,11 +79,28 @@ class _LoginScreenState extends State<LoginScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             _appLogoWidget(),
+            Visibility(
+                visible: AppConfig.instance.flavor == AppFlavor.varsha.name,
+                child: _titleWidget()),
             _userNameWidget(),
             _passwordWidget(),
-            _loginButton()
+            _loginButton(),
+            Visibility(
+                visible: AppConfig.instance.flavor == AppFlavor.varsha.name,
+                child: _backButton())
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _titleWidget() {
+    return const Padding(
+      padding: EdgeInsets.only(top: 40),
+      child: Text(
+        'Agent Login',
+        style: TextStyle(
+            color: Colors.white, fontSize: 20, fontWeight: FontWeight.w600),
       ),
     );
   }
@@ -124,6 +143,20 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  Widget _backButton() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 20),
+      child: TextButton(
+        onPressed: _onBackClicked,
+        child: const Text(
+          'Back',
+          style: TextStyle(
+              color: Colors.white, fontSize: 20, fontWeight: FontWeight.w300),
+        ),
+      ),
+    );
+  }
+
   Widget _appLogoWidget() {
     return Container(
       width: 100,
@@ -142,5 +175,9 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       context.showMessage('Please provide required information.');
     }
+  }
+
+  _onBackClicked() {
+    AppConfig.appRouter.pop();
   }
 }

@@ -19,10 +19,12 @@ import '../widgets/cart_item_widget.dart';
 import 'models/cart.dart';
 
 class CartScreen extends StatefulWidget {
-  const CartScreen({Key? key, required this.hiveCustomerModel})
+  const CartScreen(
+      {Key? key, required this.hiveCustomerModel, required this.isCustomer})
       : super(key: key);
 
   final HiveCustomerModel hiveCustomerModel;
+  final bool isCustomer;
 
   @override
   State<CartScreen> createState() => _CartScreenState();
@@ -204,7 +206,8 @@ class _CartScreenState extends State<CartScreen> {
                             (context, index) => CartItemWidget(
                                   cartModel: _cartProducts[index],
                                   onDeleteClicked: () =>
-                                      _showDeleteItemConfirmationBottomSheet(_cartProducts[index]),
+                                      _showDeleteItemConfirmationBottomSheet(
+                                          _cartProducts[index]),
                                   onQuantityClicked: () =>
                                       _onQuantityClicked(_cartProducts[index]),
                                 ),
@@ -270,7 +273,7 @@ class _CartScreenState extends State<CartScreen> {
                 context.showMessage(state.message);
               }
               if (state is CartItemDeleted) {
-                if(_cartProducts.length>1){
+                if (_cartProducts.length > 1) {
                   context.showMessage('Item deleted');
                 }
                 context
@@ -336,10 +339,15 @@ class _CartScreenState extends State<CartScreen> {
                 context
                     .read<CartCubit>()
                     .deleteCart(widget.hiveCustomerModel.id!);
-                AppConfig.appRouter.pushAndPopUntil(
-                  const CustomerListRouter(),
-                  predicate: (route) => false,
-                );
+                if (widget.isCustomer) {
+                  AppConfig.appRouter.pushAndPopUntil(
+                    ProductListRouter(
+                        hiveCustomerModel: widget.hiveCustomerModel),
+                    predicate: (route) => false,
+                  );
+                } else {
+                  AppConfig.appRouter.pop();
+                }
               }
               if (state is OrderDetailsAdditionFailed) {
                 context.showMessage(state.message);
@@ -355,8 +363,8 @@ class _CartScreenState extends State<CartScreen> {
     _showQuantitySelectionBottomSheet(cartProduct, _onQuantitySelected);
   }
 
-  void _showQuantitySelectionBottomSheet(Cart cart,
-      Function(int quantity, Cart cart) onQuantitySelected) async {
+  void _showQuantitySelectionBottomSheet(
+      Cart cart, Function(int quantity, Cart cart) onQuantitySelected) async {
     final quantityFieldFocusNode = FocusNode();
     final quantityController = TextEditingController();
     if (cart.quantity > 0) {
@@ -371,10 +379,8 @@ class _CartScreenState extends State<CartScreen> {
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 12),
           decoration: const BoxDecoration(
-              gradient: LinearGradient(colors: [
-                appColorGradient1,
-                appColorGradient2
-              ]),
+              gradient: LinearGradient(
+                  colors: [appColorGradient1, appColorGradient2]),
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20), topRight: Radius.circular(20))),
           padding: EdgeInsets.only(
@@ -610,10 +616,8 @@ class _CartScreenState extends State<CartScreen> {
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 12),
           decoration: const BoxDecoration(
-              gradient: LinearGradient(colors: [
-                appColorGradient1,
-                appColorGradient2
-              ]),
+              gradient: LinearGradient(
+                  colors: [appColorGradient1, appColorGradient2]),
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20), topRight: Radius.circular(20))),
           padding: EdgeInsets.only(
@@ -713,10 +717,8 @@ class _CartScreenState extends State<CartScreen> {
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 12),
           decoration: const BoxDecoration(
-              gradient: LinearGradient(colors: [
-                appColorGradient1,
-                appColorGradient2
-              ]),
+              gradient: LinearGradient(
+                  colors: [appColorGradient1, appColorGradient2]),
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20), topRight: Radius.circular(20))),
           padding: EdgeInsets.only(

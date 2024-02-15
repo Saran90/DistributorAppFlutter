@@ -10,6 +10,7 @@ import '../../../../app_config.dart';
 
 abstract class ProductDataDataSource {
   Future<List<HiveProductModel>?> getProducts(String name);
+  Future<List<HiveProductModel>?> getCustomerProducts(String name);
 }
 
 class ProductDataDataSourceImpl extends ProductDataDataSource {
@@ -27,6 +28,26 @@ class ProductDataDataSourceImpl extends ProductDataDataSource {
     try {
       var response = await dio.get(
         AppConfig.instance.endPoint!.products,
+        queryParameters: {'Name': name},
+      );
+      ProductsDataResponse productsDataResponse =
+          ProductsDataResponse.fromJson(response.data);
+      List<HiveProductModel> hiveProductModels =
+          _getHiveProductsModels(productsDataResponse);
+      await _storeProducts(hiveProductModels);
+      await sharedPreferenceDataSource.setBool(spHasProductDataSynced, true);
+      return hiveProductModels;
+    } catch (exception) {
+      debugPrint('Products Call: $exception');
+    }
+    return null;
+  }
+
+  @override
+  Future<List<HiveProductModel>?> getCustomerProducts(String name) async {
+    try {
+      var response = await dio.get(
+        AppConfig.instance.endPoint!.customerProducts,
         queryParameters: {'Name': name},
       );
       ProductsDataResponse productsDataResponse =

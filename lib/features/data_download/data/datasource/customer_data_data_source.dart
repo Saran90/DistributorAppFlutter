@@ -3,7 +3,6 @@ import 'package:distributor_app_flutter/app_config.dart';
 import 'package:distributor_app_flutter/core/data/local_storage/hive_data_source.dart';
 import 'package:distributor_app_flutter/core/data/preference/constants.dart';
 import 'package:distributor_app_flutter/core/data/preference/shared_preference_data_source.dart';
-import 'package:distributor_app_flutter/utils/endpoints.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../../../core/data/local_storage/models/hive_customer_model.dart';
@@ -11,6 +10,12 @@ import 'models/customer_data_response.dart';
 
 abstract class CustomerDataDataSource {
   Future<List<HiveCustomerModel>?> getCustomers(String name);
+
+  Future<void> saveCustomerSelection(HiveCustomerModel hiveCustomerModel);
+
+  Future<void> deleteCustomerSelection();
+
+  Future<HiveCustomerModel?> getCustomerSelection();
 }
 
 class CustomerDataDataSourceImpl extends CustomerDataDataSource {
@@ -26,10 +31,12 @@ class CustomerDataDataSourceImpl extends CustomerDataDataSource {
   @override
   Future<List<HiveCustomerModel>?> getCustomers(String name) async {
     try {
-      var response = await dio.get(AppConfig.instance.endPoint!.customers,
-          queryParameters: {'Name': name},);
+      var response = await dio.get(
+        AppConfig.instance.endPoint!.customers,
+        queryParameters: {'Name': name},
+      );
       CustomerDataResponse customerDataResponse =
-      CustomerDataResponse.fromJson(response.data);
+          CustomerDataResponse.fromJson(response.data);
       List<HiveCustomerModel> hiveCustomerModels =
           _getHiveCustomersModels(customerDataResponse);
       await _storeCustomers(hiveCustomerModels);
@@ -43,15 +50,15 @@ class CustomerDataDataSourceImpl extends CustomerDataDataSource {
 
   HiveCustomerModel _getHiveCustomerModel(Customers customers) {
     return HiveCustomerModel(
-      id: customers.id,
-      name: customers.name,
-      status: customers.status,
-      address: customers.address,
-      contactNumber: customers.contactNo,
-      contactPerson: customers.contactPerson,
-      location: customers.location,
-      pincode: customers.pinCode
-    );
+        id: customers.id,
+        name: customers.name,
+        status: customers.status,
+        address: customers.address,
+        contactNumber: customers.contactNo,
+        contactPerson: customers.contactPerson,
+        location: customers.location,
+        pincode: customers.pinCode,
+        accountBalance: customers.accountBalance?.toDouble());
   }
 
   List<HiveCustomerModel> _getHiveCustomersModels(
@@ -67,10 +74,34 @@ class CustomerDataDataSourceImpl extends CustomerDataDataSource {
     return hiveCustomerModels;
   }
 
-  Future<void> _storeCustomers(List<HiveCustomerModel> hiveCustomerModels) async {
+  Future<void> _storeCustomers(
+      List<HiveCustomerModel> hiveCustomerModels) async {
     await hiveDataSource.deleteAllCustomers();
     for (int i = 0; i < hiveCustomerModels.length; i++) {
       await hiveDataSource.addCustomer(hiveCustomerModels[i]);
     }
+  }
+
+  @override
+  Future<void> saveCustomerSelection(
+      HiveCustomerModel hiveCustomerModel) async {
+    sharedPreferenceDataSource.setInt(
+        spSelectedCustomerId, hiveCustomerModel.id ?? 0);
+    hiveDataSource.saveSelectedCustomer(hiveCustomerModel);
+  }
+
+  @override
+  Future<void> deleteCustomerSelection() async {
+    sharedPreferenceDataSource.setInt(spSelectedCustomerId, 0);
+    hiveDataSource.deleteSelectedCustomer();
+  }
+
+  @override
+  Future<HiveCustomerModel?> getCustomerSelection() async {
+    int? selectedId = sharedPreferenceDataSource.getInt(spSelectedCustomerId);
+    if (selectedId != null) {
+      return hiveDataSource.getSelectedCustomer(selectedId);
+    }
+    return null;
   }
 }

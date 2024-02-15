@@ -134,7 +134,7 @@ class FailedOrderItemWidget extends StatelessWidget {
       return 'Failed';
     } else if (failedOrder.status == 2) {
       return 'Duplicate';
-    } else if (failedOrder.status == -1) {
+    } else if (failedOrder.status == 0) {
       return 'Sync Issue';
     } else {
       return 'Done';

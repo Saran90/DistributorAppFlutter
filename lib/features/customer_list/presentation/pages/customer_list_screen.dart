@@ -8,7 +8,6 @@ import 'package:distributor_app_flutter/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:app_popup_menu/app_popup_menu.dart';
 
 import '../../../../../utils/colors.dart';
 import '../../../../app_config.dart';
@@ -66,13 +65,10 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
                 pinned: true,
                 flexibleSpace: Container(
                   padding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                   decoration: const BoxDecoration(
-                      gradient: LinearGradient(colors: [
-                        appColorGradient1,
-                        appColorGradient2
-                      ])
-                  ),
+                      gradient: LinearGradient(
+                          colors: [appColorGradient1, appColorGradient2])),
                   child: Column(
                     children: [
                       Container(
@@ -269,7 +265,11 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
             },
             listener: (context, state) {
               if (state is UnAuthenticated) {
-                AppConfig.appRouter.replace(const LoginRouter());
+                if (AppConfig.instance.flavor == AppFlavor.varsha.name) {
+                  AppConfig.appRouter.replaceAll([const LandingRouter()]);
+                } else {
+                  AppConfig.appRouter.replaceAll([const LoginRouter()]);
+                }
               }
               if (state is LogoutFailed) {
                 setState(() {
@@ -304,15 +304,13 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
       ),
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(colors: [
-            appColorGradient1,
-            appColorGradient2
-          ])
-        ),
+            gradient:
+                LinearGradient(colors: [appColorGradient1, appColorGradient2])),
         child: BottomNavigationBar(
           elevation: 0,
           backgroundColor: Colors.transparent,
-          selectedLabelStyle: const TextStyle(color: Colors.white, fontSize: 15),
+          selectedLabelStyle:
+              const TextStyle(color: Colors.white, fontSize: 15),
           unselectedLabelStyle:
               const TextStyle(color: Colors.white, fontSize: 15),
           fixedColor: Colors.white,
@@ -405,10 +403,18 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
           value: 3,
           child: Text('Failed Orders'),
         ));
-        list.add(const PopupMenuItem(
-          value: 4,
-          child: Text('Logout'),
-        ));
+        if (_showOrderHistory()) {
+          list.add(const PopupMenuItem(
+            value: 4,
+            child: Text('Order History'),
+          ));
+        }
+        if (_showOrderHistory()) {
+          list.add(const PopupMenuItem(
+            value: 5,
+            child: Text('Logout'),
+          ));
+        }
         return list;
       },
       position: PopupMenuPosition.under,
@@ -426,6 +432,11 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
             AppConfig.appRouter.push(const FailedOrdersListRouter());
             break;
           case 4:
+            _showOrderHistory()
+                ? AppConfig.appRouter.push(const OrderHistoryRouter())
+                : _showLogoutConfirmationBottomSheet();
+            break;
+          case 5:
             _showLogoutConfirmationBottomSheet();
             break;
         }
@@ -449,10 +460,8 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 12),
           decoration: const BoxDecoration(
-              gradient: LinearGradient(colors: [
-                appColorGradient1,
-                appColorGradient2
-              ]),
+              gradient: LinearGradient(
+                  colors: [appColorGradient1, appColorGradient2]),
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20), topRight: Radius.circular(20))),
           padding: EdgeInsets.only(
@@ -550,10 +559,8 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 12),
           decoration: const BoxDecoration(
-              gradient: LinearGradient(colors: [
-                appColorGradient1,
-                appColorGradient2
-              ]),
+              gradient: LinearGradient(
+                  colors: [appColorGradient1, appColorGradient2]),
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20), topRight: Radius.circular(20))),
           padding: EdgeInsets.only(
@@ -650,11 +657,20 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
       isDismissible: false,
       backgroundColor: Colors.transparent,
       builder: (ctx) => StatefulBuilder(
-        builder: (context, setState) => BlocProvider<SalesOrderCubit>(create: (context) => AppConfig.s1(),
-          child: const SalesUploadWidget(),),
+        builder: (context, setState) => BlocProvider<SalesOrderCubit>(
+          create: (context) => AppConfig.s1(),
+          child: const SalesUploadWidget(),
+        ),
       ),
     );
     // FocusManager.instance.primaryFocus?.unfocus();
   }
 
+  bool _showOrderHistory() {
+    if (AppConfig.instance.flavor == AppFlavor.varsha.name) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

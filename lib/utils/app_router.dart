@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:distributor_app_flutter/features/landing_page/landing_wrapper.dart';
 import 'package:distributor_app_flutter/utils/auth_guard.dart';
 import 'package:flutter/material.dart';
 
@@ -8,7 +9,11 @@ import '../features/customer_list/presentation/pages/customer_list_wrapper.dart'
 import '../features/data_download/presentation/pages/data_download_wrapper.dart';
 import '../features/failed_orders/presentation/pages/failed_order_item_list_wrapper.dart';
 import '../features/failed_orders/presentation/pages/failed_orders_list_wrapper.dart';
+import '../features/login/presentation/pages/customer/customer_login_wrapper.dart';
 import '../features/login/presentation/pages/login_wrapper.dart';
+import '../features/order_history/presentation/models/order_history.dart';
+import '../features/order_history/presentation/pages/detail/order_history_detail_wrapper.dart';
+import '../features/order_history/presentation/pages/order_history_wrapper.dart';
 import '../features/orders_list/presentation/pages/order_item_list_wrapper.dart';
 import '../features/orders_list/presentation/pages/orders_list_wrapper.dart';
 import '../features/product_list/presentation/pages/product_list_wrapper.dart';
@@ -26,6 +31,8 @@ class AppRouter extends _$AppRouter {
   List<AutoRoute> get routes => [
         AutoRoute(page: SplashRouter.page, initial: true, path: splashRoute),
         AutoRoute(page: LoginRouter.page, path: loginRoute),
+        AutoRoute(page: CustomerLoginRouter.page, path: customerLoginRoute),
+        AutoRoute(page: LandingRouter.page, path: landingRoute),
         AutoRoute(
             page: DataDownloadRouter.page,
             path: dataDownloadRoute,
@@ -63,6 +70,14 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
             page: FailedOrdersItemListRouter.page,
             path: failedOrdersItemListRoute,
+            guards: [AuthGuard()]),
+        AutoRoute(
+            page: OrderHistoryRouter.page,
+            path: orderHistoryRoute,
+            guards: [AuthGuard()]),
+        AutoRoute(
+            page: OrderHistoryDetailRouter.page,
+            path: orderHistoryDetailRoute,
             guards: [AuthGuard()]),
       ];
 }
