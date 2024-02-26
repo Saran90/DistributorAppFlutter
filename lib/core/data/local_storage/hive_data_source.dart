@@ -18,8 +18,8 @@ abstract class HiveDataSource {
 
   List<HiveCustomerModel>? getAllCustomers();
 
-  List<HiveCustomerModel>? getAllFilteredCustomer(String search,
-      String location);
+  List<HiveCustomerModel>? getAllFilteredCustomer(
+      String search, String location);
 
   Future<void> deleteCustomer(HiveCustomerModel hiveCustomerModel);
 
@@ -169,20 +169,20 @@ class HiveDataSourceImpl extends HiveDataSource {
   }
 
   @override
-  List<HiveCustomerModel>? getAllFilteredCustomer(String search,
-      String location) {
+  List<HiveCustomerModel>? getAllFilteredCustomer(
+      String search, String location) {
     List<HiveCustomerModel>? customers = customerBox?.values.toList();
     if (customers != null) {
       if (search.isNotEmpty) {
         customers = customers
             .where((element) =>
-            element.name!.toLowerCase().contains(search.toLowerCase()))
+                element.name!.toLowerCase().contains(search.toLowerCase()))
             .toList();
       }
       if (location.isNotEmpty) {
         customers = customers
             .where((element) =>
-        element.location!.toLowerCase() == location.toLowerCase())
+                element.location!.toLowerCase() == location.toLowerCase())
             .toList();
       }
     }
@@ -261,51 +261,60 @@ class HiveDataSourceImpl extends HiveDataSource {
     List<HiveProductModel>? products = productBox?.values.toList();
     if (products != null) {
       if (search.isNotEmpty) {
-        if(AppConfig.instance.flavor == AppFlavor.varsha.name){
+        if (AppConfig.instance.flavor == AppFlavor.varsha.name) {
           if (search.startsWith(RegExp(r'\D[0-9]'))) {
             //Search product with mrp
             String mrpString = search[1].replaceAll(RegExp(r'\D'), '');
             int mrp = int.parse(mrpString);
-            products =
-                products.where((element) => element.mrp == mrp.toDouble())
-                    .toList();
+            products = products
+                .where((element) => element.mrp == mrp.toDouble())
+                .toList();
           } else {
             if (search.contains('.')) {
               List<String> searchItems = search.split('.');
               if (searchItems.length > 1) {
                 //Search product with name
                 products = products
-                    .where((element) =>
-                    element.name!.toLowerCase().contains(
-                        searchItems[0].toLowerCase()))
+                    .where((element) => element.name!
+                        .toLowerCase()
+                        .contains(searchItems[0].toLowerCase()))
                     .toList();
 
                 //Search product with mrp
                 String mrpString = searchItems[1].replaceAll(RegExp(r'\D'), '');
                 if (mrpString.isNotEmpty) {
                   int mrp = int.parse(mrpString);
-                  products =
-                      products.where((element) =>
+                  products = products
+                      .where((element) =>
                           element.mrp.toString().startsWith(mrpString))
-                          .toList();
+                      .toList();
                 }
               }
             } else {
               products = products
-                  .where((element) =>
-                  element.name!.toLowerCase().contains(search.toLowerCase()))
+                  .where((element) => element.name!
+                      .toLowerCase()
+                      .contains(search.toLowerCase()))
                   .toList();
             }
           }
-        }else{
-          products = products
-              .where((element) =>
-              element.name!.toLowerCase().contains(search.toLowerCase()))
-              .toList();
+        } else {
+          List<String> _searchKeys = [];
+          _searchKeys = search.split(' ');
+          for (int i = 0; i < _searchKeys.length; i++) {
+            if (_searchKeys[i].isNotEmpty) {
+              products = products!
+                  .sublist(i, products.length)
+                  .where((element) => element.name!
+                  .toLowerCase()
+                  .contains(_searchKeys[i].toLowerCase()))
+                  .toList();
+            }
+          }
         }
       }
-      products.sort(
-            (a, b) => a.name!.compareTo(b.name!),
+      products!.sort(
+        (a, b) => a.name!.compareTo(b.name!),
       );
     }
     return products;
@@ -314,9 +323,7 @@ class HiveDataSourceImpl extends HiveDataSource {
   @override
   Future<void> addCart(HiveCartModel hiveCartModel) async {
     return await cartBox?.put(
-        (hiveCartModel.customerId + DateTime
-            .now()
-            .millisecondsSinceEpoch)
+        (hiveCartModel.customerId + DateTime.now().millisecondsSinceEpoch)
             .hashCode,
         hiveCartModel);
   }
@@ -329,7 +336,7 @@ class HiveDataSourceImpl extends HiveDataSource {
   @override
   Future<void> deleteCustomerCart(int customerId) async {
     List<HiveCartModel>? customerCart =
-    cartBox?.values.where((e) => e.customerId == customerId).toList();
+        cartBox?.values.where((e) => e.customerId == customerId).toList();
     if (customerCart != null) {
       List<dynamic> keys = customerCart.map((e) => e.key).toList();
       await cartBox?.deleteAll(keys);
@@ -339,7 +346,7 @@ class HiveDataSourceImpl extends HiveDataSource {
   @override
   HiveCartModel? getCartProduct(int productId, int customerId) {
     List<HiveCartModel>? customerCart =
-    cartBox?.values.where((e) => e.customerId == customerId).toList();
+        cartBox?.values.where((e) => e.customerId == customerId).toList();
     if (customerCart != null) {
       return customerCart
           .where((element) => element.productId == productId.toString())
@@ -395,17 +402,11 @@ class HiveDataSourceImpl extends HiveDataSource {
   @override
   Future<bool> isDataAvailable() async {
     bool isCustomerDataAvailable =
-        customerBox?.values
-            .toList()
-            .isNotEmpty ?? false;
+        customerBox?.values.toList().isNotEmpty ?? false;
     bool isLocationDataAvailable =
-        locationBox?.values
-            .toList()
-            .isNotEmpty ?? false;
+        locationBox?.values.toList().isNotEmpty ?? false;
     bool isProductDataAvailable =
-        productBox?.values
-            .toList()
-            .isNotEmpty ?? false;
+        productBox?.values.toList().isNotEmpty ?? false;
     return isCustomerDataAvailable &&
         isLocationDataAvailable &&
         isProductDataAvailable;
@@ -414,15 +415,10 @@ class HiveDataSourceImpl extends HiveDataSource {
   @override
   Future<bool> isDataAvailableForCustomerLogin() async {
     bool isCustomerDataAvailable =
-        customerBox?.values
-            .toList()
-            .isNotEmpty ?? false;
+        customerBox?.values.toList().isNotEmpty ?? false;
     bool isProductDataAvailable =
-        productBox?.values
-            .toList()
-            .isNotEmpty ?? false;
-    return isCustomerDataAvailable &&
-        isProductDataAvailable;
+        productBox?.values.toList().isNotEmpty ?? false;
+    return isCustomerDataAvailable && isProductDataAvailable;
   }
 
   @override
@@ -464,7 +460,7 @@ class HiveDataSourceImpl extends HiveDataSource {
   @override
   Future<List<HiveOrderSummaryModel>?> getAllOrderSummaries() async {
     List<HiveOrderSummaryModel>? orderSummaries =
-    orderSummaryBox?.values.toList();
+        orderSummaryBox?.values.toList();
     return orderSummaries;
   }
 
@@ -480,7 +476,7 @@ class HiveDataSourceImpl extends HiveDataSource {
   @override
   Future<List<HiveOrderSummaryModel>?> getAllUnSendOrderSummaries() async {
     List<HiveOrderSummaryModel>? orderSummaries =
-    orderSummaryBox?.values.toList();
+        orderSummaryBox?.values.toList();
     return orderSummaries?.where((element) => element.status != 1).toList();
   }
 
@@ -521,7 +517,7 @@ class HiveDataSourceImpl extends HiveDataSource {
       i++;
     }
     var orders =
-    await getAllOrderDetailsByOrder(hiveOrderDetailsModels[0].orderId);
+        await getAllOrderDetailsByOrder(hiveOrderDetailsModels[0].orderId);
     debugPrint('Order list: $orders');
   }
 
@@ -544,7 +540,7 @@ class HiveDataSourceImpl extends HiveDataSource {
   @override
   Future<void> deleteOrderDetailsForOrder(int orderId) async {
     List<HiveOrderDetailsModel>? orderDetails =
-    orderDetailsBox?.values.where((e) => e.orderId == orderId).toList();
+        orderDetailsBox?.values.where((e) => e.orderId == orderId).toList();
     if (orderDetails != null) {
       List<dynamic> keys = orderDetails.map((e) => e.key).toList();
       await orderDetailsBox?.deleteAll(keys);
@@ -559,12 +555,11 @@ class HiveDataSourceImpl extends HiveDataSource {
   @override
   Future<void> updateOrderSummaryStatus(int orderId, int status) async {
     List<HiveOrderSummaryModel>? orderSummary =
-    orderSummaryBox?.values.where((e) => e.orderId == orderId).toList();
+        orderSummaryBox?.values.where((e) => e.orderId == orderId).toList();
     if (orderSummary != null) {
       for (int i = 0; i < orderSummary.length; i++) {
         await orderSummaryBox?.put(
-            orderSummary[i].key, orderSummary[i]
-          ..status = status);
+            orderSummary[i].key, orderSummary[i]..status = status);
       }
     }
   }
@@ -572,12 +567,11 @@ class HiveDataSourceImpl extends HiveDataSource {
   @override
   Future<void> updateOrderDetailStatus(int orderId, int status) async {
     List<HiveOrderDetailsModel>? orderDetails =
-    orderDetailsBox?.values.where((e) => e.orderId == orderId).toList();
+        orderDetailsBox?.values.where((e) => e.orderId == orderId).toList();
     if (orderDetails != null) {
       for (int i = 0; i < orderDetails.length; i++) {
         await orderDetailsBox?.put(
-            orderDetails[i].id, orderDetails[i]
-          ..status = status);
+            orderDetails[i].id, orderDetails[i]..status = status);
       }
     }
   }
@@ -585,7 +579,7 @@ class HiveDataSourceImpl extends HiveDataSource {
   @override
   Future<void> deleteOrderDetailsForId(int id) async {
     List<HiveOrderDetailsModel>? orderDetails =
-    orderDetailsBox?.values.where((e) => e.id == id).toList();
+        orderDetailsBox?.values.where((e) => e.id == id).toList();
     if (orderDetails != null) {
       List<dynamic> keys = orderDetails.map((e) => e.key).toList();
       await orderDetailsBox?.deleteAll(keys);
@@ -593,17 +587,18 @@ class HiveDataSourceImpl extends HiveDataSource {
   }
 
   @override
-  Future<void> deleteSelectedCustomer() async {
-  }
+  Future<void> deleteSelectedCustomer() async {}
 
   @override
   Future<HiveCustomerModel?> getSelectedCustomer(int id) async {
     var customerList = customerBox?.values.toList();
-    var selectedCustomer = customerList?.where((element) => element.id == id).first;;
+    var selectedCustomer =
+        customerList?.where((element) => element.id == id).first;
+    ;
     return selectedCustomer;
   }
 
   @override
-  Future<void> saveSelectedCustomer(HiveCustomerModel hiveCustomerModel) async {
-  }
+  Future<void> saveSelectedCustomer(
+      HiveCustomerModel hiveCustomerModel) async {}
 }
