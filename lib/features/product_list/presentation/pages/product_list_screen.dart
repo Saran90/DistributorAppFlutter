@@ -171,8 +171,10 @@ class _ProductListScreenState extends State<ProductListScreen> {
                   ),
                 ),
                 SliverAppBar(
-                  toolbarHeight: AppConfig.instance.flavor ==
-                      AppFlavor.varsha.name ? 170 : 120,
+                  toolbarHeight:
+                      AppConfig.instance.flavor == AppFlavor.varsha.name
+                          ? 170
+                          : 120,
                   // backgroundColor: appColor,
                   automaticallyImplyLeading: false,
                   pinned: true,
@@ -257,6 +259,25 @@ class _ProductListScreenState extends State<ProductListScreen> {
                                         fontSize: 16,
                                         fontWeight: FontWeight.w400,
                                       ),
+                                      onTap: () {
+                                        var selection = TextSelection(
+                                            baseOffset: 0,
+                                            extentOffset: _searchController
+                                                .value.text.length);
+                                        if (_searchController.selection.extentOffset !=
+                                            _searchController
+                                                .value.text.length) {
+                                          _searchController.selection =
+                                              selection;
+                                        } else {
+                                          _searchController.selection =
+                                              TextSelection(
+                                                  baseOffset: _searchController
+                                                      .value.text.length,
+                                                  extentOffset: _searchController
+                                                      .value.text.length);
+                                        }
+                                      },
                                       controller: _searchController,
                                       keyboardType: TextInputType.text,
                                       decoration: const InputDecoration(
