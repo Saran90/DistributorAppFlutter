@@ -304,11 +304,11 @@ class HiveDataSourceImpl extends HiveDataSource {
           for (int i = 0; i < _searchKeys.length; i++) {
             if (_searchKeys[i].isNotEmpty) {
               products = products!
-                  .sublist(i, products.length)
                   .where((element) => element.name!
-                  .toLowerCase()
-                  .contains(_searchKeys[i].toLowerCase()))
+                  .toUpperCase()
+                  .contains(_searchKeys[i].toUpperCase()))
                   .toList();
+              print('');
             }
           }
         }
@@ -361,7 +361,7 @@ class HiveDataSourceImpl extends HiveDataSource {
     List<HiveCartModel>? customerCart = cartBox?.values.toList();
     customerCart =
         customerCart?.where((e) => e.customerId == customerId).toList();
-    return customerCart;
+     return customerCart;
   }
 
   @override
