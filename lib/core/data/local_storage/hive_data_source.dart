@@ -78,7 +78,7 @@ abstract class HiveDataSource {
 
   Future<void> deleteOrderSummaryByCustomer(int customerId);
 
-  Future<int?> deleteAllOrderSummaries();
+  Future<void> deleteAllOrderSummaries();
 
   Future<List<HiveOrderSummaryModel>?> getOrderSummariesByCustomer(
       int customerId);
@@ -106,7 +106,7 @@ abstract class HiveDataSource {
 
   Future<void> deleteOrderDetailsForId(int id);
 
-  Future<int?> deleteAllOrderDetails();
+  Future<void> deleteAllOrderDetails();
 
   Future<void> updateOrderDetailStatus(int orderId, int status);
 
@@ -393,10 +393,10 @@ class HiveDataSourceImpl extends HiveDataSource {
     await customerBox?.clear();
     await locationBox?.clear();
     await productBox?.clear();
-    await cartBox?.clear();
+    await deleteAllCart();
     await userBox?.clear();
-    await orderSummaryBox?.clear();
-    await orderDetailsBox?.clear();
+    await deleteAllOrderSummaries();
+    await deleteAllOrderDetails();
   }
 
   @override
@@ -430,8 +430,14 @@ class HiveDataSourceImpl extends HiveDataSource {
   }
 
   @override
-  Future<int?> deleteAllOrderSummaries() async {
-    return await orderSummaryBox?.clear();
+  Future<void> deleteAllOrderSummaries() async {
+    List<HiveOrderSummaryModel>? orderSummaries = orderSummaryBox?.values
+        .where((e) => e.orderDate.compareTo(DateTime.now().subtract(const Duration(days: 8)))<0)
+        .toList();
+    if (orderSummaries != null) {
+      List<dynamic> keys = orderSummaries.map((e) => e.key).toList();
+      await orderSummaryBox?.deleteAll(keys);
+    }
   }
 
   @override
@@ -548,8 +554,14 @@ class HiveDataSourceImpl extends HiveDataSource {
   }
 
   @override
-  Future<int?> deleteAllOrderDetails() async {
-    return orderDetailsBox?.clear();
+  Future<void> deleteAllOrderDetails() async {
+    List<HiveOrderDetailsModel>? orderDetails = orderDetailsBox?.values
+        .where((e) => e.orderDate.compareTo(DateTime.now().subtract(const Duration(days: 8)))<0)
+        .toList();
+    if (orderDetails != null) {
+      List<dynamic> keys = orderDetails.map((e) => e.key).toList();
+      await orderDetailsBox?.deleteAll(keys);
+    }
   }
 
   @override

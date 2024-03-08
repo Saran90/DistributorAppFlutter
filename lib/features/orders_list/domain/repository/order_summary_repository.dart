@@ -12,7 +12,7 @@ abstract class OrderSummaryRepository {
 
   Future<Either<Failure, void>> deleteAllCustomerOrders(int customerId);
 
-  Future<Either<Failure, int?>> deleteAllOrders();
+  Future<Either<Failure, void>> deleteAllOrders();
 
   Future<Either<Failure, List<HiveOrderSummaryModel>?>> getOrdersByCustomer(
       int customerId);

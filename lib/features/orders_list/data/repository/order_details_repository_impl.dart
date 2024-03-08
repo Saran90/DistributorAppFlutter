@@ -45,7 +45,7 @@ class OrderDetailsRepositoryImpl extends OrderDetailsRepository {
   }
 
   @override
-  Future<Either<Failure, int?>> deleteAllOrderItems() async {
+  Future<Either<Failure, void>> deleteAllOrderItems() async {
     try {
       var result = await orderDetailsDataSource.deleteAllOrderItems();
       return Right(result);

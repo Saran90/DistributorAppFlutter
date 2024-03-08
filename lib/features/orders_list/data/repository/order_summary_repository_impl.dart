@@ -32,7 +32,7 @@ class OrderSummaryRepositoryImpl extends OrderSummaryRepository {
   }
 
   @override
-  Future<Either<Failure, int?>> deleteAllOrders() async {
+  Future<Either<Failure, void>> deleteAllOrders() async {
     try {
       var result = await orderSummaryDataSource.deleteAllOrders();
       return Right(result);

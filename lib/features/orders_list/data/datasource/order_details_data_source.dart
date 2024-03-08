@@ -8,7 +8,7 @@ abstract class OrderDetailsDataSource {
 
   Future<List<HiveOrderDetailsModel>?> getOrderItemsForOrder(int orderId);
 
-  Future<int?> deleteAllOrderItems();
+  Future<void> deleteAllOrderItems();
 
   Future<void> updateOrderDetailStatus(int orderId, int status);
 
@@ -38,7 +38,7 @@ class OrderDetailsDataSourceImpl extends OrderDetailsDataSource {
   }
 
   @override
-  Future<int?> deleteAllOrderItems() {
+  Future<void> deleteAllOrderItems() {
     return hiveDataSource.deleteAllOrderDetails();
   }
 
