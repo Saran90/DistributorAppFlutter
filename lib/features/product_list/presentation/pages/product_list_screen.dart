@@ -174,7 +174,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                   toolbarHeight:
                       AppConfig.instance.flavor == AppFlavor.varsha.name
                           ? 170
-                          : 120,
+                          : 80,
                   // backgroundColor: appColor,
                   automaticallyImplyLeading: false,
                   pinned: true,
@@ -188,21 +188,25 @@ class _ProductListScreenState extends State<ProductListScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(
-                            '${widget.hiveCustomerModel.name}, ${widget.hiveCustomerModel.location}',
-                            maxLines: 2,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
+                          Visibility(
+                            visible: AppConfig.instance.flavor ==
+                                AppFlavor.varsha.name,
+                            child: Text(
+                              '${widget.hiveCustomerModel.name}, ${widget.hiveCustomerModel.location}',
+                              maxLines: 2,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              textAlign: TextAlign.center,
                             ),
-                            textAlign: TextAlign.center,
                           ),
                           Visibility(
                             visible: AppConfig.instance.flavor ==
                                 AppFlavor.varsha.name,
                             child: Padding(
-                              padding: const EdgeInsets.only(top: 20),
+                              padding: const EdgeInsets.only(top: 20,bottom: 20),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
@@ -224,16 +228,13 @@ class _ProductListScreenState extends State<ProductListScreen> {
                               ),
                             ),
                           ),
-                          const SizedBox(
-                            height: 20,
-                          ),
                           Container(
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 border:
                                     Border.all(color: Colors.white, width: 1)),
                             height: 40,
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            padding: const EdgeInsets.only(left: 20),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -303,13 +304,19 @@ class _ProductListScreenState extends State<ProductListScreen> {
                                         _updateList();
                                       },
                                       child: SizedBox(
-                                        width: 20,
+                                        width: 60,
                                         height: 20,
-                                        child: SvgPicture.asset(
-                                          'assets/icons/close.svg',
-                                          height: 30,
-                                          width: 30,
-                                          color: Colors.white,
+                                        child: Center(
+                                          child: SizedBox(
+                                            width: 20,
+                                            height: 20,
+                                            child: SvgPicture.asset(
+                                              'assets/icons/close.svg',
+                                              height: 30,
+                                              width: 30,
+                                              color: Colors.white,
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ))
