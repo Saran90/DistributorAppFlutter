@@ -13,7 +13,7 @@ class EndPointCochinDistributors extends EndPoint{
 
   @override
   String get baseUrl {
-    return testingUrl;
+    return liveUrl;
   }
 
   @override
