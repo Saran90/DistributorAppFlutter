@@ -305,8 +305,8 @@ class HiveDataSourceImpl extends HiveDataSource {
             if (_searchKeys[i].isNotEmpty) {
               products = products!
                   .where((element) => element.name!
-                  .toUpperCase()
-                  .contains(_searchKeys[i].toUpperCase()))
+                      .toUpperCase()
+                      .contains(_searchKeys[i].toUpperCase()))
                   .toList();
               print('');
             }
@@ -361,7 +361,8 @@ class HiveDataSourceImpl extends HiveDataSource {
     List<HiveCartModel>? customerCart = cartBox?.values.toList();
     customerCart =
         customerCart?.where((e) => e.customerId == customerId).toList();
-     return customerCart;
+    customerCart?.sort((a, b) => a.dateTime.compareTo(b.dateTime));
+    return customerCart;
   }
 
   @override
@@ -432,7 +433,10 @@ class HiveDataSourceImpl extends HiveDataSource {
   @override
   Future<void> deleteAllOrderSummaries() async {
     List<HiveOrderSummaryModel>? orderSummaries = orderSummaryBox?.values
-        .where((e) => e.orderDate.compareTo(DateTime.now().subtract(const Duration(days: 8)))<0)
+        .where((e) =>
+            e.orderDate
+                .compareTo(DateTime.now().subtract(const Duration(days: 8))) <
+            0)
         .toList();
     if (orderSummaries != null) {
       List<dynamic> keys = orderSummaries.map((e) => e.key).toList();
@@ -537,10 +541,12 @@ class HiveDataSourceImpl extends HiveDataSource {
   @override
   Future<List<HiveOrderDetailsModel>?> getAllOrderDetailsByOrder(
       int orderId) async {
-    return orderDetailsBox?.values
+    List<HiveOrderDetailsModel>? orderDetails = orderDetailsBox?.values
         .toList()
         .where((e) => e.orderId == orderId)
         .toList();
+    orderDetails?.sort((a, b) => a.dateTime.compareTo(b.dateTime),);
+    return orderDetails;
   }
 
   @override
@@ -556,7 +562,10 @@ class HiveDataSourceImpl extends HiveDataSource {
   @override
   Future<void> deleteAllOrderDetails() async {
     List<HiveOrderDetailsModel>? orderDetails = orderDetailsBox?.values
-        .where((e) => e.orderDate.compareTo(DateTime.now().subtract(const Duration(days: 8)))<0)
+        .where((e) =>
+            e.orderDate
+                .compareTo(DateTime.now().subtract(const Duration(days: 8))) <
+            0)
         .toList();
     if (orderDetails != null) {
       List<dynamic> keys = orderDetails.map((e) => e.key).toList();

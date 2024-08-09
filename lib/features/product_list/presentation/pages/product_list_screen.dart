@@ -601,7 +601,8 @@ class _ProductListScreenState extends State<ProductListScreen> {
             stock: product.stock ?? 0,
             userId: _userId ?? 0,
             productId: product.id != null ? '${product.id}' : '',
-            productName: product.name ?? ''));
+            productName: product.name ?? '',
+            dateTime: DateTime.now()));
       }
     } else {
       if (quantity > 0) {
@@ -617,7 +618,8 @@ class _ProductListScreenState extends State<ProductListScreen> {
             stock: product.stock ?? 0,
             userId: _userId ?? 0,
             productId: product.id != null ? '${product.id}' : '',
-            productName: product.name ?? ''));
+            productName: product.name ?? '',
+            dateTime: DateTime.now()));
       }
     }
   }

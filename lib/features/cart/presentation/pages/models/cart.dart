@@ -13,6 +13,7 @@ class Cart {
   String unit;
   double mrp;
   double stock;
+  DateTime dateTime;
 
   Cart(
       {required this.orderAmount,
@@ -26,6 +27,7 @@ class Cart {
       required this.stock,
       required this.userId,
       required this.productId,
+      required this.dateTime,
       required this.productName});
 
   HiveCartModel toHiveModel() {
@@ -41,6 +43,7 @@ class Cart {
         stock: stock,
         userId: userId,
         productId: productId,
+        dateTime: dateTime,
         productName: productName);
   }
 }

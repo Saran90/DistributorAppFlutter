@@ -28,6 +28,7 @@ class HiveCartModelAdapter extends TypeAdapter<HiveCartModel> {
       stock: fields[11] as double,
       userId: fields[1] as int,
       productId: fields[3] as String,
+      dateTime: fields[12] as DateTime,
       productName: fields[4] as String,
     );
   }
@@ -35,7 +36,7 @@ class HiveCartModelAdapter extends TypeAdapter<HiveCartModel> {
   @override
   void write(BinaryWriter writer, HiveCartModel obj) {
     writer
-      ..writeByte(12)
+      ..writeByte(13)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -59,7 +60,9 @@ class HiveCartModelAdapter extends TypeAdapter<HiveCartModel> {
       ..writeByte(10)
       ..write(obj.mrp)
       ..writeByte(11)
-      ..write(obj.stock);
+      ..write(obj.stock)
+      ..writeByte(12)
+      ..write(obj.dateTime);
   }
 
   @override
