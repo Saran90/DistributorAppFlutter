@@ -1,5 +1,6 @@
 const String appNameCochinDistributor = 'Cochin Distributors';
 const String appNameVarsha = 'Varsha';
+const String appNameNks = 'NKS';
 const String appName = 'Cochin Distributors';
 
 

@@ -1,5 +1,6 @@
 import 'package:distributor_app_flutter/utils/app_router.dart';
 import 'package:distributor_app_flutter/utils/endpoints_cochin_distributor.dart';
+import 'package:distributor_app_flutter/utils/endpoints_nks.dart';
 import 'package:get_it/get_it.dart';
 
 import 'utils/endpoints.dart';
@@ -51,6 +52,12 @@ class AppConfig {
       appName: appNameVarsha,
       endPoint: EndPointVarsha(),
       logo: 'assets/images/varsha_logo.jpg');
+
+  static AppConfig nks = AppConfig(
+      flavor: AppFlavor.nks.name,
+      appName: appNameNks,
+      endPoint: EndPointNks(),
+      logo: 'assets/images/nks_logo.png');
 }
 
-enum AppFlavor { cochinDistributor, varsha }
+enum AppFlavor { cochinDistributor, varsha, nks }
