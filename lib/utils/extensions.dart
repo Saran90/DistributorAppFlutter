@@ -18,7 +18,7 @@ extension DoublePrecisionExtension on double {
 
 extension DateTimeApiFormatExtension on DateTime {
   String toApiFormat() {
-    final DateFormat formatter = DateFormat('yyyy-MM-dd, hh:mm:ss');
+    final DateFormat formatter = DateFormat('yyyy-MM-dd, HH:mm:ss');
     return formatter.format(this);
   }
 
