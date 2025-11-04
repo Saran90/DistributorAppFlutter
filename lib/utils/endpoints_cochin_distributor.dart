@@ -8,7 +8,7 @@ class EndPointCochinDistributors extends EndPoint{
 
   @override
   String get liveUrl {
-    return 'http://sales.cochindistributor.in/api/';
+    return 'http://sales.cochindistributors.in/api/';
   }
 
   @override
