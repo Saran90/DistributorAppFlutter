@@ -1,14 +1,19 @@
 import 'endpoints.dart';
 
-class EndPointCochinDistributors extends EndPoint{
+class EndPointNks extends EndPoint {
+  // @override
+  // String get testingUrl {
+  //   return 'http://varsha.atintellilabs.live/api/';
+  // }
+
   @override
   String get testingUrl {
-    return 'http://tradematecochindemo.atintellilabs.live/api/';
+    return 'http://nks.atintellilabs.live/api/';
   }
 
   @override
   String get liveUrl {
-    return 'https://sales.cochindistributors.in/api/';
+    return 'http://nks.atintellilabs.live/api/';
   }
 
   @override

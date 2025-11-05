@@ -409,12 +409,10 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
             child: Text('Order History'),
           ));
         }
-        if (_showOrderHistory()) {
-          list.add(const PopupMenuItem(
-            value: 5,
-            child: Text('Logout'),
-          ));
-        }
+        list.add(const PopupMenuItem(
+          value: 5,
+          child: Text('Logout'),
+        ));
         return list;
       },
       position: PopupMenuPosition.under,

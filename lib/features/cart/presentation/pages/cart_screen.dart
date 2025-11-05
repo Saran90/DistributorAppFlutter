@@ -316,7 +316,8 @@ class _CartScreenState extends State<CartScreen> {
                         orderId: state.hiveOrderSummaryModel.orderId,
                         productId: int.parse(e.productId),
                         productName: e.productName,
-                        total: e.orderAmount))
+                        total: e.orderAmount,
+                        dateTime: DateTime.now()))
                     .toList());
               }
               if (state is OrderSummaryAdditionFailed) {

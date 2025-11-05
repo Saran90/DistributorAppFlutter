@@ -27,13 +27,14 @@ class HiveOrderDetailsModelAdapter extends TypeAdapter<HiveOrderDetailsModel> {
       productId: fields[2] as int,
       productName: fields[3] as String,
       total: fields[7] as double,
+      dateTime: fields[10] as DateTime,
     );
   }
 
   @override
   void write(BinaryWriter writer, HiveOrderDetailsModel obj) {
     writer
-      ..writeByte(10)
+      ..writeByte(11)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -53,7 +54,9 @@ class HiveOrderDetailsModelAdapter extends TypeAdapter<HiveOrderDetailsModel> {
       ..writeByte(8)
       ..write(obj.status)
       ..writeByte(9)
-      ..write(obj.orderDate);
+      ..write(obj.orderDate)
+      ..writeByte(10)
+      ..write(obj.dateTime);
   }
 
   @override

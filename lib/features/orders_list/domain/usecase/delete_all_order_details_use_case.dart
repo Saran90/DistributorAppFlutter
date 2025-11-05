@@ -5,13 +5,13 @@ import '../../../../core/data/usecase/usecase.dart';
 import '../repository/order_details_repository.dart';
 
 class DeleteAllOrderDetailsUseCase
-    extends UseCase<int?, NoParams> {
+    extends UseCase<void, NoParams> {
   final OrderDetailsRepository orderDetailsRepository;
 
   DeleteAllOrderDetailsUseCase({required this.orderDetailsRepository});
 
   @override
-  Future<Either<Failure, int?>> call(params) {
+  Future<Either<Failure, void>> call(params) {
     return orderDetailsRepository.deleteAllOrderItems();
   }
 }

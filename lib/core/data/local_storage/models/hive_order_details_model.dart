@@ -24,6 +24,8 @@ class HiveOrderDetailsModel extends HiveObject {
   int status;
   @HiveField(9)
   DateTime orderDate;
+  @HiveField(10)
+  DateTime dateTime;
 
   HiveOrderDetailsModel({
     required this.id,
@@ -36,5 +38,6 @@ class HiveOrderDetailsModel extends HiveObject {
     required this.productId,
     required this.productName,
     required this.total,
+    required this.dateTime,
   });
 }

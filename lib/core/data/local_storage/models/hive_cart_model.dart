@@ -30,6 +30,8 @@ class HiveCartModel extends HiveObject {
   double mrp;
   @HiveField(11)
   double stock;
+  @HiveField(12)
+  DateTime dateTime;
 
   HiveCartModel(
       {required this.orderAmount,
@@ -43,6 +45,7 @@ class HiveCartModel extends HiveObject {
       required this.stock,
       required this.userId,
       required this.productId,
+      required this.dateTime,
       required this.productName});
 
   Cart toCartModel() {
@@ -58,6 +61,7 @@ class HiveCartModel extends HiveObject {
         stock: stock,
         userId: userId,
         productId: productId,
+        dateTime: dateTime,
         productName: productName);
   }
 }

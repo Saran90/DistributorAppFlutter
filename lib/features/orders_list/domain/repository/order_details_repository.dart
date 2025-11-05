@@ -11,7 +11,7 @@ abstract class OrderDetailsRepository {
   Future<Either<Failure, List<HiveOrderDetailsModel>?>> getOrderItemsForOrder(
       int orderId);
 
-  Future<Either<Failure, int?>> deleteAllOrderItems();
+  Future<Either<Failure, void>> deleteAllOrderItems();
 
   Future<Either<Failure,void>> updateOrderDetailStatus(int orderId,int status);
 

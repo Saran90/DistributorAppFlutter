@@ -171,7 +171,10 @@ class _ProductListScreenState extends State<ProductListScreen> {
                   ),
                 ),
                 SliverAppBar(
-                  toolbarHeight: 170,
+                  toolbarHeight:
+                      AppConfig.instance.flavor == AppFlavor.varsha.name
+                          ? 170
+                          : 80,
                   // backgroundColor: appColor,
                   automaticallyImplyLeading: false,
                   pinned: true,
@@ -185,39 +188,45 @@ class _ProductListScreenState extends State<ProductListScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(
-                            '${widget.hiveCustomerModel.name}, ${widget.hiveCustomerModel.location}',
-                            maxLines: 2,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              const Text('Account balance:',
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.white)),
-                              const SizedBox(
-                                width: 5,
+                          Visibility(
+                            visible: AppConfig.instance.flavor ==
+                                AppFlavor.varsha.name,
+                            child: Text(
+                              '${widget.hiveCustomerModel.name}, ${widget.hiveCustomerModel.location}',
+                              maxLines: 2,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
                               ),
-                              Text('₹ ${widget.hiveCustomerModel.accountBalance}',
-                                  style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.white))
-                            ],
+                              textAlign: TextAlign.center,
+                            ),
                           ),
-                          const SizedBox(
-                            height: 20,
+                          Visibility(
+                            visible: AppConfig.instance.flavor ==
+                                AppFlavor.varsha.name,
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 20,bottom: 20),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  const Text('Account balance:',
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.normal,
+                                          color: Colors.white)),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                      '₹ ${widget.hiveCustomerModel.accountBalance}',
+                                      style: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.normal,
+                                          color: Colors.white))
+                                ],
+                              ),
+                            ),
                           ),
                           Container(
                             decoration: BoxDecoration(
@@ -225,7 +234,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                                 border:
                                     Border.all(color: Colors.white, width: 1)),
                             height: 40,
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            padding: const EdgeInsets.only(left: 20),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -251,6 +260,25 @@ class _ProductListScreenState extends State<ProductListScreen> {
                                         fontSize: 16,
                                         fontWeight: FontWeight.w400,
                                       ),
+                                      onTap: () {
+                                        var selection = TextSelection(
+                                            baseOffset: 0,
+                                            extentOffset: _searchController
+                                                .value.text.length);
+                                        if (_searchController.selection.extentOffset !=
+                                            _searchController
+                                                .value.text.length) {
+                                          _searchController.selection =
+                                              selection;
+                                        } else {
+                                          _searchController.selection =
+                                              TextSelection(
+                                                  baseOffset: _searchController
+                                                      .value.text.length,
+                                                  extentOffset: _searchController
+                                                      .value.text.length);
+                                        }
+                                      },
                                       controller: _searchController,
                                       keyboardType: TextInputType.text,
                                       decoration: const InputDecoration(
@@ -276,13 +304,19 @@ class _ProductListScreenState extends State<ProductListScreen> {
                                         _updateList();
                                       },
                                       child: SizedBox(
-                                        width: 20,
+                                        width: 60,
                                         height: 20,
-                                        child: SvgPicture.asset(
-                                          'assets/icons/close.svg',
-                                          height: 30,
-                                          width: 30,
-                                          color: Colors.white,
+                                        child: Center(
+                                          child: SizedBox(
+                                            width: 20,
+                                            height: 20,
+                                            child: SvgPicture.asset(
+                                              'assets/icons/close.svg',
+                                              height: 30,
+                                              width: 30,
+                                              color: Colors.white,
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ))
@@ -567,7 +601,8 @@ class _ProductListScreenState extends State<ProductListScreen> {
             stock: product.stock ?? 0,
             userId: _userId ?? 0,
             productId: product.id != null ? '${product.id}' : '',
-            productName: product.name ?? ''));
+            productName: product.name ?? '',
+            dateTime: DateTime.now()));
       }
     } else {
       if (quantity > 0) {
@@ -583,7 +618,8 @@ class _ProductListScreenState extends State<ProductListScreen> {
             stock: product.stock ?? 0,
             userId: _userId ?? 0,
             productId: product.id != null ? '${product.id}' : '',
-            productName: product.name ?? ''));
+            productName: product.name ?? '',
+            dateTime: DateTime.now()));
       }
     }
   }
